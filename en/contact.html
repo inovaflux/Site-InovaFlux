@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | InovaFlux</title>
+    <style>
+        :root {
+            --bleu: #1A365D;
+            --orange: #E67E22;
+            --fond: #F4F7F6;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--fond); color: #333; line-height: 1.5; }
+        
+        header {
+            background: white;
+            padding: 16px 5%;
+            border-bottom: 2px solid var(--bleu);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo { height: 120px; width: auto; display: block; max-width: 100%; }
+
+        .nav-top { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+
+        .lang-switch {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-switch a {
+            color: var(--bleu);
+            text-decoration: none;
+        }
+
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 22px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-bleu {
+            color: var(--bleu);
+            border: 2px solid var(--bleu);
+        }
+
+        .btn-bleu:hover,
+        .btn-nav.current.btn-bleu {
+            background: var(--bleu);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+            border: 2px solid var(--orange);
+        }
+
+        .btn-orange:hover,
+        .btn-nav.current.btn-orange {
+            background: #d35400;
+            border-color: #d35400;
+        }
+
+        .container { padding: 50px 5%; max-width: 800px; margin: 0 auto; text-align: center; }
+
+        .contact-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 8px solid var(--orange);
+        }
+
+        h1 { color: var(--bleu); margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+
+        .btn-email {
+            display: inline-block;
+            background: var(--orange);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-email:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+        }
+
+        .info-item { margin: 25px 0; }
+        .label { font-weight: bold; color: var(--bleu); display: block; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 5px; }
+        
+        .location-tag { margin-top: 40px; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 10px 3%;
+            }
+
+            .logo {
+                height: 80px;
+            }
+
+            .container {
+                padding: 30px 4%;
+            }
+
+            .contact-box {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 5px 3%;
+            }
+
+            .logo {
+                height: 40px;
+            }
+
+            .nav-top {
+                gap: 8px;
+            }
+
+            .btn-nav {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html">
+        <img src="../logo.png" alt="InovaFlux" class="logo">
+    </a>
+
+    <nav class="nav-top">
+        <a href="index.html" class="btn-nav btn-bleu">← Home</a>
+        <a href="produits.html" class="btn-nav btn-bleu">Products</a>
+        <a href="telechargements.html" class="btn-nav btn-bleu">Downloads</a>
+        <a href="contact.html" class="btn-nav btn-orange current">Contact</a>
+        <a href="panier.html" class="btn-nav btn-bleu">Cart</a>
+        <span class="lang-switch">EN | <a href="../contact.html">FR</a></span>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="contact-box">
+        <h1>Let’s work together</h1>
+        <p class="subtitle">For school quotes or technical questions about our kits.</p>
+
+        <div class="info-item">
+            <span class="label">By email</span>
+            <a href="mailto:contact@inovaflux.com?subject=InovaFlux Request" class="btn-email">
+                📧 Send a message
+            </a>
+        </div>
+
+        <div class="info-item">
+            <span class="label">Support & Sales</span>
+            Based in Terrebonne, serving institutions across Quebec.
+        </div>
+
+        <div class="location-tag">
+            📍 InovaFlux | Terrebonne, QC
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

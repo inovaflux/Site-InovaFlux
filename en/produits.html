@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaFlux Catalog | Options & Kits</title>
+    <style>
+        :root {
+            --bleu: #1A365D;
+            --orange: #E67E22;
+            --fond: #F4F7F6;
+            --gris-clair: #e2e8f0;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--fond); color: #333; line-height: 1.5; }
+        
+        header {
+            background: white;
+            padding: 16px 5%;
+            border-bottom: 2px solid var(--bleu);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo { height: 120px; width: auto; display: block; max-width: 100%; }
+
+        .nav-top { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+
+        .lang-switch {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-switch a {
+            color: var(--bleu);
+            text-decoration: none;
+        }
+
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 22px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-bleu {
+            color: var(--bleu);
+            border: 2px solid var(--bleu);
+        }
+
+        .btn-bleu:hover,
+        .btn-nav.current.btn-bleu {
+            background: var(--bleu);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+            border: 2px solid var(--orange);
+        }
+
+        .btn-orange:hover,
+        .btn-nav.current.btn-orange {
+            background: #d35400;
+            border-color: #d35400;
+        }
+
+        .container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+        .intro-text { text-align: center; margin-bottom: 40px; color: #555; }
+
+        .produit-card {
+            background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 50px; overflow: hidden; display: flex; flex-direction: column;
+        }
+
+        .produit-header { display: flex; gap: 30px; padding: 30px; background: white; flex-wrap: wrap; }
+
+        .produit-image { 
+            flex: 1; min-width: 250px; background: #eee; border-radius: 8px; 
+            border: 1px solid #ddd;
+        }
+        
+        .produit-image img { 
+            width: 100%; 
+            height: auto; 
+            object-fit: contain; 
+            display: block;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+        }
+
+        .carousel-item {
+            display: none;
+        }
+
+        .carousel-item.active {
+            display: block;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .carousel-btn.prev { left: 8px; }
+        .carousel-btn.next { right: 8px; }
+
+        .produit-intro { flex: 2; min-width: 300px; }
+        .ref { font-family: monospace; color: #718096; font-weight: bold; }
+        h2 { color: var(--bleu); margin-top: 5px; }
+
+        .options-table { width: 100%; border-collapse: collapse; background: #fff; }
+        .options-table th { background: var(--bleu); color: white; padding: 12px; text-align: left; }
+        .options-table td { padding: 15px; border-top: 1px solid var(--gris-clair); vertical-align: middle; }
+
+        .price-tag { font-weight: bold; color: var(--bleu); font-size: 1.1rem; }
+
+        .btn-Commande {
+            display: inline-block; padding: 8px 16px; border-radius: 4px;
+            text-decoration: none; font-weight: bold; font-size: 0.9rem;
+            transition: 0.2s; text-align: center; background: var(--orange); color: white;
+        }
+        .btn-Commande:hover { background: #d35400; }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 10px 3%;
+            }
+
+            .logo {
+                height: 80px;
+            }
+
+            .produit-header {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 5px 3%;
+            }
+
+            .logo {
+                height: 40px;
+            }
+
+            .nav-top {
+                gap: 8px;
+            }
+
+            .btn-nav {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 4%;
+            }
+
+            .options-table {
+                width: 100%;
+                table-layout: fixed;
+                font-size: 0.85rem;
+            }
+
+            .options-table th,
+            .options-table td {
+                padding: 8px 6px;
+                word-wrap: break-word;
+            }
+
+            .btn-Commande {
+                display: inline-block;
+                padding: 6px 8px;
+                font-size: 0.75rem;
+                white-space: normal;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html">
+        <img src="../logo.png" alt="NovaFlux" class="logo">
+    </a>
+
+    <nav class="nav-top">
+        <a href="index.html" class="btn-nav btn-bleu">← Home</a>
+        <a href="produits.html" class="btn-nav btn-bleu current">Products</a>
+        <a href="telechargements.html" class="btn-nav btn-bleu">Downloads</a>
+        <a href="contact.html" class="btn-nav btn-orange">Contact</a>
+        <a href="panier.html" class="btn-nav btn-bleu">Cart</a>
+        <span class="lang-switch">EN | <a href="../produits.html">FR</a></span>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="intro-text">
+        <h1>Automation Solutions</h1>
+        <p>Select your product and preferred version. For school orders, use the <strong>Contact</strong> button at the top of the page.</p>
+    </div>
+
+    <div id="produits-container"></div>
+</div>
+
+<script>
+    // Generate products dynamically from produits.json (English fields)
+    fetch('../produits.json?v=' + Date.now())
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            var container = document.getElementById('produits-container');
+            if (!container || !data || !Array.isArray(data.products)) return;
+
+            data.products.forEach(function (p) {
+                var images = Array.isArray(p.images) && p.images.length ? p.images : (p.image ? [p.image] : []);
+
+                var card = document.createElement('div');
+                card.className = 'produit-card';
+
+                card.innerHTML =
+                    '<div class="produit-header">' +
+                        '<div class="produit-image carousel" data-product-id="' + p.id + '">' +
+                            '<div class="carousel-inner">' +
+                                images.map(function (src, index) {
+                                    var activeClass = index === 0 ? ' active' : '';
+                                    var displayStyle = index === 0 ? 'block' : 'none';
+                                    return '<img class="carousel-item' + activeClass + '" style="display:' + displayStyle + ';" src="../' + src + '" alt="' + (p.imageAlt && p.imageAlt.en ? p.imageAlt.en : '') + '">';
+                                }).join('') +
+                            '</div>' +
+                            (images.length > 1
+                                ? '<button class="carousel-btn prev" data-dir="prev">&#10094;</button>' +
+                                  '<button class="carousel-btn next" data-dir="next">&#10095;</button>'
+                                : '') +
+                        '</div>' +
+                        '<div class="produit-intro">' +
+                            '<span class="ref">REF: ' + p.ref + '</span>' +
+                            '<h2>' + (p.name && p.name.en ? p.name.en : '') + '</h2>' +
+                            '<p>' + (p.description && p.description.en ? p.description.en : '') + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<table class="options-table">' +
+                        '<thead>' +
+                            '<tr><th>Version</th><th>Included</th><th>Price</th><th>Secure order</th></tr>' +
+                        '</thead>' +
+                        '<tbody>' +
+                            (p.options || []).map(function (opt, idx) {
+                                var optLabel = (opt.label && opt.label.en ? opt.label.en : '');
+                                var optPrice = (opt.price || '');
+                                return '<tr>' +
+                                    '<td><strong>' + optLabel + '</strong></td>' +
+                                    '<td>' + (opt.includes && opt.includes.en ? opt.includes.en : '') + '</td>' +
+                                    '<td class="price-tag">' + optPrice + '</td>' +
+                                    '<td>' +
+                                        '<input type="number" min="1" value="1" class="qty-commande" style="width:55px;margin-right:8px;" ' +
+                                            'data-ref="' + (p.ref || '') + '" ' +
+                                            'data-name="' + (p.name && p.name.en ? p.name.en : '') + '" ' +
+                                            'data-option="' + optLabel + '" ' +
+                                            'data-price="' + optPrice + '"' +
+                                        '>' +
+                                        '<a href="#" class="btn-Commande" ' +
+                                            'data-ref="' + (p.ref || '') + '" ' +
+                                            'data-name="' + (p.name && p.name.en ? p.name.en : '') + '" ' +
+                                            'data-option="' + optLabel + '" ' +
+                                            'data-price="' + optPrice + '"' +
+                                        '>Add to cart</a>' +
+                                    '</td>' +
+                                '</tr>';
+                            }).join('') +
+                        '</tbody>' +
+                    '</table>';
+
+                container.appendChild(card);
+            });
+
+            initCarousels();
+            initCartButtons();
+        })
+        .catch(function (err) {
+            console.error('Error loading produits.json', err);
+        });
+
+    function initCarousels() {
+        var carousels = document.querySelectorAll('.carousel');
+
+        carousels.forEach(function (carousel) {
+            var items = carousel.querySelectorAll('.carousel-item');
+            if (!items.length) return;
+
+            var index = 0;
+
+            function show(i) {
+                index = (i + items.length) % items.length;
+                items.forEach(function (img, k) {
+                    var isActive = (k === index);
+                    img.classList.toggle('active', isActive);
+                    img.style.display = isActive ? 'block' : 'none';
+                });
+            }
+
+            var prevBtn = carousel.querySelector('.carousel-btn.prev');
+            var nextBtn = carousel.querySelector('.carousel-btn.next');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    show(index - 1);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    show(index + 1);
+                });
+            }
+
+            var startX = null;
+            carousel.addEventListener('touchstart', function (e) {
+                if (e.touches && e.touches.length === 1) {
+                    startX = e.touches[0].clientX;
+                }
+            });
+
+            carousel.addEventListener('touchend', function (e) {
+                if (startX === null) return;
+                var endX = e.changedTouches[0].clientX;
+                var deltaX = endX - startX;
+                var threshold = 30;
+                if (deltaX > threshold) {
+                    show(index - 1);
+                } else if (deltaX < -threshold) {
+                    show(index + 1);
+                }
+                startX = null;
+            });
+        });
+    }
+
+    // Simple cart using localStorage (same key as FR)
+    function initCartButtons() {
+        var buttons = document.querySelectorAll('.btn-Commande[data-ref]');
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var parentCell = btn.closest('td');
+                var qtyInput = parentCell ? parentCell.querySelector('.qty-commande') : null;
+                var qtyVal = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+                if (isNaN(qtyVal) || qtyVal < 1) qtyVal = 1;
+
+                var item = {
+                    ref: btn.getAttribute('data-ref') || '',
+                    name: btn.getAttribute('data-name') || '',
+                    option: btn.getAttribute('data-option') || '',
+                    price: btn.getAttribute('data-price') || '',
+                    qty: qtyVal
+                };
+
+                try {
+                    var stored = localStorage.getItem('panierInovaFlux');
+                    var cart = stored ? JSON.parse(stored) : [];
+
+                    var merged = false;
+                    for (var i = 0; i < cart.length; i++) {
+                        var it = cart[i];
+                        if (it.ref === item.ref &&
+                            it.option === item.option &&
+                            it.price === item.price) {
+                            it.qty = (it.qty || 1) + item.qty;
+                            merged = true;
+                            break;
+                        }
+                    }
+                    if (!merged) {
+                        cart.push(item);
+                    }
+
+                    localStorage.setItem('panierInovaFlux', JSON.stringify(cart));
+                    alert('Added to cart: ' + item.qty + ' x ' + item.name + ' - ' + item.option);
+                } catch (err) {
+                    console.error('Cart error', err);
+                    alert('Unable to add to cart in this browser.');
+                }
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

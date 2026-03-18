@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier | InovaFlux</title>
+    <style>
+        :root {
+            --bleu: #1A365D;
+            --orange: #E67E22;
+            --fond: #F4F7F6;
+            --gris-clair: #e2e8f0;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--fond); color: #333; line-height: 1.5; }
+
+        header {
+            background: white;
+            padding: 16px 5%;
+            border-bottom: 2px solid var(--bleu);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo { height: 120px; width: auto; display: block; max-width: 100%; }
+
+        .nav-top { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+
+        .lang-switch {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-switch a {
+            color: var(--bleu);
+            text-decoration: none;
+        }
+
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 22px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-bleu {
+            color: var(--bleu);
+            border: 2px solid var(--bleu);
+        }
+
+        .btn-bleu:hover,
+        .btn-nav.current.btn-bleu {
+            background: var(--bleu);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+            border: 2px solid var(--orange);
+        }
+
+        .btn-orange:hover,
+        .btn-nav.current.btn-orange {
+            background: #d35400;
+            border-color: #d35400;
+        }
+
+        .container { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
+
+        h1 { color: var(--bleu); margin-bottom: 10px; }
+        .subtitle { color: #555; margin-bottom: 25px; }
+
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        th, td { padding: 12px; border-bottom: 1px solid var(--gris-clair); font-size: 0.95rem; }
+        th { background: var(--bleu); color: white; text-align: left; }
+
+        tfoot td { font-weight: bold; }
+
+        .text-right { text-align: right; }
+
+        .btn-action {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: var(--orange);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-action:hover {
+            background: #d35400;
+        }
+
+        .empty {
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 900px) {
+            header { padding: 10px 3%; }
+            .logo { height: 80px; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { padding: 5px 3%; }
+            .logo { height: 40px; }
+            .nav-top { gap: 8px; }
+            .btn-nav { padding: 6px 12px; font-size: 0.85rem; }
+        }
+
+        @media (max-width: 700px) {
+            th, td { font-size: 0.85rem; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html">
+        <img src="logo.png" alt="InovaFlux" class="logo">
+    </a>
+
+    <nav class="nav-top">
+        <a href="index.html" class="btn-nav btn-bleu">← Accueil</a>
+        <a href="produits.html" class="btn-nav btn-bleu">Produits</a>
+        <a href="telechargements.html" class="btn-nav btn-bleu">Téléchargements</a>
+        <a href="contact.html" class="btn-nav btn-orange">Contact</a>
+        <a href="panier.html" class="btn-nav btn-bleu current">Panier</a>
+        <span class="lang-switch">FR | <a href="en/panier.html">EN</a></span>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Panier / Soumission</h1>
+    <p class="subtitle">
+        Voici les items ajoutés depuis la page Produits. Vous pouvez ajuster les quantités et envoyer une soumission par courriel avec les montants estimés.
+        <br>Les frais de livraison sont à déterminer en fonction de l'emplacement et seront confirmés dans la soumission officielle.
+    </p>
+
+    <div id="cart-root"></div>
+
+    <button id="btn-clear" class="btn-action" type="button">Vider le panier</button>
+    <button id="btn-mail" class="btn-action" type="button">Envoyer la soumission par courriel</button>
+</div>
+
+<script>
+    // Paramètres fiscaux simples (à ajuster selon votre région)
+    var TAUX_TPS = 0.05;     // 5% TPS
+    var TAUX_TVQ = 0.09975;  // 9.975% TVQ (QC)
+
+    function parsePrice(str) {
+        if (!str) return 0;
+        // Garde les chiffres et le point
+        var cleaned = String(str).replace(/[^0-9.]/g, '');
+        var val = parseFloat(cleaned);
+        return isNaN(val) ? 0 : val;
+    }
+
+    function formatPrice(n) {
+        return n.toFixed(2) + '$';
+    }
+
+    function loadCart() {
+        try {
+            var stored = localStorage.getItem('panierInovaFlux');
+            var cart = stored ? JSON.parse(stored) : [];
+            // S'assure qu'il y a au moins quantité 1
+            cart.forEach(function (item) {
+                if (!item.qty || item.qty <= 0) {
+                    item.qty = 1;
+                }
+            });
+            return cart;
+        } catch (e) {
+            console.error('Erreur lecture panier', e);
+            return [];
+        }
+    }
+
+    function saveCart(cart) {
+        try {
+            localStorage.setItem('panierInovaFlux', JSON.stringify(cart));
+        } catch (e) {
+            console.error('Erreur sauvegarde panier', e);
+        }
+    }
+
+    function renderCart() {
+        var root = document.getElementById('cart-root');
+        var cart = loadCart();
+
+        if (!cart.length) {
+            root.innerHTML = '<div class="empty">Aucun item dans le panier. Retournez à la page <a href="produits.html">Produits</a> pour ajouter des articles.</div>';
+            return;
+        }
+
+        var subtotal = 0;
+        cart.forEach(function (item) {
+            var q = item.qty || 1;
+            subtotal += parsePrice(item.price) * q;
+        });
+        var tps = subtotal * TAUX_TPS;
+        var tvq = subtotal * TAUX_TVQ;
+        var total = subtotal + tps + tvq;
+
+        var rows = cart.map(function (item, index) {
+            var q = item.qty || 1;
+            var unit = parsePrice(item.price);
+            var lineTotal = unit * q;
+            return '<tr>' +
+                '<td>' + (item.ref || '') + '</td>' +
+                '<td>' + (item.name || '') + '</td>' +
+                '<td>' + (item.option || '') + '</td>' +
+                '<td class="text-right">' +
+                    '<input type="number" min="1" value="' + q + '" data-index="' + index + '" class="qty-input" style="width:60px;">' +
+                '</td>' +
+                '<td class="text-right">' + (item.price || '') + '</td>' +
+                '<td class="text-right">' + formatPrice(lineTotal) + '</td>' +
+                '<td class="text-right"><button type="button" class="btn-remove" data-index="' + index + '">✕</button></td>' +
+            '</tr>';
+        }).join('');
+
+        root.innerHTML =
+            '<table>' +
+                '<thead>' +
+                    '<tr>' +
+                        '<th>Référence</th>' +
+                        '<th>Produit</th>' +
+                        '<th>Option</th>' +
+                        '<th class="text-right">Qté</th>' +
+                        '<th class="text-right">Prix unitaire</th>' +
+                        '<th class="text-right">Total ligne</th>' +
+                        '<th class="text-right">Retirer</th>' +
+                    '</tr>' +
+                '</thead>' +
+                '<tbody>' + rows + '</tbody>' +
+                '<tfoot>' +
+                    '<tr>' +
+                        '<td colspan="3" class="text-right">Sous-total</td>' +
+                        '<td class="text-right">' + formatPrice(subtotal) + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                        '<td colspan="3" class="text-right">TPS (' + (TAUX_TPS * 100).toFixed(1) + '%)</td>' +
+                        '<td class="text-right">' + formatPrice(tps) + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                        '<td colspan="3" class="text-right">TVQ (' + (TAUX_TVQ * 100).toFixed(2) + '%)</td>' +
+                        '<td class="text-right">' + formatPrice(tvq) + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                        '<td colspan="3" class="text-right">Total estimé</td>' +
+                        '<td class="text-right">' + formatPrice(total) + '</td>' +
+                    '</tr>' +
+                '</tfoot>' +
+            '</table>';
+    }
+
+    function buildMailBody() {
+        var cart = loadCart();
+        if (!cart.length) {
+            return 'Aucun item dans le panier.';
+        }
+
+        var lines = [];
+        lines.push('Demande de soumission InovaFlux');
+        lines.push('');
+        lines.push('Items :');
+        cart.forEach(function (item) {
+            var q = item.qty || 1;
+            lines.push('- ' + q + ' x ' + (item.ref || '') + ' | ' + (item.name || '') + ' | ' + (item.option || '') + ' | ' + (item.price || ''));
+        });
+
+        var subtotal = 0;
+        cart.forEach(function (item) { 
+            var q = item.qty || 1;
+            subtotal += parsePrice(item.price) * q; 
+        });
+        var tps = subtotal * TAUX_TPS;
+        var tvq = subtotal * TAUX_TVQ;
+        var total = subtotal + tps + tvq;
+
+        lines.push('');
+        lines.push('Sous-total : ' + formatPrice(subtotal));
+        lines.push('TPS (' + (TAUX_TPS * 100).toFixed(1) + '%) : ' + formatPrice(tps));
+        lines.push('TVQ (' + (TAUX_TVQ * 100).toFixed(2) + '%) : ' + formatPrice(tvq));
+        lines.push('Total estimé (hors frais de livraison) : ' + formatPrice(total));
+        lines.push('');
+        lines.push('Veuillez indiquer :');
+        lines.push('- Nom de l\'établissement :');
+        lines.push('- Adresse de livraison :');
+        lines.push('- Personne contact :');
+
+        return lines.join('\n');
+    }
+
+    document.getElementById('btn-clear').addEventListener('click', function () {
+        if (confirm('Vider le panier ?')) {
+            saveCart([]);
+            renderCart();
+        }
+    });
+
+    document.getElementById('btn-mail').addEventListener('click', function () {
+        var body = buildMailBody();
+        var subject = 'Demande de soumission InovaFlux';
+
+        var mailto = 'mailto:contact@inovaflux.com' +
+            '?subject=' + encodeURIComponent(subject) +
+            '&body=' + encodeURIComponent(body);
+
+        window.location.href = mailto;
+    });
+
+    // Écoute les changements de quantité (délégué après rendu)
+    document.addEventListener('change', function (e) {
+        if (!e.target.classList || !e.target.classList.contains('qty-input')) return;
+        var index = parseInt(e.target.getAttribute('data-index'), 10);
+        var val = parseInt(e.target.value, 10);
+        if (isNaN(index) || index < 0) return;
+        if (isNaN(val) || val < 1) val = 1;
+        var cart = loadCart();
+        if (!cart[index]) return;
+        cart[index].qty = val;
+        saveCart(cart);
+        renderCart();
+    });
+
+    // Retirer un item
+    document.addEventListener('click', function (e) {
+        if (!e.target.classList || !e.target.classList.contains('btn-remove')) return;
+        var index = parseInt(e.target.getAttribute('data-index'), 10);
+        if (isNaN(index) || index < 0) return;
+        var cart = loadCart();
+        if (!cart[index]) return;
+        cart.splice(index, 1);
+        saveCart(cart);
+        renderCart();
+    });
+
+    renderCart();
+</script>
+
+</body>
+</html>
+

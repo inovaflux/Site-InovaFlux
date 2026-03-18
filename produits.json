@@ -1,0 +1,234 @@
+{
+  "products": [
+    {
+      "id": "32R-DC-V3.2",
+      "ref": "32R-DC-V3.2",
+      "images": [
+        "images/plc-32.jpg",
+        "images/arduino-shield.jpg",
+        "images/vfd-ac.jpg"
+      ],
+      "imageAlt": {
+        "fr": "Automate 32 points",
+        "en": "32-point PLC"
+      },
+      "name": {
+        "fr": "Automate Industriel 32 points",
+        "en": "32-Point Industrial PLC"
+      },
+      "description": {
+        "fr": "Système de contrôle robuste pour rail DIN. Idéal pour l'apprentissage de la logique de contrôle.",
+        "en": "Robust DIN-rail controller, ideal for teaching control logic."
+      },
+      "options": [
+        {
+          "key": "pcb",
+          "label": {
+            "fr": "PCB Seul",
+            "en": "PCB only"
+          },
+          "includes": {
+            "fr": "Circuit imprimé nu 4 couches.",
+            "en": "4-layer bare PCB."
+          },
+          "price": "70.00$"
+        },
+        {
+          "key": "kit",
+          "label": {
+            "fr": "Kit Complet",
+            "en": "Full kit"
+          },
+          "includes": {
+            "fr": "PCB + Composants + Boîtier DIN.",
+            "en": "PCB + components + DIN enclosure."
+          },
+          "price": "195.00$"
+        },
+        {
+          "key": "assembled",
+          "label": {
+            "fr": "Assemblé",
+            "en": "Assembled"
+          },
+          "includes": {
+            "fr": "Unité soudée et testée.",
+            "en": "Soldered and tested unit."
+          },
+          "price": "225.00$"
+        }
+      ]
+    },
+    {
+      "id": "SHLD-UN-V1",
+      "ref": "SHLD-UN-V1",
+      "images": [
+        "images/arduino-shield.jpg"
+      ],
+      "imageAlt": {
+        "fr": "Shield Arduino",
+        "en": "Arduino shield"
+      },
+      "name": {
+        "fr": "Shield d'interface pour Arduino",
+        "en": "Interface Shield for Arduino"
+      },
+      "description": {
+        "fr": "Permet de connecter facilement des capteurs industriels à un Arduino Uno ou Mega.",
+        "en": "Connect industrial sensors to an Arduino Uno or Mega with ease."
+      },
+      "options": [
+        {
+          "key": "pcb",
+          "label": {
+            "fr": "PCB Seul",
+            "en": "PCB only"
+          },
+          "includes": {
+            "fr": "PCB de prototypage rapide.",
+            "en": "Fast prototyping PCB."
+          },
+          "price": "12.00$"
+        },
+        {
+          "key": "kit",
+          "label": {
+            "fr": "Kit Complet",
+            "en": "Full kit"
+          },
+          "includes": {
+            "fr": "PCB + Connecteurs + Borniers.",
+            "en": "PCB + headers + terminal blocks."
+          },
+          "price": "35.00$"
+        },
+        {
+          "key": "assembled",
+          "label": {
+            "fr": "Assemblé",
+            "en": "Assembled"
+          },
+          "includes": {
+            "fr": "Shield prêt à l'emploi.",
+            "en": "Ready-to-use shield."
+          },
+          "price": "55.00$"
+        }
+      ]
+    },
+    {
+      "id": "VFD-AC-V2",
+      "ref": "VFD-AC-V2",
+      "images": [
+        "images/vfd-ac.jpg"
+      ],
+      "imageAlt": {
+        "fr": "VFD AC",
+        "en": "AC VFD"
+      },
+      "name": {
+        "fr": "Variateur AC Triphasé 208V",
+        "en": "208V Three-Phase AC Drive"
+      },
+      "description": {
+        "fr": "Contrôle de vitesse moteur avec architecture ouverte pour l'enseignement de la puissance.",
+        "en": "Open-architecture drive for teaching power electronics and motor speed control."
+      },
+      "options": [
+        {
+          "key": "pcb",
+          "label": {
+            "fr": "PCB Seul",
+            "en": "PCB only"
+          },
+          "includes": {
+            "fr": "PCBs Puissance et Contrôle.",
+            "en": "Power and control PCBs."
+          },
+          "price": "45.00$"
+        },
+        {
+          "key": "kit",
+          "label": {
+            "fr": "Kit Complet",
+            "en": "Full kit"
+          },
+          "includes": {
+            "fr": "PCBs, IGBTs, Dissipateur.",
+            "en": "PCBs, IGBTs, heatsink."
+          },
+          "price": "195.00$"
+        },
+        {
+          "key": "assembled",
+          "label": {
+            "fr": "Assemblé",
+            "en": "Assembled"
+          },
+          "includes": {
+            "fr": "Unité calibrée en boîtier.",
+            "en": "Calibrated unit in enclosure."
+          },
+          "price": "350.00$"
+        }
+      ]
+    },
+    {
+      "id": "DRV-DC-V2",
+      "ref": "DRV-DC-V2",
+      "images": [
+        "images/drv-dc.jpg"
+      ],
+      "imageAlt": {
+        "fr": "Variateur DC",
+        "en": "DC drive"
+      },
+      "name": {
+        "fr": "Variateur de vitesse moteur DC 120V",
+        "en": "120V DC Motor Drive"
+      },
+      "description": {
+        "fr": "Étude du découpage PWM haute tension sur courant continu.",
+        "en": "Study high-voltage PWM control on DC motors."
+      },
+      "options": [
+        {
+          "key": "pcb",
+          "label": {
+            "fr": "PCB Seul",
+            "en": "PCB only"
+          },
+          "includes": {
+            "fr": "Circuit imprimé double face.",
+            "en": "Double-sided PCB."
+          },
+          "price": "15.00$"
+        },
+        {
+          "key": "kit",
+          "label": {
+            "fr": "Kit Complet",
+            "en": "Full kit"
+          },
+          "includes": {
+            "fr": "PCB + Composants éducatifs.",
+            "en": "PCB + educational components."
+          },
+          "price": "65.00$"
+        },
+        {
+          "key": "assembled",
+          "label": {
+            "fr": "Assemblé",
+            "en": "Assembled"
+          },
+          "includes": {
+            "fr": "Unité robuste pour banc de test.",
+            "en": "Robust unit for lab benches."
+          },
+          "price": "110.00$"
+        }
+      ]
+    }
+  ]
+}
