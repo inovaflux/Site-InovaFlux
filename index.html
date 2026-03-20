@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InovaFlux | Accueil</title>
+    <style>
+        /* --- CONFIGURATION DES COULEURS --- */
+        :root {
+            --bleu: #1A365D;   
+            --orange: #E67E22; 
+            --fond: #F4F7F6;   
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--fond); color: #333; line-height: 1.5; }
+        
+        /* --- BARRE DE NAVIGATION --- */
+  /*      header { 
+            background: white; padding: 15px 5%; display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* --- BARRE DE NAVIGATION (PARAMÈTRES DU PANIER) --- */
+        header {
+            background: white;
+            padding: 16px 5%;
+            border-bottom: 2px solid var(--bleu);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo { height: 120px; width: auto; display: block; max-width: 100%; } 
+
+        .nav-top { 
+            display: flex;       
+            align-items: center; 
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .lang-switch {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-switch a {
+            color: var(--bleu);
+            text-decoration: none;
+        }
+
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- STYLE DES BOUTONS DE MENU (Harmonisé) --- */
+        .btn-nav {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 22px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        /* Style bleu (Produits et Téléchargements) */
+        .btn-bleu { 
+            color: var(--bleu); 
+            border: 2px solid var(--bleu); 
+        }
+        .btn-bleu:hover, .btn-nav.current.btn-bleu { 
+            background: var(--bleu); 
+            color: white; 
+        }
+
+        /* Style orange (Contact) */
+        .btn-orange { 
+            background: var(--orange); 
+            color: white; 
+            border: 2px solid var(--orange); 
+        }
+        .btn-orange:hover, .btn-nav.current.btn-orange { 
+            background: #d35400; 
+            border-color: #d35400; 
+        }
+
+        /* --- SECTION HERO (BANNIÈRE) --- */
+        .hero { background: var(--bleu); color: white; padding: 80px 5%; text-align: center; }
+        
+        /* --- GRILLE DE CARTES --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 50px 5%; }
+        
+        .card { 
+            background: white; padding: 30px; border-radius: 12px; text-align: center;
+            border-bottom: 5px solid var(--bleu); transition: 0.3s; text-decoration: none; color: inherit;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card:hover { 
+            transform: translateY(-10px); 
+            border-bottom-color: var(--orange); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            header {
+                padding: 10px 3%;
+            }
+
+            .logo {
+                height: 80px;
+            }
+
+            .grid {
+                padding: 30px 5%;
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- MOBILE PAYSAGE : réduire la hauteur du header, logo petit --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 5px 3%;
+            }
+
+            .logo {
+                height: 40px;
+            }
+
+            .nav-top {
+                gap: 8px;
+            }
+
+            .btn-nav {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html"><img src="logo.png" alt="InovaFlux" class="logo"></a>
+    
+    <nav class="nav-top">
+        <a href="index.html" class="btn-nav btn-bleu current">← Accueil</a>
+        <a href="produits.html" class="btn-nav btn-bleu">Produits</a>
+        <a href="telechargements.html" class="btn-nav btn-bleu">Téléchargements</a>
+        <a href="contact.html" class="btn-nav btn-orange">Contact</a>
+        <a href="panier.html" class="btn-nav btn-bleu">Panier</a>
+        <span class="lang-switch">FR | <a href="en/index.html">EN</a></span>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>OPEN INSIDE: Pour l'apprentissage de l'électronique</h1>
+    <p>Kits d'apprentissage sur l'électronique industrielle.</p>
+</section>
+
+<main class="grid">
+    <a href="produits.html" class="card">
+        <h3>Nos Produits</h3>
+        <p>Explorez notre matériel didactique.</p>
+    </a>
+    <a href="telechargements.html" class="card">
+        <h3>Téléchargements</h3>
+        <p>Récupérez les fichiers sources et schémas.</p>
+    </a>
+    <a href="contact.html" class="card">
+        <h3>Contact</h3>
+        <p>Une question ? Écrivez-nous.</p>
+    </a>
+</main>
+
+</body>
+</html>
