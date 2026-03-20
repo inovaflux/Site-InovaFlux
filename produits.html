@@ -309,6 +309,9 @@
             }
         }
     </style>
+    <!-- Viewer 3D hébergé localement (supporte .step, .stl, .obj…) -->
+    <script src="libs/occt-import-js.js"></script>
+    <script src="libs/o3dv.min.js"></script>
 </head>
 <body>
 
@@ -497,7 +500,8 @@
         });
     }
 
-    // ── Visionneur 3D via 3dviewer.net ────────────────────────────────────────
+    // ── Visionneur 3D local (occt-import-js + online-3d-viewer) ───────────────
+    var ovViewer = null;
 
     function init3DButtons() {
         document.querySelectorAll('.btn-3d').forEach(function (btn) {
@@ -513,39 +517,39 @@
 
         document.getElementById('modal3d-title').textContent = title + ' — Vue 3D';
         modal.classList.add('open');
+        container.innerHTML = '<div class="viewer-msg">Chargement du modèle 3D…</div>';
+
+        // Résoudre l'URL du fichier STEP
+        var fileUrl = stepPath.match(/^https?:\/\//)
+            ? stepPath
+            : window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + stepPath;
+
+        // Créer le conteneur du viewer
+        var viewerDiv = document.createElement('div');
+        viewerDiv.style.cssText = 'width:100%;height:100%;';
         container.innerHTML = '';
+        container.appendChild(viewerDiv);
 
-        var isLocal = window.location.hostname === 'localhost' ||
-                      window.location.hostname === '127.0.0.1';
+        // Détruire le viewer précédent si existant
+        if (ovViewer) { try { ovViewer.Destroy(); } catch(e) {} ovViewer = null; }
 
-        if (isLocal) {
-            container.innerHTML =
-                '<div class="viewer-msg">La vue 3D est disponible une fois le site en ligne.<br>' +
-                '<small style="color:#666;">Déployez sur GitHub Pages pour visualiser les modèles STEP.</small></div>';
-            return;
+        try {
+            ovViewer = new OV.EmbeddedViewer(viewerDiv);
+            ovViewer.LoadModelFromUrlList([fileUrl]);
+        } catch (e) {
+            container.innerHTML = '<div class="viewer-msg">Erreur de chargement du modèle 3D.<br><small style="color:#666;">' + e.message + '</small></div>';
         }
-
-        // Construire l'URL absolue du fichier STEP
-        var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
-        var fileUrl  = window.location.origin + basePath + stepPath;
-        var iframeUrl = 'https://3dviewer.net/embed.html#model=' + encodeURIComponent(fileUrl);
-
-        var iframe = document.createElement('iframe');
-        iframe.src = iframeUrl;
-        iframe.allowFullscreen = true;
-        container.appendChild(iframe);
     }
 
-    document.getElementById('modal3d-close').addEventListener('click', function () {
+    function close3DModal() {
         document.getElementById('modal3d').classList.remove('open');
         document.getElementById('viewer-container').innerHTML = '';
-    });
+        if (ovViewer) { try { ovViewer.Destroy(); } catch(e) {} ovViewer = null; }
+    }
 
+    document.getElementById('modal3d-close').addEventListener('click', close3DModal);
     document.getElementById('modal3d').addEventListener('click', function (e) {
-        if (e.target === this) {
-            this.classList.remove('open');
-            document.getElementById('viewer-container').innerHTML = '';
-        }
+        if (e.target === this) close3DModal();
     });
 
     // ── Gestion du panier simple côté client (localStorage)
