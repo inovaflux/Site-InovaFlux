@@ -3,7 +3,7 @@
     {
       "id": "32R-DC-V3.2",
       "ref": "32R-DC-V3.2",
-      "step": "models/3D_PCB_32-R-DC.step",
+      "step": "https://drive.google.com/file/d/1LFz1rn_z3-ET_g38l7RFyboO4ojzvwTI/view?usp=drive_link",
       "images": [
         "images/plc-32.jpg",
         "images/3D_PCB_32-R-DC.jpg"
