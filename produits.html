@@ -194,6 +194,90 @@
             }
         }
 
+        /* --- BOUTON VUE 3D --- */
+        .btn-3d {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 18px;
+            background: var(--bleu);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-3d:hover { background: #0f2440; }
+
+        /* --- MODAL VISIONNEUR 3D --- */
+        .modal-3d {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-3d.open { display: flex; }
+
+        .modal-3d-inner {
+            background: #1a1a2e;
+            border-radius: 12px;
+            width: 90vw;
+            max-width: 900px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .modal-3d-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: var(--bleu);
+            color: white;
+            font-weight: bold;
+        }
+
+        .modal-3d-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        #viewer-container {
+            flex: 1;
+            width: 100%;
+        }
+
+        #viewer-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .viewer-msg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #aaa;
+            font-size: 1rem;
+            text-align: center;
+            padding: 30px;
+            line-height: 1.8;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px 4%;
@@ -227,6 +311,17 @@
     </style>
 </head>
 <body>
+
+<!-- Modal visionneur 3D -->
+<div class="modal-3d" id="modal3d">
+    <div class="modal-3d-inner">
+        <div class="modal-3d-header">
+            <span id="modal3d-title">Vue 3D</span>
+            <button class="modal-3d-close" id="modal3d-close" title="Fermer">✕</button>
+        </div>
+        <div id="viewer-container"></div>
+    </div>
+</div>
 
 <header>
     <a href="index.html">
@@ -285,6 +380,9 @@
                             '<span class="ref">REF: ' + p.ref + '</span>' +
                             '<h2>' + (p.name && p.name.fr ? p.name.fr : '') + '</h2>' +
                             '<p>' + (p.description && p.description.fr ? p.description.fr : '') + '</p>' +
+                            (p.step
+                                ? '<button class="btn-3d" data-step="' + p.step + '" data-name="' + (p.name && p.name.fr ? p.name.fr : '') + '">&#9654; Vue 3D</button>'
+                                : '') +
                         '</div>' +
                     '</div>' +
                     '<table class="options-table">' +
@@ -323,6 +421,7 @@
 
             initCarousels();
             initCartButtons();
+            init3DButtons();
         })
         .catch(function (err) {
             console.error('Erreur chargement produits.json', err);
@@ -353,6 +452,7 @@
                 prevBtn.addEventListener('click', function (e) {
                     e.stopPropagation();
                     show(index - 1);
+                    resetAutoPlay();
                 });
             }
 
@@ -360,8 +460,19 @@
                 nextBtn.addEventListener('click', function (e) {
                     e.stopPropagation();
                     show(index + 1);
+                    resetAutoPlay();
                 });
             }
+
+            // Auto-play toutes les 4 secondes (seulement si plusieurs images)
+            var autoTimer;
+            function resetAutoPlay() {
+                clearInterval(autoTimer);
+                if (items.length > 1) {
+                    autoTimer = setInterval(function () { show(index + 1); }, 4000);
+                }
+            }
+            resetAutoPlay();
 
             // Touch support
             var startX = null;
@@ -386,7 +497,58 @@
         });
     }
 
-    // Gestion du panier simple côté client (localStorage)
+    // ── Visionneur 3D via 3dviewer.net ────────────────────────────────────────
+
+    function init3DButtons() {
+        document.querySelectorAll('.btn-3d').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                open3DModal(btn.getAttribute('data-step'), btn.getAttribute('data-name') || 'Modèle 3D');
+            });
+        });
+    }
+
+    function open3DModal(stepPath, title) {
+        var modal     = document.getElementById('modal3d');
+        var container = document.getElementById('viewer-container');
+
+        document.getElementById('modal3d-title').textContent = title + ' — Vue 3D';
+        modal.classList.add('open');
+        container.innerHTML = '';
+
+        var isLocal = window.location.hostname === 'localhost' ||
+                      window.location.hostname === '127.0.0.1';
+
+        if (isLocal) {
+            container.innerHTML =
+                '<div class="viewer-msg">La vue 3D est disponible une fois le site en ligne.<br>' +
+                '<small style="color:#666;">Déployez sur GitHub Pages pour visualiser les modèles STEP.</small></div>';
+            return;
+        }
+
+        // Construire l'URL absolue du fichier STEP
+        var basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+        var fileUrl  = window.location.origin + basePath + stepPath;
+        var iframeUrl = 'https://3dviewer.net/embed.html#model=' + encodeURIComponent(fileUrl);
+
+        var iframe = document.createElement('iframe');
+        iframe.src = iframeUrl;
+        iframe.allowFullscreen = true;
+        container.appendChild(iframe);
+    }
+
+    document.getElementById('modal3d-close').addEventListener('click', function () {
+        document.getElementById('modal3d').classList.remove('open');
+        document.getElementById('viewer-container').innerHTML = '';
+    });
+
+    document.getElementById('modal3d').addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.classList.remove('open');
+            document.getElementById('viewer-container').innerHTML = '';
+        }
+    });
+
+    // ── Gestion du panier simple côté client (localStorage)
     function initCartButtons() {
         var buttons = document.querySelectorAll('.btn-Commande[data-ref]');
         buttons.forEach(function (btn) {
