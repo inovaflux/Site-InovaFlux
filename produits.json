@@ -3,7 +3,7 @@
     {
       "id": "32R-DC-V3.2",
       "ref": "32R-DC-V3.2",
-      "step": "https://drive.google.com/uc?export=download&confirm=t&id=1LFz1rn_z3-ET_g38l7RFyboO4ojzvwTI",
+      "step": "https://github.com/inovaflux/Site-InovaFlux/releases/download/v1.0/3D_PCB_32-R-DC.step",
       "images": [
         "images/plc-32.jpg",
         "images/3D_PCB_32-R-DC.jpg"
