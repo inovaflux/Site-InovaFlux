@@ -3,7 +3,7 @@
     {
       "id": "32R-DC-V3.2",
       "ref": "32R-DC-V3.2",
-      "step": "https://github.com/inovaflux/Site-InovaFlux/releases/download/v1.0/3D_PCB_32-R-DC.step",
+      "step": "models/3D_PCB_32-R-DC.step",
       "images": [
         "images/plc-32.jpg",
         "images/3D_PCB_32-R-DC.jpg"
@@ -22,40 +22,28 @@
       },
       "options": [
         {
-          "key": "pcb",
+          "key": "32R-DC 70x20 LCD",
           "label": {
-            "fr": "PCB Seul",
-            "en": "PCB only"
+            "fr": "Kit Complet pour DIN rail avec afficheur LCD 70x20mm",
+            "en": "Complet kit for DIN rail with LCD screen 70x20mm"
           },
           "includes": {
-            "fr": "Circuit imprimé nu 4 couches.",
-            "en": "4-layer bare PCB."
+            "fr": "Automate boite pour DIN rail avec afficheur LCD",
+            "en": "PLC with case for DIN rail and LCD screen"
           },
-          "price": "70.00$"
+          "price": "500.00$"
         },
         {
-          "key": "kit",
+          "key": "32R-DC 70x20 LCD",
           "label": {
-            "fr": "Kit Complet",
-            "en": "Full kit"
+            "fr": "Kit Complet pour DIN rail avec afficheur LCD 118x38mm",
+            "en": "Complet kit for DIN rail with LCD screen 118x38mm"
           },
           "includes": {
-            "fr": "PCB + Composants + Boîtier DIN.",
-            "en": "PCB + components + DIN enclosure."
+            "fr": "Automate boite pour DIN rail avec afficheur LCD",
+            "en": "PLC with case for DIN rail and LCD screen"
           },
-          "price": "195.00$"
-        },
-        {
-          "key": "assembled",
-          "label": {
-            "fr": "Assemblé",
-            "en": "Assembled"
-          },
-          "includes": {
-            "fr": "Unité soudée et testée.",
-            "en": "Soldered and tested unit."
-          },
-          "price": "225.00$"
+          "price": "500.00$"
         }
       ]
     },
@@ -75,47 +63,10 @@
         "en": "Interface Shield for Arduino"
       },
       "description": {
-        "fr": "Permet de connecter facilement des capteurs industriels à un Arduino Uno ou Mega.",
-        "en": "Connect industrial sensors to an Arduino Uno or Mega with ease."
+        "fr": "Permet de connecter facilement des capteurs industriels à un Arduino Uno ou Mega. A venir",
+        "en": "Connect industrial sensors to an Arduino Uno or Mega with ease. Coming soon"
       },
-      "options": [
-        {
-          "key": "pcb",
-          "label": {
-            "fr": "PCB Seul",
-            "en": "PCB only"
-          },
-          "includes": {
-            "fr": "PCB de prototypage rapide.",
-            "en": "Fast prototyping PCB."
-          },
-          "price": "12.00$"
-        },
-        {
-          "key": "kit",
-          "label": {
-            "fr": "Kit Complet",
-            "en": "Full kit"
-          },
-          "includes": {
-            "fr": "PCB + Connecteurs + Borniers.",
-            "en": "PCB + headers + terminal blocks."
-          },
-          "price": "35.00$"
-        },
-        {
-          "key": "assembled",
-          "label": {
-            "fr": "Assemblé",
-            "en": "Assembled"
-          },
-          "includes": {
-            "fr": "Shield prêt à l'emploi.",
-            "en": "Ready-to-use shield."
-          },
-          "price": "55.00$"
-        }
-      ]
+      "options": []
     },
     {
       "id": "VFD-AC-V2",
@@ -133,47 +84,10 @@
         "en": "208V Three-Phase AC Drive"
       },
       "description": {
-        "fr": "Contrôle de vitesse moteur avec architecture ouverte pour l'enseignement de la puissance.",
-        "en": "Open-architecture drive for teaching power electronics and motor speed control."
+        "fr": "Contrôle de vitesse moteur avec architecture ouverte pour l'enseignement de la puissance. A venir",
+        "en": "Open-architecture drive for teaching power electronics and motor speed control. Coming soon"
       },
-      "options": [
-        {
-          "key": "pcb",
-          "label": {
-            "fr": "PCB Seul",
-            "en": "PCB only"
-          },
-          "includes": {
-            "fr": "PCBs Puissance et Contrôle.",
-            "en": "Power and control PCBs."
-          },
-          "price": "45.00$"
-        },
-        {
-          "key": "kit",
-          "label": {
-            "fr": "Kit Complet",
-            "en": "Full kit"
-          },
-          "includes": {
-            "fr": "PCBs, IGBTs, Dissipateur.",
-            "en": "PCBs, IGBTs, heatsink."
-          },
-          "price": "195.00$"
-        },
-        {
-          "key": "assembled",
-          "label": {
-            "fr": "Assemblé",
-            "en": "Assembled"
-          },
-          "includes": {
-            "fr": "Unité calibrée en boîtier.",
-            "en": "Calibrated unit in enclosure."
-          },
-          "price": "350.00$"
-        }
-      ]
+      "options": []
     },
     {
       "id": "DRV-DC-V2",
@@ -191,47 +105,10 @@
         "en": "120V DC Motor Drive"
       },
       "description": {
-        "fr": "Étude du découpage PWM haute tension sur courant continu.",
-        "en": "Study high-voltage PWM control on DC motors."
+        "fr": "Étude du découpage PWM haute tension sur courant continu. A venir",
+        "en": "Study high-voltage PWM control on DC motors. Coming soon"
       },
-      "options": [
-        {
-          "key": "pcb",
-          "label": {
-            "fr": "PCB Seul",
-            "en": "PCB only"
-          },
-          "includes": {
-            "fr": "Circuit imprimé double face.",
-            "en": "Double-sided PCB."
-          },
-          "price": "15.00$"
-        },
-        {
-          "key": "kit",
-          "label": {
-            "fr": "Kit Complet",
-            "en": "Full kit"
-          },
-          "includes": {
-            "fr": "PCB + Composants éducatifs.",
-            "en": "PCB + educational components."
-          },
-          "price": "65.00$"
-        },
-        {
-          "key": "assembled",
-          "label": {
-            "fr": "Assemblé",
-            "en": "Assembled"
-          },
-          "includes": {
-            "fr": "Unité robuste pour banc de test.",
-            "en": "Robust unit for lab benches."
-          },
-          "price": "110.00$"
-        }
-      ]
+      "options": []
     }
   ]
 }
