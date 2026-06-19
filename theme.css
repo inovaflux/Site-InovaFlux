@@ -89,6 +89,12 @@ html[data-theme="dark"] .product-title {
     border-color: #2c3440 !important;
 }
 
+/* Cadre d'image du carrousel (zone de letterbox) */
+html[data-theme="dark"] .produit-image {
+    background: #232b38;
+    border-color: #3a4452;
+}
+
 /* Textes secondaires / discrets */
 html[data-theme="dark"] .intro-text,
 html[data-theme="dark"] .subtitle,
