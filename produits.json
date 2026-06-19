@@ -5,7 +5,7 @@
       "ref": "32R-DC-V3.2",
       "step": "models/3D_PCB_32-R-DC.glb",
       "images": [
-        "images/3D_PCB_32-R-DC.jpg"
+        "images/3D_PCB_32-R-DC.png"
       ],
       "imageAlt": {
         "fr": "Automate 32 points",
