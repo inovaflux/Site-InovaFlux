@@ -1,0 +1,136 @@
+/* ============================================================
+   Mode sombre partagé — InovaFlux
+   Le site est clair par défaut. Les règles ci-dessous ne
+   s'appliquent que lorsque <html data-theme="dark"> est actif.
+   ============================================================ */
+
+/* --- Bouton bascule (clair par défaut) --- */
+.theme-toggle {
+    margin-left: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    border: 2px solid var(--bleu);
+    background: transparent;
+    color: var(--bleu);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.theme-toggle:hover {
+    background: var(--bleu);
+    color: #fff;
+}
+.theme-toggle--float {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--bleu);
+    color: #fff;
+}
+
+/* ============================================================
+   THÈME SOMBRE
+   ============================================================ */
+html[data-theme="dark"] {
+    color-scheme: dark;
+    /* Marque éclaircie pour rester lisible sur fond foncé */
+    --bleu: #5b8fd0;
+    --orange: #f0883e;
+    --fond: #0f1419;
+    --blanc: #1b212b;       /* utilisé par .download-section */
+    --gris-clair: #2c3440;  /* bordures de tableaux */
+}
+
+/* Fond + texte général */
+html[data-theme="dark"] body {
+    background: var(--fond);
+    color: #e2e8f0;
+}
+
+/* Barre de navigation */
+html[data-theme="dark"] header {
+    background: #161b22;
+    border-bottom-color: var(--bleu);
+}
+
+/* Surfaces "blanches" → surface foncée */
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .produit-card,
+html[data-theme="dark"] .produit-header,
+html[data-theme="dark"] .contact-box,
+html[data-theme="dark"] .download-section,
+html[data-theme="dark"] .empty,
+html[data-theme="dark"] .options-table,
+html[data-theme="dark"] table {
+    background: #1b212b;
+    color: #e2e8f0;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* En-têtes de tableaux : garder le bleu (éclairci) + texte blanc */
+html[data-theme="dark"] th,
+html[data-theme="dark"] .options-table th {
+    background: #284a73;
+    color: #fff;
+}
+
+/* Bordures internes */
+html[data-theme="dark"] th,
+html[data-theme="dark"] td,
+html[data-theme="dark"] .options-table td,
+html[data-theme="dark"] .product-title {
+    border-color: #2c3440 !important;
+}
+
+/* Textes secondaires / discrets */
+html[data-theme="dark"] .intro-text,
+html[data-theme="dark"] .subtitle,
+html[data-theme="dark"] .location-tag,
+html[data-theme="dark"] .ref {
+    color: #9aa7b8;
+}
+
+/* Boutons de téléchargement (fond clair par défaut) */
+html[data-theme="dark"] .btn-dl {
+    background: #232b38;
+    border-color: #3a4452;
+    color: #cbd5e1;
+}
+html[data-theme="dark"] .btn-dl:hover {
+    background: #2c3543;
+}
+html[data-theme="dark"] .ref-tag {
+    background: #2c3543;
+    color: #cbd5e1;
+}
+
+/* Champs de formulaire */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    background: #232b38;
+    color: #e2e8f0;
+    border: 1px solid #3a4452;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: #7b8694;
+}
+
+/* Bouton bascule en mode sombre */
+html[data-theme="dark"] .theme-toggle {
+    border-color: var(--bleu);
+    color: var(--bleu);
+    background: transparent;
+}
+html[data-theme="dark"] .theme-toggle:hover {
+    background: var(--bleu);
+    color: #0f1419;
+}
