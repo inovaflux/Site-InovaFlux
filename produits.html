@@ -523,6 +523,11 @@
             ? stepPath
             : window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + stepPath;
 
+        // Anti-cache : force le navigateur/CDN à récupérer la dernière version
+        // du modèle après une mise à jour (valeur fixée une fois par chargement de page).
+        if (!window.__modelVersion) { window.__modelVersion = Date.now(); }
+        fileUrl += (fileUrl.indexOf('?') === -1 ? '?' : '&') + 'v=' + window.__modelVersion;
+
         // Créer le conteneur du viewer
         var viewerDiv = document.createElement('div');
         viewerDiv.style.cssText = 'width:100%;height:100%;';
@@ -533,11 +538,28 @@
         if (ovViewer) { try { ovViewer.Destroy(); } catch(e) {} ovViewer = null; }
 
         try {
-            ovViewer = new OV.EmbeddedViewer(viewerDiv);
+            ovViewer = new OV.EmbeddedViewer(viewerDiv, {
+                onModelLoaded: brightenScene
+            });
             ovViewer.LoadModelFromUrlList([fileUrl]);
         } catch (e) {
             container.innerHTML = '<div class="viewer-msg">Erreur de chargement du modèle 3D.<br><small style="color:#666;">' + e.message + '</small></div>';
         }
+    }
+
+    // Éclaircit le modèle : la lumière ambiante par défaut est noire,
+    // ce qui rend les faces non exposées très sombres ("dans l'ombre").
+    function brightenScene() {
+        if (!ovViewer) return;
+        try {
+            var v = ovViewer.GetViewer();
+            var sm = v.shadingModel;
+            if (sm && sm.ambientLight && sm.directionalLight) {
+                sm.ambientLight.color.setHex(0x999999);
+                sm.directionalLight.color.setHex(0xaaaaaa);
+                v.Render();
+            }
+        } catch (e) { /* viewer non prêt : ignorer */ }
     }
 
     function close3DModal() {
