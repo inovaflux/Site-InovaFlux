@@ -93,10 +93,12 @@
             border: 1px solid #ddd;
         }
         
-        .produit-image img { 
-            width: 100%; 
-            height: auto; 
-            object-fit: contain; 
+        .produit-image img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             display: block;
         }
 
@@ -108,6 +110,7 @@
         .carousel-inner {
             position: relative;
             width: 100%;
+            aspect-ratio: 16 / 9;   /* fixed frame: content below the image no longer shifts */
         }
 
         .carousel-item {
