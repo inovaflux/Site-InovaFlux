@@ -233,6 +233,8 @@
         .viewer-msg { display: flex; align-items: center; justify-content: center; height: 100%; color: #aaa; font-size: 1rem; text-align: center; padding: 30px; line-height: 1.8; }
     </style>
     <script src="../libs/o3dv.min.js"></script>
+    <link rel="stylesheet" href="../theme.css">
+    <script src="../theme.js"></script>
 </head>
 <body>
 
@@ -433,9 +435,9 @@
         var modal     = document.getElementById('modal3d');
         var container = document.getElementById('viewer-container');
 
-        document.getElementById('modal3d-title').textContent = title + ' ù 3D View';
+        document.getElementById('modal3d-title').textContent = title + ' ? 3D View';
         modal.classList.add('open');
-        container.innerHTML = '<div class="viewer-msg">Loading 3D modelù</div>';
+        container.innerHTML = '<div class="viewer-msg">Loading 3D model?</div>';
 
         var fileUrl = stepPath.match(/^https?:\/\//)
             ? stepPath
