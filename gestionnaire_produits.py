@@ -8,11 +8,15 @@ du fichier produits.json sans éditer le fichier manuellement.
 import json
 import os
 import shutil
+import subprocess
+import threading
 import tkinter as tk
-from tkinter import ttk, messagebox, simpledialog
+from tkinter import ttk, messagebox, simpledialog, filedialog
 from datetime import datetime
 
-JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "produits.json")
+BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+JSON_PATH = os.path.join(BASE_DIR, "produits.json")
+CONVERT_SCRIPT = os.path.join(BASE_DIR, "convert_step.js")
 
 # ─── Couleurs ──────────────────────────────────────────────────────────────────
 BG        = "#1e1e2e"
@@ -248,6 +252,20 @@ class ProductManager(tk.Tk):
         self.var_images.set(", ".join(product.get("images", [])))
         r += 1
 
+        self._lbl(inner, "Fichier 3D (STEP/GLB) :", r)
+        self.var_step = self._step_row(inner, r)
+        self.var_step.set(product.get("step", ""))
+        r += 1
+
+        tk.Label(inner,
+                 text="  ℹ  GLB recommandé (rapide, hors-ligne). Un STEP peut être\n"
+                      "     converti en GLB via le bouton « ⇄ Convertir → GLB ».\n"
+                      "     Sinon : sous-dossier (ex: models/fichier.glb), lien externe,\n"
+                      "     ou < 25 Mo si à la racine.",
+                 bg=PANEL, fg=MUTED, font=("Segoe UI", 8, "italic"),
+                 justify="left").grid(row=r, column=1, sticky="w", padx=(0, 12), pady=(0, 4))
+        r += 1
+
         # ── Nom ─────────────────────────────────────────────────────────────
         r = self._section(inner, "Nom du produit", r)
 
@@ -287,20 +305,36 @@ class ProductManager(tk.Tk):
         # ── Options & Prix ──────────────────────────────────────────────────
         r = self._section(inner, "Options & Prix", r)
 
-        for opt in product.get("options", []):
+        for i, opt in enumerate(product.get("options", [])):
             key = opt.get("key", "")
-            label_fr = opt.get("label", {}).get("fr", key)
-            ov = {"key": key}
+            ov = {}
 
-            # En-tête de l'option
+            # En-tête de l'option : numéro, clé éditable, bouton supprimer
             opt_frame = tk.Frame(inner, bg="#34344e", bd=0)
             opt_frame.grid(row=r, column=0, columnspan=2,
-                           sticky="ew", padx=10, pady=(8, 2))
-            opt_frame.columnconfigure(0, weight=1)
-            tk.Label(opt_frame,
-                     text=f"  Option : {label_fr}  [{key}]",
-                     bg="#34344e", fg=PURPLE,
-                     font=("Segoe UI", 10, "bold")).pack(side="left", padx=6, pady=4)
+                           sticky="ew", padx=10, pady=(10, 2))
+            opt_frame.columnconfigure(1, weight=1)
+
+            tk.Label(opt_frame, text=f"  Option {i + 1}", bg="#34344e", fg=PURPLE,
+                     font=("Segoe UI", 10, "bold")).grid(
+                row=0, column=0, sticky="w", padx=6, pady=4)
+
+            key_box = tk.Frame(opt_frame, bg="#34344e")
+            key_box.grid(row=0, column=1, sticky="w", padx=6)
+            tk.Label(key_box, text="clé :", bg="#34344e", fg=MUTED,
+                     font=("Segoe UI", 9)).pack(side="left", padx=(0, 4))
+            key_var = tk.StringVar(value=key)
+            key_var.trace_add("write", lambda *_: self._mark_modified())
+            ttk.Entry(key_box, textvariable=key_var, width=14,
+                      font=("Segoe UI", 10)).pack(side="left")
+            ov["key"] = key_var
+
+            tk.Button(opt_frame, text="✕  Supprimer l'option",
+                      bg=RED, fg="white", activebackground=RED_H,
+                      activeforeground="white", font=("Segoe UI", 8, "bold"),
+                      relief="flat", bd=0, cursor="hand2",
+                      command=lambda idx=i: self._remove_option(idx)).grid(
+                row=0, column=2, sticky="e", padx=6, pady=4)
             r += 1
 
             self._lbl(inner, "  Label  FR :", r)
@@ -334,8 +368,15 @@ class ProductManager(tk.Tk):
 
             self.option_vars.append(ov)
 
-        # ── Bouton Appliquer ─────────────────────────────────────────────────
+        # ── Bouton Ajouter une option ────────────────────────────────────────
+        add_opt_btn = ttk.Button(
+            inner, text="  ＋  Ajouter une option  ",
+            style="Green.TButton", command=self._add_option)
+        add_opt_btn.grid(row=r, column=0, columnspan=2,
+                         sticky="w", padx=14, pady=(10, 4), ipady=4)
         r += 1
+
+        # ── Bouton Appliquer ─────────────────────────────────────────────────
         apply_btn = ttk.Button(
             inner, text="  ✔  Appliquer les modifications  ",
             style="Accent.TButton", command=self._apply_changes)
@@ -416,6 +457,146 @@ class ProductManager(tk.Tk):
 
         return var
 
+    def _step_row(self, parent, row):
+        """Champ « Fichier 3D » + boutons Parcourir et Convertir → GLB."""
+        var = tk.StringVar()
+        var.trace_add("write", lambda *_: self._mark_modified())
+
+        frame = tk.Frame(parent, bg=PANEL)
+        frame.grid(row=row, column=1, sticky="ew", padx=(0, 12), pady=3)
+        frame.columnconfigure(0, weight=1)
+
+        ttk.Entry(frame, textvariable=var, font=("Segoe UI", 10)).grid(
+            row=0, column=0, sticky="ew")
+
+        tk.Button(frame, text="📁  Parcourir", bg=ENTRY_BG, fg=TEXT,
+                  activebackground=BORDER, activeforeground="white",
+                  font=("Segoe UI", 9), relief="flat", bd=0, cursor="hand2",
+                  command=lambda: self._browse_step(var)).grid(
+            row=0, column=1, padx=(6, 0))
+
+        self.convert_btn = tk.Button(
+            frame, text="⇄  Convertir → GLB", bg=ACCENT, fg="white",
+            activebackground=ACCENT_H, activeforeground="white",
+            font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2",
+            command=self._convert_step_to_glb)
+        self.convert_btn.grid(row=0, column=2, padx=(6, 0))
+
+        return var
+
+    def _browse_step(self, var):
+        path = filedialog.askopenfilename(
+            title="Choisir un fichier 3D",
+            initialdir=os.path.join(BASE_DIR, "models"),
+            filetypes=[("Modèles 3D", "*.step *.stp *.glb *.gltf"),
+                       ("STEP", "*.step *.stp"),
+                       ("GLB / glTF", "*.glb *.gltf"),
+                       ("Tous les fichiers", "*.*")])
+        if not path:
+            return
+        # Chemin relatif au dossier du site si possible
+        try:
+            rel = os.path.relpath(path, BASE_DIR)
+            if not rel.startswith(".."):
+                path = rel.replace(os.sep, "/")
+        except ValueError:
+            pass
+        var.set(path)
+
+    # ── Conversion STEP → GLB ────────────────────────────────────────────────
+
+    def _convert_step_to_glb(self):
+        raw = self.var_step.get().strip()
+        if not raw:
+            messagebox.showwarning(
+                "Aucun fichier",
+                "Indiquez d'abord un fichier STEP dans le champ « Fichier 3D ».")
+            return
+        if raw.startswith("http://") or raw.startswith("https://"):
+            messagebox.showwarning(
+                "Lien externe",
+                "La conversion fonctionne uniquement sur un fichier STEP local,\n"
+                "pas sur un lien externe.")
+            return
+        if raw.lower().endswith(".glb"):
+            messagebox.showinfo("Déjà en GLB",
+                                "Ce fichier est déjà au format GLB.")
+            return
+        if not raw.lower().endswith((".step", ".stp")):
+            messagebox.showwarning(
+                "Format non pris en charge",
+                "Seuls les fichiers .step / .stp peuvent être convertis en GLB.")
+            return
+
+        in_path = raw if os.path.isabs(raw) else os.path.join(BASE_DIR, raw)
+        if not os.path.exists(in_path):
+            messagebox.showerror(
+                "Fichier introuvable",
+                f"Le fichier STEP est introuvable :\n  {in_path}")
+            return
+        if not os.path.exists(CONVERT_SCRIPT):
+            messagebox.showerror(
+                "Script manquant",
+                f"Le script de conversion est introuvable :\n  {CONVERT_SCRIPT}")
+            return
+
+        out_rel  = os.path.splitext(raw)[0] + ".glb"
+        out_path = os.path.splitext(in_path)[0] + ".glb"
+
+        self._set_convert_running(True)
+        self.status_var.set("Conversion STEP → GLB en cours… (peut prendre ~30 s)")
+
+        def worker():
+            try:
+                proc = subprocess.run(
+                    ["node", CONVERT_SCRIPT, in_path, out_path],
+                    capture_output=True, text=True, timeout=600)
+                self.after(0, lambda: self._on_convert_done(proc, out_rel, out_path))
+            except FileNotFoundError:
+                self.after(0, lambda: self._on_convert_error(
+                    "Node.js est introuvable.\n\n"
+                    "Installez-le (ex: sudo apt install nodejs) puis réessayez."))
+            except subprocess.TimeoutExpired:
+                self.after(0, lambda: self._on_convert_error(
+                    "La conversion a dépassé le délai (10 min).\n"
+                    "Le fichier STEP est peut-être trop volumineux."))
+            except Exception as e:
+                self.after(0, lambda: self._on_convert_error(str(e)))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _set_convert_running(self, running):
+        if getattr(self, "convert_btn", None) and self.convert_btn.winfo_exists():
+            self.convert_btn.config(
+                state="disabled" if running else "normal",
+                text="⏳  Conversion…" if running else "⇄  Convertir → GLB")
+
+    def _on_convert_done(self, proc, out_rel, out_path):
+        self._set_convert_running(False)
+        if proc.returncode != 0:
+            self.status_var.set("Échec de la conversion")
+            messagebox.showerror(
+                "Échec de la conversion",
+                (proc.stderr or proc.stdout or "Erreur inconnue").strip())
+            return
+        self.var_step.set(out_rel)
+        self._mark_modified()
+        try:
+            size_mo = os.path.getsize(out_path) / 1048576
+        except OSError:
+            size_mo = 0
+        self.status_var.set(f"GLB créé ({size_mo:.1f} Mo) — pensez à appliquer puis sauvegarder !")
+        messagebox.showinfo(
+            "Conversion réussie",
+            f"Fichier GLB créé :\n  {out_rel}  ({size_mo:.1f} Mo)\n\n"
+            "Le champ « Fichier 3D » pointe maintenant sur le GLB.\n"
+            "Pensez à « Appliquer » puis « Sauvegarder ».")
+
+    def _on_convert_error(self, message):
+        self._set_convert_running(False)
+        self.status_var.set("Échec de la conversion")
+        messagebox.showerror("Erreur de conversion", message)
+
     # ── Logique ────────────────────────────────────────────────────────────────
 
     def _mark_modified(self):
@@ -465,9 +646,54 @@ class ProductManager(tk.Tk):
         self.status_var.set(f"Produit #{idx + 1} sélectionné")
         self._show_editor(self.data["products"][idx])
 
-    def _apply_changes(self):
+    @staticmethod
+    def _valider_fichier(valeur):
+        """Retourne (True, None) si valide, (False, message) si la règle des 25 Mo s'applique."""
+        v = valeur.strip()
+        if not v:
+            return True, None
+        is_external = v.startswith("http://") or v.startswith("https://")
+        has_folder  = "/" in v or "\\" in v
+        if is_external or has_folder:
+            return True, None
+        return False, (
+            f"« {v} » est à la racine du site sans dossier.\n"
+            "Ce fichier doit être :\n"
+            "  • Dans un sous-dossier  (ex: models/fichier.step)\n"
+            "  • Un lien externe  (Google Drive, Dropbox…)\n"
+            "  • Ou faire moins de 25 Mo s'il reste à la racine."
+        )
+
+    @staticmethod
+    def _format_price(raw):
+        """Normalise une saisie de prix vers le format « 0.00$ »."""
+        raw = (raw or "").strip()
+        try:
+            return f"{float(raw):.2f}$"
+        except ValueError:
+            if not raw:
+                return "0.00$"
+            return raw if raw.endswith("$") else raw + "$"
+
+    def _collect_options(self):
+        """Reconstruit la liste des options à partir des champs affichés."""
+        options = []
+        for i, ov in enumerate(self.option_vars):
+            key = ov["key"].get().strip() or f"option{i + 1}"
+            options.append({
+                "key": key,
+                "label": {"fr": ov["label_fr"].get().strip(),
+                          "en": ov["label_en"].get().strip()},
+                "includes": {"fr": ov["includes_fr"].get().strip(),
+                             "en": ov["includes_en"].get().strip()},
+                "price": self._format_price(ov["price"].get()),
+            })
+        return options
+
+    def _collect_into_product(self):
+        """Recopie tout le formulaire courant dans le produit en mémoire."""
         if self.current_idx is None:
-            return
+            return None
         p = self.data["products"][self.current_idx]
 
         new_id = self.var_id.get().strip()
@@ -476,6 +702,7 @@ class ProductManager(tk.Tk):
 
         images_raw = self.var_images.get()
         p["images"] = [img.strip() for img in images_raw.split(",") if img.strip()]
+        p["step"] = self.var_step.get().strip()
 
         p["name"] = {
             "fr": self.var_name_fr.get().strip(),
@@ -489,19 +716,60 @@ class ProductManager(tk.Tk):
             "fr": self.txt_desc_fr.get("1.0", "end-1c").strip(),
             "en": self.txt_desc_en.get("1.0", "end-1c").strip(),
         }
+        p["options"] = self._collect_options()
+        return p
 
-        for i, ov in enumerate(self.option_vars):
-            if i >= len(p["options"]):
-                break
-            opt = p["options"][i]
-            opt["label"]    = {"fr": ov["label_fr"].get().strip(),
-                                "en": ov["label_en"].get().strip()}
-            opt["includes"] = {"fr": ov["includes_fr"].get().strip(),
-                                "en": ov["includes_en"].get().strip()}
-            try:
-                opt["price"] = f"{float(ov['price'].get()):.2f}$"
-            except ValueError:
-                pass
+    def _add_option(self):
+        p = self._collect_into_product()
+        if p is None:
+            return
+        p.setdefault("options", []).append({
+            "key": "",
+            "label":    {"fr": "Nouvelle option", "en": "New option"},
+            "includes": {"fr": "", "en": ""},
+            "price": "0.00$",
+        })
+        self._show_editor(p)
+        self._mark_modified()
+        self.status_var.set("Option ajoutée — pensez à appliquer puis sauvegarder !")
+
+    def _remove_option(self, index):
+        p = self._collect_into_product()
+        if p is None:
+            return
+        options = p.get("options", [])
+        if not (0 <= index < len(options)):
+            return
+        label = options[index].get("label", {}).get("fr", "") or options[index].get("key", "?")
+        if not messagebox.askyesno(
+                "Supprimer l'option",
+                f"Supprimer l'option :\n\n  « {label} »  ?"):
+            return
+        options.pop(index)
+        self._show_editor(p)
+        self._mark_modified()
+        self.status_var.set("Option supprimée — pensez à appliquer puis sauvegarder !")
+
+    def _apply_changes(self):
+        p = self._collect_into_product()
+        if p is None:
+            return
+
+        # ── Validation des fichiers ──────────────────────────────────────────
+        avertissements = []
+        for img in p["images"]:
+            ok, msg = self._valider_fichier(img)
+            if not ok:
+                avertissements.append(msg)
+        ok, msg = self._valider_fichier(p["step"])
+        if not ok:
+            avertissements.append(msg)
+
+        if avertissements:
+            messagebox.showwarning(
+                "Règle des fichiers — Vérification requise",
+                "\n\n".join(avertissements)
+            )
 
         self.modified = False
         self.title("Gestionnaire de Produits")
@@ -526,6 +794,7 @@ class ProductManager(tk.Tk):
             "id":  new_id,
             "ref": new_id,
             "images": ["images/placeholder.jpg"],
+            "step": "",
             "imageAlt":    {"fr": "Nouveau produit", "en": "New product"},
             "name":        {"fr": "Nouveau produit", "en": "New product"},
             "description": {"fr": "Description FR.", "en": "Description EN."},

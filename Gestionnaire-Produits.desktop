@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gestionnaire de Produits
+Comment=Gérer les produits, options et prix du site InovaFlux
+Exec=/home/sudam/Documents/Site_V2.2/gestion.sh
+Icon=/home/sudam/Documents/Site_V2.2/logo.png
+Path=/home/sudam/Documents/Site_V2.2
+Terminal=false
+Categories=Utility;
