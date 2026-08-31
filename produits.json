@@ -108,7 +108,10 @@
       "ref": "SHIELD-UNO-V2.1",
       "step": "",
       "images": [
-        "images/arduino-shield.jpg"
+        "images/Unoshield/SH-dos.jpg",
+        "images/Unoshield/SH-dos.jpg",
+        "images/Unoshield/Uno-PCB.png",
+        "images/Unoshield/Uno-PCB.png"
       ],
       "imageAlt": {
         "fr": "Shield Arduino",
@@ -187,7 +190,8 @@
       "ref": "DRV-DC-V2 (À venir)",
       "step": "",
       "images": [
-        "images/drv-dc.jpg"
+        "images/Unoshield/SH-dos.jpg",
+        "images/Unoshield/SH-dos.jpg"
       ],
       "imageAlt": {
         "fr": "Variateur DC",
