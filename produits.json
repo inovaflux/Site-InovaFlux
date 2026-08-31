@@ -106,7 +106,7 @@
     {
       "id": "SHIELD-UNO-V2.1",
       "ref": "SHIELD-UNO-V2.1",
-      "step": "",
+      "step": "models/3D_PCB_Uno_Sheild.glb",
       "images": [
         "images/Unoshield/SH-dos.jpg",
         "images/Unoshield/SH-dos.jpg",
