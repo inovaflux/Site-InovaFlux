@@ -42,7 +42,7 @@
           "price": "500.00$"
         },
         {
-          "key": "32R-DC 70x20 LCD",
+          "key": "32R-DC 118x38 LCD",
           "label": {
             "fr": "Kit Complet pour DIN rail avec afficheur LCD 118x38mm",
             "en": "Complet kit for DIN rail with LCD screen 118x38mm"
@@ -51,13 +51,61 @@
             "fr": "Automate boite pour DIN rail avec afficheur LCD",
             "en": "PLC with case for DIN rail and LCD screen"
           },
-          "price": "600.00$"
+          "price": "580.00$"
+        },
+        {
+          "key": "32R-DC Kit à assembler",
+          "label": {
+            "fr": "Circuit imprimé et kit de pièces complet",
+            "en": "Circuit board and complet parts kit"
+          },
+          "includes": {
+            "fr": "Circuit imprimé, pièces électroniques",
+            "en": "Circuit board, electronic parts"
+          },
+          "price": "250.00$"
+        },
+        {
+          "key": "Boitier LCD 70x20 seul",
+          "label": {
+            "fr": "Boitier pour rail DIN avec écran 2004 70x20 pour le 32R-DC-VX.X",
+            "en": "DIN rail enclosure with 2004 70x20 display for the 32R-DC-VX.X"
+          },
+          "includes": {
+            "fr": "Boitier pour rail DIN, écran 2004 70x20, fil de connection I2C",
+            "en": "DIN rail enclosure, 2004 70x20 display, I2C connection wire"
+          },
+          "price": "100.00$"
+        },
+        {
+          "key": "Boitier LCD 118x38 seul",
+          "label": {
+            "fr": "Boitier pour rail DIN avec écran 2004 118x38 pour le 32R-DC-VX.X",
+            "en": "DIN rail enclosure with 2004 118x38 display for the 32R-DC-VX.X"
+          },
+          "includes": {
+            "fr": "Boitier pour rail DIN, écran 2004 118x38, fil de connection I2C",
+            "en": "DIN rail enclosure, 2004 118x38 display, I2C connection wire"
+          },
+          "price": "150.00$"
+        },
+        {
+          "key": "Circuit imprimé seul",
+          "label": {
+            "fr": "Circuit imprimé seul",
+            "en": "Circuit board only"
+          },
+          "includes": {
+            "fr": "Circuit imprimé",
+            "en": "Circuit board"
+          },
+          "price": "125.00$"
         }
       ]
     },
     {
-      "id": "SHLD-UN-V1",
-      "ref": "SHLD-UN-V1",
+      "id": "SHIELD-UNO-V2.1",
+      "ref": "SHIELD-UNO-V2.1",
       "step": "",
       "images": [
         "images/arduino-shield.jpg"
@@ -74,11 +122,48 @@
         "fr": "Permet de connecter facilement des capteurs industriels à un Arduino Uno ou Mega. A venir",
         "en": "Connect industrial sensors to an Arduino Uno or Mega with ease. Coming soon"
       },
-      "options": []
+      "options": [
+        {
+          "key": "SHIELD-UNO-V2.1 Assemblé",
+          "label": {
+            "fr": "SHIELD-UNO-V2.1 Assemblé",
+            "en": "Assemble SHIELD-UNO-V2.1"
+          },
+          "includes": {
+            "fr": "Un SHIELD-UNO-V2.1",
+            "en": "One SHIELD-UNO-V2.1"
+          },
+          "price": "150.00$"
+        },
+        {
+          "key": "SHIELD-UNO-V2.1 Kit",
+          "label": {
+            "fr": "SHIELD-UNO-V2.1 Ensemble complet pour assemblage",
+            "en": "SHIELD-UNO-V2.1 Complete kit for assembly"
+          },
+          "includes": {
+            "fr": "Circuit imprimé, kit de pièces complet",
+            "en": "Circuit board, complete parts kit"
+          },
+          "price": "100.00$"
+        },
+        {
+          "key": "Circuit imprimé seul",
+          "label": {
+            "fr": "Circuit imprimé seul",
+            "en": "Circuit board"
+          },
+          "includes": {
+            "fr": "Circuit imprimé seul",
+            "en": "Circuit board"
+          },
+          "price": "75.00$"
+        }
+      ]
     },
     {
-      "id": "VFD-AC-V2",
-      "ref": "VFD-AC-V2",
+      "id": "VFD-AC-V2 (À venir)",
+      "ref": "VFD-AC-V2 (À venir)",
       "step": "",
       "images": [
         "images/vfd-ac.jpg"
@@ -88,8 +173,8 @@
         "en": "AC VFD"
       },
       "name": {
-        "fr": "Variateur AC Triphasé 208V",
-        "en": "208V Three-Phase AC Drive"
+        "fr": "Variateur AC Triphasé 208V (Bientôt disponible)",
+        "en": "208V Three-Phase AC Drive (Available soon)"
       },
       "description": {
         "fr": "Contrôle de vitesse moteur avec architecture ouverte pour l'enseignement de la puissance. A venir",
@@ -98,8 +183,8 @@
       "options": []
     },
     {
-      "id": "DRV-DC-V2",
-      "ref": "DRV-DC-V2",
+      "id": "DRV-DC-V2 (À venir)",
+      "ref": "DRV-DC-V2 (À venir)",
       "step": "",
       "images": [
         "images/drv-dc.jpg"
@@ -109,8 +194,8 @@
         "en": "DC drive"
       },
       "name": {
-        "fr": "Variateur de vitesse moteur DC 120V",
-        "en": "120V DC Motor Drive"
+        "fr": "Variateur de vitesse moteur DC 120V (Bientôt disponible)",
+        "en": "120V DC Motor Drive (Available soon)"
       },
       "description": {
         "fr": "Étude du découpage PWM haute tension sur courant continu. A venir",
