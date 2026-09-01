@@ -109,6 +109,7 @@
       "step": "models/3D_PCB_Uno_Sheild.glb",
       "images": [
         "images/Unoshield/SH-dos.jpg",
+        "images/Unoshield/SH-kit.jpeg",
         "images/Unoshield/SH-face.jpg",
         "images/Unoshield/Uno-PCB.png",
         "images/Unoshield/Uno-render.png"
