@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnostic de logique Ladder - Poste de transfert</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#111c2e; --line:#334155;
+    --txt:#e2e8f0; --muted:#94a3b8; --blue:#38bdf8; --green:#22c55e;
+    --yellow:#facc15; --red:#ef4444; --orange:#f97316; --violet:#a78bfa;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:#0b1120; color:var(--txt);
+    font-family:'Segoe UI',Roboto,system-ui,sans-serif; font-size:15px;
+  }
+  .app{max-width:1240px; margin:0 auto; padding:16px;}
+  h1,h2,h3{margin:0;}
+  .hero{
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    background:linear-gradient(135deg,#0c4a6e,#0f172a);
+    border:1px solid var(--line); border-radius:14px; padding:18px 22px; margin-bottom:14px;
+  }
+  .hero h1{font-size:1.35rem; color:#e0f2fe;}
+  .hero p{margin:4px 0 0; color:#7dd3fc; font-size:.9rem;}
+  .hero-actions{display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end;}
+  .banner{border-radius:9px; padding:9px 12px; font-size:.83rem; line-height:1.45; margin-bottom:12px; border:1px solid var(--line);}
+  .banner.demo{background:#052e16; border-color:#22c55e; color:#bbf7d0;}
+  .banner.diag{background:#0c4a6e; border-color:#38bdf8; color:#bae6fd;}
+  .banner.test{background:#451a03; border-color:#f59e0b; color:#fde68a;}
+  .banner b{color:#fff;}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; margin-bottom:14px;
+  }
+  .card h2{font-size:1rem; color:#bae6fd; margin-bottom:8px; text-transform:uppercase; letter-spacing:.5px;}
+  .consignes{font-size:.9rem; color:#cbd5e1;}
+  .consignes b{color:#fde68a;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+  .sub{color:var(--muted); font-size:.82rem; margin-top:4px;}
+
+  /* --- Comment ca marche --- */
+  .marche-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:800px){.marche-grid{grid-template-columns:1fr;}}
+  .marche h3{font-size:.82rem; color:#fde68a; margin:0 0 7px; text-transform:uppercase; letter-spacing:.6px;}
+  .marche-list{margin:0; padding-left:18px; font-size:.85rem; color:#cbd5e1; line-height:1.65;}
+  .marche-list b{color:#7dd3fc;}
+  .marche-notes{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:16px; font-size:.8rem; color:#cbd5e1;}
+  @media(max-width:800px){.marche-notes{grid-template-columns:1fr;}}
+  .marche-notes>div{background:#0d1526; border:1px solid var(--line); border-radius:8px; padding:9px 11px; line-height:1.45;}
+  .marche-notes b{color:#fde68a;}
+
+  /* --- HMI --- */
+  .hmi{display:flex; flex-wrap:wrap; gap:18px;}
+  .hmi-block{flex:1 1 240px; min-width:220px;}
+  .hmi-title{font-size:.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:8px;}
+  .btnrow{display:flex; flex-wrap:wrap; gap:8px;}
+  .btn{
+    border:1px solid var(--line); background:#172033; color:var(--txt);
+    border-radius:9px; padding:10px 14px; font-size:.9rem; font-weight:600; cursor:pointer;
+    transition:.12s; user-select:none;
+  }
+  .btn:hover{filter:brightness(1.2);}
+  .btn:active{transform:translateY(1px);}
+  .btn.green{background:#14532d; border-color:#22c55e; color:#bbf7d0;}
+  .btn.red{background:#7f1d1d; border-color:#ef4444; color:#fecaca;}
+  .btn.amber{background:#713f12; border-color:#f59e0b; color:#fde68a;}
+  .btn.blue{background:#0c4a6e; border-color:#38bdf8; color:#bae6fd;}
+  .btn.ghost{background:transparent;}
+  .btn.on{box-shadow:0 0 0 2px #fde68a inset; filter:brightness(1.35);}
+  .lamps{display:flex; flex-wrap:wrap; gap:14px;}
+  .lamp{display:flex; flex-direction:column; align-items:center; width:74px; gap:6px;}
+  .lamp .bulb{
+    width:38px; height:38px; border-radius:50%; background:#1f2937;
+    border:3px solid #0b1120; box-shadow:inset 0 0 8px #000;
+  }
+  .lamp small{font-size:.68rem; color:var(--muted); text-align:center; line-height:1.15;}
+  .lamp .bulb.blue.on{background:var(--blue); box-shadow:0 0 16px var(--blue);}
+  .lamp .bulb.green.on{background:var(--green); box-shadow:0 0 16px var(--green);}
+  .lamp .bulb.yellow.on{background:var(--yellow); box-shadow:0 0 16px var(--yellow);}
+  .lamp .bulb.red.on{background:var(--red); box-shadow:0 0 16px var(--red);}
+
+  /* --- machine --- */
+  #machineSvg{width:100%; height:auto; display:block;}
+  /* --- ladder --- */
+  #ladderWrap{max-height:72vh; overflow:auto; background:#0d1526; border:1px solid var(--line); border-radius:8px; padding:6px;}
+  #ladderSvg{width:88%; height:auto; display:block; margin:0 auto;}
+  .rung-title{fill:#7dd3fc; font:600 12px 'Segoe UI',sans-serif;}
+  .grp-title{fill:#fde68a; font:700 13px 'Segoe UI',sans-serif;}
+
+  /* --- grafcet --- */
+  #grafcet{padding:4px 2px;}
+  .gstep{
+    display:flex; align-items:center; gap:10px; padding:7px 10px; border-radius:8px;
+    border:1px solid var(--line); background:#0d1526; margin-bottom:0;
+  }
+  .gstep .num{font-weight:800; font-family:monospace; font-size:1rem; width:38px; color:#7dd3fc;}
+  .gstep .name{font-size:.84rem; color:#cbd5e1; flex:1;}
+  .gstep .act{font-size:.72rem; color:#86efac; white-space:nowrap;}
+  .gstep.active{border-color:var(--green); background:#052e16; box-shadow:0 0 10px rgba(34,197,94,.35);}
+  .gstep.active .num{color:#4ade80;}
+  .gtr{display:flex; align-items:center; gap:8px; padding:3px 10px 3px 24px; color:#fbbf24; font-size:.74rem;}
+  .gtr .arrow{color:#64748b;}
+  .gtr.blocked{color:#fca5a5; font-weight:700;}
+  .gtr.blocked .arrow{color:#ef4444;}
+  .gtr.branch{padding-left:34px;}
+  .gtr.branch .to{margin-left:auto; font-weight:700; color:#7dd3fc;}
+  .gtr.branch.blocked .to{color:#fca5a5;}
+
+  /* --- IO table --- */
+  table.io{width:100%; border-collapse:collapse; font-size:.78rem;}
+  table.io th,table.io td{padding:3px 6px; border-bottom:1px solid #24334a; text-align:left;}
+  table.io th{color:#93c5fd; font-weight:600;}
+  .dot{display:inline-block; width:10px; height:10px; border-radius:50%; background:#334155; margin-right:4px; vertical-align:middle;}
+  .dot.on{background:var(--green); box-shadow:0 0 6px var(--green);}
+  .dot.on.blue{background:var(--blue); box-shadow:0 0 6px var(--blue);}
+  .dot.on.red{background:var(--red); box-shadow:0 0 6px var(--red);}
+  .dot.on.yellow{background:var(--yellow); box-shadow:0 0 6px var(--yellow);}
+  .mono{font-family:monospace; color:#93c5fd;}
+
+  /* --- diagnosis --- */
+  .diag-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+  @media(max-width:800px){.diag-grid{grid-template-columns:1fr;}}
+  .field label{display:block; font-size:.78rem; color:var(--muted); margin-bottom:4px;}
+  select{
+    width:100%; padding:9px 10px; border-radius:8px; background:#0d1526; color:var(--txt);
+    border:1px solid var(--line); font-size:.88rem;
+  }
+  .submit-row{margin-top:14px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  #result{font-size:.9rem;}
+  .verdict{padding:12px 14px; border-radius:10px; margin-top:12px; line-height:1.5;}
+  .verdict.ok{background:#052e16; border:1px solid #22c55e;}
+  .verdict.ko{background:#450a0a; border:1px solid #ef4444;}
+  .badge{display:inline-block; padding:2px 8px; border-radius:20px; font-size:.72rem; font-weight:700;}
+  .badge.ok{background:#166534; color:#bbf7d0;}
+  .badge.ko{background:#7f1d1d; color:#fecaca;}
+  .test-recap{width:100%; border-collapse:collapse; font-size:.78rem; margin-top:10px;}
+  .test-recap th,.test-recap td{padding:4px 6px; border-bottom:1px solid #24334a; text-align:left;}
+  .test-recap th{color:#93c5fd;}
+  footer{text-align:center; color:#64748b; font-size:.78rem; padding:10px 0 24px;}
+  .leg{display:flex; gap:14px; flex-wrap:wrap; font-size:.72rem; color:var(--muted); margin-top:8px;}
+  .leg span{display:flex; align-items:center; gap:5px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div>
+      <h1>Diagnostic de logique Ladder &mdash; Poste de transfert</h1>
+      <p>Automate programmable &middot; Grafcet + Ladder &middot; Tapis roulant, capteur de poids et 4 vérins</p>
+    </div>
+    <div class="hero-actions">
+      <button id="btnDemo" class="btn green">Découverte (sans panne)</button>
+      <button id="btnNewFault" class="btn blue">Panne aléatoire</button>
+      <button id="btnTest" class="btn amber">Test : 10 pannes</button>
+    </div>
+  </div>
+
+  <div class="card consignes">
+    <h2>Consignes</h2>
+    <p>
+      <b>1) Découverte :</b> regarde d'abord la machine fonctionner <b>sans panne</b> pour te familiariser avec le cycle.<br>
+      <b>2) Panne aléatoire :</b> une panne cachée est injectée ; le cycle va <b>se bloquer</b> à une étape. Trouve
+      <b>(1)</b> où il est bloqué, <b>(2)</b> la cause et <b>(3)</b> le composant fautif.<br>
+      <b>3) Test 10 pannes :</b> enchaîne 10 pannes sans voir les réponses ; la <b>note est envoyée à Moodle</b>.
+    </p>
+    <p class="sub">
+      Astuce : compare la <b>LED terrain</b> (capteur physique) et la <b>LED PLC</b> (ce que l'automate lit).
+      Un vérin qui ne bouge pas, un capteur qui ne détecte plus et une entrée PLC défectueuse ne donnent pas
+      les mêmes indices.
+    </p>
+  </div>
+
+  <div class="card marche">
+    <h2>Comment fonctionne la machine ?</h2>
+    <div class="marche-grid">
+      <div>
+        <h3>Les organes</h3>
+        <ul class="marche-list">
+          <li><b>M1 — tapis roulant</b> : amène une pièce au poste de pesée.</li>
+          <li><b>Capteur de poids</b> (0–500 g) : confirme qu'une pièce est présente (≥ 150 g).</li>
+          <li><b>Vérin C — poussoir</b> : met la pièce en position de saisie.</li>
+          <li><b>Vérin B — axe vertical</b> : descend puis remonte.</li>
+          <li><b>Pince D</b> : serre (ferme) ou relâche (ouvre) la pièce.</li>
+          <li><b>Vérin A — translation</b> : déplace l'ensemble vers le poste de dépose, puis revient.</li>
+          <li>Chaque vérin a <b>2 fins de course</b> : « rentré » (0) et « sorti » (1).</li>
+        </ul>
+        <h3 style="margin-top:14px;">Les actions, de gauche à droite</h3>
+        <ul class="marche-list">
+          <li><b>Entrée</b> : information lue par l'automate (capteur, bouton).</li>
+          <li><b>Sortie</b> : ordre donné par l'automate (moteur, vérin, voyant).</li>
+          <li><b>Grafcet</b> : le déroulement du cycle, étape par étape.</li>
+          <li><b>Ladder</b> : le programme. On lit de gauche à droite : les <b>contacts</b> (conditions) à gauche, la <b>bobine</b> (action) à droite.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Le cycle en 13 étapes (Grafcet)</h3>
+        <ol class="marche-list">
+          <li><b>X0</b> repos — tout est rentré, tapis arrêté</li>
+          <li><b>X1</b> le tapis amène la pièce</li>
+          <li><b>X2</b> tapis arrêté, pièce pesée</li>
+          <li><b>X3</b> le poussoir C sort</li>
+          <li><b>X4</b> le poussoir C rentre</li>
+          <li><b>X5</b> B descend</li>
+          <li><b>X6</b> la pince D ferme</li>
+          <li><b>X7</b> B remonte avec la pièce</li>
+          <li><b>X8</b> A part vers la dépose</li>
+          <li><b>X9</b> B descend</li>
+          <li><b>X10</b> la pince D ouvre</li>
+          <li><b>X11</b> B remonte</li>
+          <li><b>X12</b> A revient à la position de départ</li>
+        </ol>
+      </div>
+    </div>
+    <div class="marche-notes">
+      <div><b>Un contact vert</b> = condition vraie. <b>Une bobine verte</b> = action activée. Le reste est inactif.</div>
+      <div><b>Maintien</b> : une mémoire qui se garde toute seule (le cycle boucle). <b>Stop</b> la retire et le cycle se termine.</div>
+      <div><b>Pas besoin d'automate réel</b> : tout se passe à l'écran. Ta mission : expliquer <b>où</b> et <b>pourquoi</b> le cycle s'arrête.</div>
+    </div>
+  </div>
+
+  <div class="card hmi">
+    <div class="hmi-block">
+      <div class="hmi-title">Panneau opérateur</div>
+      <div class="btnrow">
+        <button id="btnStart" class="btn green">Start</button>
+        <button id="btnMaint" class="btn amber">Maintien</button>
+        <button id="btnStop" class="btn red">Stop</button>
+        <button id="btnEstop" class="btn red">Arrêt d'urgence</button>
+        <button id="btnReset" class="btn ghost">Reset</button>
+      </div>
+      <div class="sub">Maintien actif : le cycle boucle. Sans maintien, Stop termine le cycle courant.</div>
+    </div>
+    <div class="hmi-block">
+      <div class="hmi-title">Signalisation</div>
+      <div class="lamps">
+        <div class="lamp"><div id="lampPret" class="bulb blue"></div><small>Bleu<br>Prêt à partir</small></div>
+        <div class="lamp"><div id="lampMarche" class="bulb green"></div><small>Vert<br>En route</small></div>
+        <div class="lamp"><div id="lampLast" class="bulb yellow"></div><small>Jaune<br>Dernier cycle</small></div>
+        <div class="lamp"><div id="lampEstop" class="bulb red"></div><small>Rouge<br>Arrêt urgence</small></div>
+      </div>
+    </div>
+    <div class="hmi-block">
+      <div class="hmi-title">Compteurs</div>
+      <div class="sub">
+        Cycles terminés : <b id="cntCycles">0</b><br>
+        Étape active : <b id="curStep" class="mono">X0</b><br>
+        Poids poste : <b id="curWeight" class="mono">0 g</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Machine (temps réel)</h2>
+      <svg id="machineSvg" viewBox="0 0 740 430" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="leg">
+        <span><i class="dot on"></i>LED PLC</span>
+        <span><i class="dot on blue"></i>LED terrain</span>
+        <span><i class="dot on yellow"></i>Sortie active</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Entrées / Sorties</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <div class="hmi-title">Entrées</div>
+          <table class="io" id="ioIn"><tbody></tbody></table>
+        </div>
+        <div>
+          <div class="hmi-title">Sorties</div>
+          <table class="io" id="ioOut"><tbody></tbody></table>
+        </div>
+      </div>
+      <div class="sub" style="margin-top:8px;">Entrée analogique poids : <b id="ioWeight" class="mono">0 g</b> &nbsp; Seuil pièce 150 g &middot; Seuil libre 50 g</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Ladder (logique live)</h2>
+    <div id="ladderWrap"><svg id="ladderSvg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Grafcet</h2>
+      <div id="grafcet"></div>
+    </div>
+    <div class="card">
+      <h2>Diagnostic</h2>
+      <div id="diagBanner" class="banner"></div>
+      <div class="diag-grid">
+        <div class="field">
+          <label for="selStep">1. Où le cycle est-il bloqué ?</label>
+          <select id="selStep"></select>
+        </div>
+        <div class="field">
+          <label for="selCause">2. Pourquoi ?</label>
+          <select id="selCause"></select>
+        </div>
+        <div class="field">
+          <label for="selComp">3. Quel composant / adresse ?</label>
+          <select id="selComp"></select>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button id="btnSubmit" class="btn blue">Soumettre le diagnostic</button>
+        <button id="btnNextFault" class="btn blue" style="display:none;">Panne suivante</button>
+        <span id="lmsNote" class="sub"></span>
+      </div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <footer>Diagnostic de logique Ladder &mdash; Automates programmables &middot; Sudam Ouellet 2025-2026</footer>
+</div>
+
+<script src="scorm_api.js"></script>
+<script src="sim.js"></script>
+</body>
+</html>

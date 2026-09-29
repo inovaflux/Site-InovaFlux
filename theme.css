@@ -66,6 +66,7 @@ html[data-theme="dark"] .produit-card,
 html[data-theme="dark"] .produit-header,
 html[data-theme="dark"] .contact-box,
 html[data-theme="dark"] .download-section,
+html[data-theme="dark"] .exercice-section,
 html[data-theme="dark"] .empty,
 html[data-theme="dark"] .options-table,
 html[data-theme="dark"] table {
@@ -85,7 +86,8 @@ html[data-theme="dark"] .options-table th {
 html[data-theme="dark"] th,
 html[data-theme="dark"] td,
 html[data-theme="dark"] .options-table td,
-html[data-theme="dark"] .product-title {
+html[data-theme="dark"] .product-title,
+html[data-theme="dark"] .exercice-head {
     border-color: #2c3440 !important;
 }
 
@@ -115,6 +117,23 @@ html[data-theme="dark"] .btn-dl:hover {
 html[data-theme="dark"] .ref-tag {
     background: #2c3543;
     color: #cbd5e1;
+}
+
+/* Étiquettes et descriptifs des exercices */
+html[data-theme="dark"] .tag {
+    background: #2c3543;
+    color: #cbd5e1;
+}
+html[data-theme="dark"] .exercice-desc {
+    color: #9aa7b8;
+}
+html[data-theme="dark"] .exercice-head h2 {
+    color: var(--bleu);
+}
+
+/* Modale de lancement d'un exercice */
+html[data-theme="dark"] .ex-modal-header {
+    background: #161b22;
 }
 
 /* Champs de formulaire */

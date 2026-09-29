@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnostic - Alimentation lineaire (Module 11)</title>
+<style>
+  :root{
+    --bg:#0b1120; --panel:#1e293b; --line:#334155;
+    --txt:#e2e8f0; --muted:#94a3b8; --blue:#38bdf8; --green:#22c55e;
+    --yellow:#facc15; --red:#ef4444; --orange:#f97316;
+  }
+  *{box-sizing:border-box;}
+  html{font-size:19px;}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:'Segoe UI',Roboto,system-ui,sans-serif;font-size:16px;}
+  .app{max-width:1920px;margin:0 auto;padding:14px;}
+  h1,h2,h3{margin:0;}
+  .hero{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:linear-gradient(135deg,#0c4a6e,#0f172a);border:1px solid var(--line);
+    border-radius:14px;padding:16px 20px;margin-bottom:12px;flex-wrap:wrap;}
+  .hero h1{font-size:1.3rem;color:#e0f2fe;}
+  .hero p{margin:4px 0 0;color:#7dd3fc;font-size:.88rem;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:8px;}
+  .btn{border:1px solid var(--line);background:#172033;color:var(--txt);border-radius:9px;
+    padding:9px 13px;font-size:.88rem;font-weight:600;cursor:pointer;transition:.12s;user-select:none;}
+  .btn:hover{filter:brightness(1.2);}
+  .btn.green{background:#14532d;border-color:#22c55e;color:#bbf7d0;}
+  .btn.blue{background:#0c4a6e;border-color:#38bdf8;color:#bae6fd;}
+  .btn.amber{background:#713f12;border-color:#f59e0b;color:#fde68a;}
+  .btn.red{background:#7f1d1d;border-color:#ef4444;color:#fecaca;}
+  .btn.purple{background:#3b0764;border-color:#a855f7;color:#e9d5ff;}
+  .btn.ghost{background:transparent;}
+  .btn.on{box-shadow:0 0 0 2px #fde68a inset;filter:brightness(1.3);}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px;}
+  .card h2{font-size:.95rem;color:#bae6fd;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+  .consignes{font-size:.88rem;color:#cbd5e1;line-height:1.5;}
+  .consignes b{color:#fde68a;}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;align-items:start;}
+  .role{color:var(--muted);font-size:.8rem;line-height:1.5;margin-top:6px;}
+  .val{color:#93c5fd;font-family:monospace;font-size:.82rem;}
+  .status{border-radius:9px;padding:8px 12px;font-size:.85rem;border:1px solid var(--line);background:#0d1526;margin-bottom:10px;}
+  .status .ok{color:#4ade80;}
+  /* schema */
+  #schemaWrap{background:#0b1120;border:1px solid var(--line);border-radius:8px;overflow:auto;}
+  #schemaSvg{width:100%;height:auto;display:block;min-width:900px;}
+  #schemaSvg .wire{stroke:#7dd3fc;stroke-width:2;fill:none;}
+  #schemaSvg .junc{fill:#7dd3fc;}
+  #schemaSvg .lbl{fill:#93c5fd;font:600 11px 'Segoe UI',sans-serif;}
+  #schemaSvg .lbl.rail{fill:#64748b;font-size:11px;letter-spacing:1px;}
+  #schemaSvg .lbl.node{fill:#facc15;font:700 11px monospace;}
+  #schemaSvg .body{fill:#1e293b;stroke:#94a3b8;stroke-width:1.5;}
+  #schemaSvg .ref{fill:#e2e8f0;font:700 12px 'Segoe UI',sans-serif;text-anchor:middle;}
+  #schemaSvg .val{fill:#93c5fd;font:400 10px monospace;text-anchor:middle;}
+  #schemaSvg .pintxt{fill:#cbd5e1;font:700 10px monospace;}
+  #schemaSvg .hot{fill:transparent;stroke:transparent;}
+  #schemaSvg .comp{cursor:pointer;}
+  #schemaSvg .comp:hover .body{stroke:#fde68a;filter:drop-shadow(0 0 6px #facc15);}
+  #schemaSvg .comp.burns .body{fill:#3b0d0d;stroke:#ef4444;filter:drop-shadow(0 0 8px #ef4444);}
+  #schemaSvg .comp.burns .ref{fill:#fecaca;}
+  #schemaSvg .comp.fault-inv .body{stroke:#a78bfa;stroke-dasharray:4 3;}
+  #schemaSvg .tp{cursor:crosshair;}
+  #schemaSvg .pad .p{fill:#0f172a;stroke:#facc15;stroke-width:2;}
+  #schemaSvg .pad:hover .p{fill:#facc15;}
+  #schemaSvg .pad .pn{fill:#a16207;font:600 7.5px monospace;text-anchor:middle;opacity:0;}
+  #schemaSvg .pad:hover .pn{opacity:1;fill:#fde68a;}
+  #schemaSvg .tp.probeP .p{fill:#ef4444;stroke:#fff;}
+  #schemaSvg .tp.probeN .p{fill:#111;stroke:#fff;}
+  /* schema utilisateur : pastilles orange et etiquettes cliquables */
+  #schemaSvg .pad{cursor:crosshair;}
+  #schemaSvg .pad.probeP{fill:#ef4444 !important;stroke:#ffffff !important;stroke-width:3 !important;r:9px !important;filter:drop-shadow(0 0 4px #ef4444);}
+  #schemaSvg .pad.probeN{fill:#111111 !important;stroke:#ffffff !important;stroke-width:3 !important;r:9px !important;filter:drop-shadow(0 0 4px #000);}
+  #schemaSvg .pad:hover{stroke:#ffffff !important;stroke-width:3 !important;}
+  #schemaSvg .comp-label{cursor:pointer;}
+  #schemaSvg .comp-label:hover{fill:#facc15 !important;font-weight:bold;}
+  #schemaSvg .comp-label.fault-visible{fill:#ef4444 !important;font-weight:bold;}
+  #schemaSvg .comp-label.fault-invisible{fill:#a78bfa !important;font-style:italic;}
+  #schemaSvg .led-arrow{transition:stroke .15s,fill .15s,filter .15s;}
+  #schemaSvg .led-arrow.led-on{stroke:#fde047 !important;fill:#fde047 !important;filter:drop-shadow(0 0 7px #facc15);}
+  /* image carte */
+  #boardWrap{position:relative;border:1px solid var(--line);border-radius:8px;overflow:auto;background:#0b1120;}
+  #boardWrap img{display:block;width:100%;height:auto;}
+  .hotspot{position:absolute;border:2px solid rgba(56,189,248,.75);background:rgba(56,189,248,.12);
+    border-radius:6px;cursor:pointer;color:#e0f2fe;font-size:10px;font-weight:700;padding:1px 3px;}
+  .hotspot:hover{background:rgba(250,204,21,.35);border-color:#facc15;}
+  #photoDots{position:absolute;inset:0;pointer-events:none;}
+  #thermGlow{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;}
+  #thermGlow .tglow{position:absolute;border-radius:50%;transform:translate(-50%,-50%);
+    pointer-events:none;mix-blend-mode:screen;filter:blur(7px);}
+  .pd{position:absolute;width:15px;height:15px;border-radius:50%;background:rgba(250,204,21,.9);
+    border:2px solid #0b1120;transform:translate(-50%,-50%);cursor:crosshair;box-shadow:0 0 4px #000;pointer-events:auto;}
+  .pd:hover{background:#fde68a;box-shadow:0 0 8px #facc15;}
+  .pd.pdP{background:#ef4444;border-color:#fff;}
+  .pd.pdN{background:#111111;border-color:#fff;}
+  #photoDots .pt{cursor:crosshair;}
+  #photoDots .pt:hover circle{stroke:#fff;}
+  #photoDots .pt.pdP circle{fill:#ef4444 !important;stroke:#fff !important;}
+  #photoDots .pt.pdN circle{fill:#111111 !important;stroke:#fff !important;}
+  /* correspondance survol schema <-> carte */
+  #schemaSvg .pad.corr .p{stroke:#22d3ee !important;stroke-width:3.5 !important;}
+  #schemaSvg .tp.corr .p{stroke:#22d3ee !important;stroke-width:3.5 !important;}
+  #photoDots .pt.corr circle{stroke:#22d3ee !important;stroke-width:5 !important;filter:drop-shadow(0 0 6px #22d3ee);}
+  /* observation */
+  .obsout{margin-top:8px;}
+  .obshead{font-size:.85rem;color:#bae6fd;margin-bottom:5px;}
+  .obsline{padding:7px 9px;border-radius:7px;margin-bottom:5px;font-size:.84rem;line-height:1.4;border:1px solid var(--line);}
+  .obsline.ok{background:#052e16;border-color:#22c55e;color:#bbf7d0;}
+  .obsline.inv{background:#2e1065;border-color:#a78bfa;color:#ddd6fe;}
+  .obsline.warm{background:#713f12;border-color:#f59e0b;color:#fde68a;}
+  .obsline.hot{background:#7c2d12;border-color:#f97316;color:#fed7aa;}
+  .obsline.ko,.obsline.burn{background:#7f1d1d;border-color:#ef4444;color:#fecaca;font-weight:700;}
+  /* multimetre flottant */
+  .floater{position:fixed;right:18px;top:96px;width:330px;z-index:60;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.55);}
+  .floater .fhead{cursor:move;padding:8px 12px;border-bottom:1px solid var(--line);font-weight:700;color:#bae6fd;
+    display:flex;justify-content:space-between;align-items:center;user-select:none;touch-action:none;}
+  .floater .fbody{padding:10px 12px;}
+  .fhint{font-weight:400;color:var(--muted);font-size:.72rem;}
+  .floater.min .fbody{display:none;}
+  #forcedFloat{left:18px;right:auto;top:170px;width:410px;}
+  #forcedFloat .fbody{max-height:calc(100vh - 175px);overflow:auto;}
+  #mmFloat{top:150px;}
+  #obsFloat{right:372px;top:150px;width:330px;}
+  #forcedHelp{margin-bottom:8px;}
+  #forcedHelpBody{font-size:.79rem;color:#cbd5e1;background:#0d1526;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.45;}
+  #forcedHelpBody b{color:#bae6fd;}
+  #forcedHelpBody .blk{margin-bottom:6px;}
+  #forcedHelpBody .regle{color:#fde68a;font-weight:700;border-top:1px solid var(--line);padding-top:6px;}
+  .modal{position:fixed;inset:0;background:rgba(2,6,23,.74);z-index:200;display:flex;align-items:center;justify-content:center;padding:18px;}
+  .modalbox{max-width:800px;max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+  .modalbox h2{color:#e0f2fe;margin:0 0 6px;font-size:1.31rem;}
+  .modalbox h3{color:#bae6fd;margin:18px 0 8px;font-size:1.01rem;}
+  .modalbox ul{margin:0;padding-left:22px;font-size:.86rem;line-height:1.62;color:#cbd5e1;}
+  .modalbox ul li{margin-bottom:5px;}
+  .modalbox .role{font-size:.83rem;}
+  .modalbox b{color:#e2e8f0;}
+  .modalbox .regle{color:#fde68a;font-weight:700;}
+  .mm .screen{background:#03130a;border:1px solid #14532d;border-radius:6px;padding:10px;text-align:right;
+    font-family:monospace;font-size:1.5rem;color:#4ade80;text-shadow:0 0 8px rgba(74,222,128,.55);letter-spacing:1px;}
+  .dialwrap{display:flex;justify-content:center;margin:8px 0 2px;}
+  #mmDial{width:215px;max-width:100%;touch-action:manipulation;user-select:none;}
+  #mmDial .dialface{fill:#0d1526;stroke:#334155;stroke-width:2;}
+  #mmDial .dialptr{fill:#38bdf8;}
+  #mmDial .dialknob{fill:#1e293b;stroke:#64748b;stroke-width:2;}
+  #mmDial .dialcap{fill:#38bdf8;}
+  #mmDial .dialtick{stroke:#475569;stroke-width:2;}
+  #mmDial .diallab{fill:#94a3b8;font-size:11px;font-weight:700;}
+  #mmDial .diallab.on{fill:#facc15;}
+  #mmDial .diallab:hover{fill:#e2e8f0;}
+  .conns{display:flex;gap:8px;margin:8px 0 2px;}
+  .conn{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:7px 8px;background:#0d1526;cursor:pointer;}
+  .conn:hover{border-color:#38bdf8;}
+  .conn.active{box-shadow:0 0 0 2px #facc15 inset;border-color:#facc15;}
+  .connsign{font-size:1.6rem;font-weight:800;line-height:1;flex:0 0 auto;}
+  .conn.red .connsign{color:#ef4444;}
+  .conn.black .connsign{color:#e2e8f0;}
+  .conndot{width:26px;height:26px;border-radius:50%;flex:0 0 auto;}
+  .conn.red .conndot{background:radial-gradient(circle at 35% 30%, #fca5a5, #ef4444 60%, #991b1b);box-shadow:0 0 9px rgba(239,68,68,.7);}
+  .conn.black .conndot{background:radial-gradient(circle at 35% 30%, #475569, #111 65%, #000);border:1px solid #64748b;}
+  .conntxt{font-size:.66rem;color:var(--muted);display:flex;flex-direction:column;line-height:1.2;min-width:0;}
+  .conntxt b{font-family:monospace;font-size:.74rem;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mmnote{min-height:16px;margin:6px 0 2px;font-size:.78rem;color:#fca5a5;line-height:1.35;}
+  .mmnote.info{color:#7dd3fc;}
+  .potrow{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);}
+  .potrow label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px;}
+  .potrow #potVal{color:#4ade80;font-family:monospace;}
+  .potrow input[type=range]{width:100%;accent-color:#38bdf8;}
+  .potrow button{margin-top:5px;padding:4px 10px;font-size:.78rem;}
+  .obsblock{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);}
+  .obsblock-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;color:#bae6fd;font-size:.82rem;user-select:none;}
+  .obsblock-body{margin-top:8px;}
+  .obsblock.min .obsblock-body{display:none;}
+  .diagrow{margin-bottom:8px;}
+  .diagrow label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:3px;}
+  .diagrow select{width:100%;background:#0d1526;color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:6px;font-size:.85rem;}
+  .repcomp{font-weight:700;color:#bae6fd;background:#0c4a6e;border:1px solid #38bdf8;border-radius:8px;padding:7px 10px;font-size:.92rem;}
+  #diagFeedback{margin-top:8px;}
+  .sym{padding:6px 8px;border-radius:7px;margin-bottom:5px;font-size:.85rem;}
+  .sym.ko{background:#3b0d0d;border:1px solid #ef4444;color:#fecaca;}
+  .sym.ok{background:#052e16;border:1px solid #22c55e;color:#bbf7d0;}
+  .outmeter{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#0d1526;}
+  .outmeter b{font-family:monospace;font-size:1.25rem;}
+  .outmeter b.ok{color:#4ade80;} .outmeter b.ko{color:#fca5a5;}
+  .lblm{font-size:.72rem;color:var(--muted);letter-spacing:1px;}
+  .fiche{padding:7px 9px;border-radius:7px;font-size:.84rem;line-height:1.4;margin:6px 0;}
+  .fiche.vis{background:#3b0d0d;border:1px solid #ef4444;color:#fecaca;}
+  .fiche.inv{background:#2e1065;border:1px solid #a78bfa;color:#ddd6fe;}
+  .fiche.none{background:#0d1526;border:1px solid var(--line);color:#cbd5e1;}
+  .fiche.ok{background:#052e16;border:1px solid #22c55e;color:#bbf7d0;}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .cid{color:#93c5fd;font-family:monospace;font-size:.8rem;}
+  table.jrn,table.guide,table.pins{width:100%;border-collapse:collapse;font-size:.8rem;}
+  table.jrn td,table.guide td,table.guide th,table.jrn th,table.pins td,table.pins th{padding:3px 6px;border-bottom:1px solid #24334a;text-align:left;}
+  table.guide th,table.pins th{color:#93c5fd;font-weight:600;}
+  table.guide tr.bad td{color:#fca5a5;font-weight:700;}
+  .pinTag{font-family:monospace;color:#fde68a;}
+  .vd{padding:10px 12px;border-radius:9px;background:#0d1526;border:1px solid var(--line);font-size:.88rem;line-height:1.5;margin-top:8px;}
+  .vd.final{border-color:#38bdf8;}
+  .vd .big{font-size:1.8rem;font-weight:800;color:#4ade80;}
+  .ok{color:#4ade80;}
+  /* --- mode diagnostic force (guide) --- */
+  #forcedArea{}
+  .forced-head{padding:9px 11px;border-radius:9px;background:#0d1526;border:1px solid var(--line);margin-bottom:9px;font-size:.86rem;line-height:1.45;}
+  .forced-head b{color:#bae6fd;}
+  .fphase{display:flex;gap:9px;align-items:center;padding:7px 9px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:.83rem;background:#0d1526;}
+  .fphase .num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;background:#1e293b;color:#93c5fd;flex:0 0 auto;}
+  .fphase .st{margin-left:auto;font-size:.75rem;color:var(--muted);}
+  .fphase.done{border-color:#22c55e;} .fphase.done .num{background:#22c55e;color:#04160a;} .fphase.done .st{color:#4ade80;}
+  .fphase.active{border-color:#38bdf8;box-shadow:0 0 0 1px #38bdf8 inset;} .fphase.active .num{background:#38bdf8;color:#04121f;}
+  .fphase.locked{opacity:.55;}
+  .symchk{display:flex;gap:8px;align-items:flex-start;padding:7px 9px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:.85rem;cursor:pointer;background:#0d1526;line-height:1.4;}
+  .symchk:hover{border-color:#38bdf8;}
+  .symchk.checked{border-color:#22c55e;background:#052e16;}
+  .symchk input{margin-top:3px;}
+  .stepbox{border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-bottom:6px;font-size:.84rem;background:#0d1526;line-height:1.4;}
+  .stepbox.cur{border-color:#38bdf8;box-shadow:0 0 0 1px #38bdf8 inset;}
+  .stepbox.done{border-color:#22c55e;background:#052e16;color:#bbf7d0;}
+  .stepbox .stxt{color:#e2e8f0;}
+  .stepbox.done .stxt{color:#bbf7d0;}
+  .stepbox .sexp{color:#93c5fd;font-family:monospace;font-size:.79rem;margin-top:3px;}
+  #stepHint{margin-top:6px;font-size:.82rem;color:#fde68a;min-height:1.1em;}
+  .trail{border-left:2px solid #334155;margin:4px 0 8px 6px;padding-left:10px;}
+  .trail .tline{font-size:.8rem;color:#cbd5e1;padding:2px 0;}
+  .choices{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .choice{text-align:left;background:#0c4a6e;border:1px solid #38bdf8;color:#bae6fd;border-radius:8px;padding:8px 10px;font-size:.85rem;cursor:pointer;line-height:1.35;}
+  .choice:hover{background:#075985;}
+  .choice.good{background:#14532d;border-color:#22c55e;color:#bbf7d0;}
+  .choice:disabled{opacity:.65;cursor:default;}
+  .vrow{display:flex;align-items:center;gap:6px;margin-top:6px;}
+  .vrow label{font-size:.8rem;color:var(--muted);}
+  .vinput{flex:1;min-width:0;background:#03130a;border:1px solid #14532d;border-radius:7px;color:#4ade80;
+    font-family:monospace;font-size:1rem;padding:6px 8px;text-align:right;}
+  .vinput::placeholder{color:#33694a;}
+  .vinput:focus{outline:none;border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.35);}
+  .vunit{font-family:monospace;color:#93c5fd;font-size:.85rem;}
+  .obsbar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.83rem;color:#bae6fd;margin:6px 0;}
+  .obsbar .cnt{font-family:monospace;color:#4ade80;}
+  .obsbar button{padding:4px 10px;font-size:.78rem;}
+  /* --- camera thermique --- */
+  #thermalLens{position:fixed;width:160px;height:160px;left:60px;top:180px;z-index:70;display:none;
+    border:1px solid rgba(148,163,184,.35);border-radius:8px;cursor:move;background:rgba(15,23,42,.18);
+    box-shadow:inset 0 0 40px rgba(0,0,0,.5);touch-action:none;}
+  #thermalLens.on{display:block;}
+  #thermalLens .cnr{position:absolute;width:20px;height:20px;border:3px solid #94a3b8;pointer-events:none;}
+  #thermalLens .cnr.tl{left:-2px;top:-2px;border-right:0;border-bottom:0;border-top-left-radius:8px;}
+  #thermalLens .cnr.tr{right:-2px;top:-2px;border-left:0;border-bottom:0;border-top-right-radius:8px;}
+  #thermalLens .cnr.bl{left:-2px;bottom:-2px;border-right:0;border-top:0;border-bottom-left-radius:8px;}
+  #thermalLens .cnr.br{right:-2px;bottom:-2px;border-left:0;border-top:0;border-bottom-right-radius:8px;}
+  #thermalLens .lenstag{position:absolute;left:6px;top:3px;font-size:.6rem;letter-spacing:1.5px;font-weight:700;color:#e2e8f0;text-shadow:0 1px 3px #000;}
+  #thermalLens .lensread{position:absolute;right:6px;top:3px;font-family:monospace;font-size:.74rem;font-weight:700;color:#fed7aa;text-shadow:0 1px 3px #000;}
+  #thermalLens .lenslbl{position:absolute;left:0;right:0;bottom:-22px;text-align:center;font-size:.72rem;color:#cbd5e1;white-space:nowrap;}
+  .hotspot.thermal{border-color:#f97316 !important;color:#fed7aa !important;box-shadow:0 0 18px 4px #f97316;}
+  footer{text-align:center;color:#64748b;font-size:.78rem;padding:10px 0 24px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div>
+      <h1>Diagnostic theorique &mdash; Alimentation lineaire (Module 11)</h1>
+      <p>Regulateur de tension &middot; TIP41C + LM358 &middot; symptomes, mesures, remontee en arriere et reparation</p>
+    </div>
+    <div class="hero-actions">
+      <button id="btnDemo" class="btn green">Decouverte (sans panne)</button>
+      <button id="btnForced" class="btn purple">Diagnostic force (guide)</button>
+      <button id="btnPractice" class="btn blue">Pratique (1 a 3 pannes)</button>
+      <button id="btnEval" class="btn amber">Evaluation (10)</button>
+    </div>
+  </div>
+
+  <div class="card consignes">
+    <h2>Consignes</h2>
+    <p>
+      <b>1) Decouverte :</b> observe les tensions nominales en deplacant les sondes du multimetre sur les <b>pastilles jaunes</b> placees a chaque broche.<br>
+      <b>2) Pratique :</b> une a trois pannes cachees sont injectees. Repere les <b>symptomes</b>, inspecte les composants (clic),
+      mesure chaque broche (B/C/E des transistors, les 2 bornes des composants a 2 poles), puis remonte la chaine depuis la sortie
+      jusqu'a la source. <b>Remplacer / reparer</b> le composant fautif puis reverifie les symptomes jusqu'a retablir ~16 V.<br>
+      <b>3) Evaluation :</b> 10 scenarios notes, envoyes a Moodle.
+    </p>
+    <p class="role" style="color:#bae6fd;">
+      Avant de mesurer, <b>observe</b> les composants (survol = œil, clic = toucher) : certains d&eacute;fauts se voient, d'autres non.
+      Les points du <b>sch&eacute;ma</b> et de la <b>carte</b> sont li&eacute;s : survole un point, le m&ecirc;me point s'allume en <b>cyan</b> sur l'autre vue.
+      C&ocirc;t&eacute; <b>alternatif</b> (points <b>bleus</b>) : s&eacute;lectionne le mode <b>V ~ (AC)</b> et place <b>les deux sondes</b> c&ocirc;t&eacute; AC.
+      Si tu ne mets qu'une seule sonde c&ocirc;t&eacute; AC, l'exercice te le rappelle. Le multim&egrave;tre a une <b>sonde rouge mobile</b> :
+      la noire reste o&ugrave; tu l'as pos&eacute;e (clique <b>Sonde &minus;</b> pour la repositionner). Le <b>potentiom&egrave;tre R4</b> se r&egrave;gle avec le curseur du multim&egrave;tre.
+    </p>
+    <p class="role">
+      Astuce : une panne <b>visible</b> (brulure, eclat, gonflement) se repere a l'oeil. Une panne <b>invisible</b>
+      (piste coupee, soudure froide, transistor ouvert/court) ne se voit pas : il faut la localiser au <b>multimetre</b>
+      (tension en marche, resistance hors tension). Le multimetre est une <b>fenetre flottante</b> : glisse son entete pour la deplacer.
+    </p>
+  </div>
+
+  <div id="statusLine" class="status"></div>
+
+  <!-- Schema pleine largeur -->
+  <div class="card">
+    <h2>Plan electrique interactif &mdash; pastilles de mesure a chaque broche</h2>
+    <div id="schemaWrap"><div id="schemaHost"></div></div>
+    <div class="role">Clique un composant pour l'inspecter ; clique une <b>pastille jaune</b> pour y placer la sonde active du multimetre
+      (accès direct aux broches <b>B, C, E</b> des transistors et aux <b>2 bornes</b> de chaque composant).
+      Le plan est charge depuis <b>schematic.svg</b> s'il est present (editable dans Inkscape/Illustrator).</div>
+  </div>
+
+  <!-- Photo de la carte, sous le plan, pleine largeur -->
+  <div class="card">
+    <h2>Photo de la carte (exercice lineaire)</h2>
+    <div id="boardWrap">
+      <img src="boardcc.jpg" alt="Carte alimentation lineaire">
+      <div class="hotspot" data-comp="F1" style="left:13.56%;top:6.77%;">F1</div>
+      <div class="hotspot" data-comp="D1" style="left:15.30%;top:33.54%;">D1</div>
+      <div class="hotspot" data-comp="R2" style="left:17.05%;top:61.07%;">R2</div>
+      <div class="hotspot" data-comp="C1" style="left:38.34%;top:32.43%;">C1</div>
+      <div class="hotspot" data-comp="R1" style="left:29.48%;top:35.89%;">R1</div>
+      <div class="hotspot" data-comp="D2" style="left:29.46%;top:48.74%;">D2</div>
+      <div class="hotspot" data-comp="Q1" style="left:54.95%;top:30.15%;">Q1</div>
+      <div class="hotspot" data-comp="Q2" style="left:51.59%;top:40.56%;">Q2</div>
+      <div class="hotspot" data-comp="R8" style="left:71.52%;top:31.67%;">R8</div>
+      <div class="hotspot" data-comp="D3" style="left:8.04%;top:85.95%;">D3</div>
+      <div class="hotspot" data-comp="C3" style="left:14.22%;top:85.63%;">C3</div>
+      <div class="hotspot" data-comp="Q3" style="left:61.52%;top:50.66%;">Q3</div>
+      <div class="hotspot" data-comp="R9" style="left:76.96%;top:44.08%;">R9</div>
+      <div class="hotspot" data-comp="Q4" style="left:78.19%;top:59.10%;">Q4</div>
+      <div class="hotspot" data-comp="R10" style="left:67.33%;top:58.79%;">R10</div>
+      <div class="hotspot" data-comp="R11" style="left:73.87%;top:65.18%;">R11</div>
+      <div class="hotspot" data-comp="R7" style="left:51.76%;top:59.00%;">R7</div>
+      <div class="hotspot" data-comp="R12" style="left:90.01%;top:36.44%;">R12</div>
+      <div class="hotspot" data-comp="C5" style="left:84.32%;top:31.19%;">C5</div>
+      <div class="hotspot" data-comp="IC1" style="left:50.33%;top:80.39%;">LM358</div>
+      <div class="hotspot" data-comp="C4" style="left:45.93%;top:90.57%;">C4</div>
+      <div class="hotspot" data-comp="R5" style="left:31.92%;top:85.19%;">R5</div>
+      <div class="hotspot" data-comp="R6" style="left:40.79%;top:84.82%;">R6</div>
+      <div class="hotspot" data-comp="R4" style="left:24.62%;top:85.14%;">R4</div>
+      <div class="hotspot" data-comp="C2" style="left:44.86%;top:32.50%;">C2</div>
+
+      <div id="photoDots"></div>
+      <div id="thermGlow"></div>
+    </div>
+    <div class="role">Zones bleues = inspection d'un composant. <b>Pastilles jaunes</b> = points de test sur la carte (clic = placer la sonde rouge, comme sur le schema).</div>
+  </div>
+
+  <div class="grid3">
+    <div class="card" id="symptCard">
+      <h2>Symptomes observes</h2>
+      <div id="symptoms"></div>
+    </div>
+
+    <div class="card">
+      <h2>Fiche composant &agrave; broches</h2>
+      <div id="fiche"><div class="role">Clique un composant du schema pour voir ses broches et leurs tensions.</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Journal des interventions</h2>
+      <div id="journal"></div>
+      <div id="diagArea" style="display:none;margin-top:10px;">
+        <h2>Diagnostic &mdash; declarer la panne</h2>
+        <div class="diagrow">
+          <label>1. Partie du circuit</label>
+          <select id="diagPart"></select>
+        </div>
+        <div class="diagrow">
+          <label>2. Composant</label>
+          <select id="diagComp"></select>
+        </div>
+        <div class="diagrow">
+          <label>3. Action a faire</label>
+          <select id="diagAct">
+            <option value="remplacer">Remplacer la piece</option>
+            <option value="souder">Refaire la soudure</option>
+            <option value="piste">Remplacer la piste par un fil</option>
+          </select>
+        </div>
+        <div class="row"><button id="btnDiag" class="btn blue">Soumettre le diagnostic</button></div>
+        <div id="diagFeedback"></div>
+      </div>
+      <div class="card" id="evalArea" style="display:none;margin-top:10px;">
+        <h2>Evaluation</h2>
+        <div class="row">
+          <button id="btnValidate" class="btn blue">Valider le scenario</button>
+          <button id="btnNextSc" class="btn green">Scenario suivant</button>
+        </div>
+        <div id="lmsNote" class="role"></div>
+      </div>
+      <div class="row"><button id="btnReveal" class="btn amber" style="display:none;">Voir la solution (pratique)</button></div>
+      <div id="verdict"></div>
+    </div>
+  </div>
+
+  <div class="card" id="guideCard">
+    <h2>Valeurs attendues / methode de remontee</h2>
+    <div id="guide"></div>
+  </div>
+
+  <footer>Diagnostic alimentation lineaire &mdash; Module 11 &middot; Sudam Ouellet 2025-2026</footer>
+</div>
+
+<!-- Multimetre flottant -->
+<div id="mmFloat" class="floater">
+  <div class="fhead" id="mmFloatHead">
+    <span>Multim&egrave;tre</span>
+    <span>
+      <span class="fhint">glisser pour d&eacute;placer</span>
+      <button class="btn ghost" id="mmMin" style="padding:2px 8px;margin-left:6px;" title="Reduire">&#8211;</button>
+    </span>
+  </div>
+  <div class="fbody">
+    <div class="mm">
+      <div class="screen" id="mmDisplay">---</div>
+      <div class="row" style="margin:7px 0 2px;">
+        <button id="btnPower" class="btn green on">Alimentation : ON</button>
+      </div>
+      <div class="dialwrap"><svg id="mmDial" viewBox="0 0 190 168" aria-label="Selecteur de calibre"></svg></div>
+      <div id="mmNote" class="mmnote"></div>
+      <div class="conns">
+        <div id="probeP" class="conn red active" title="Sonde + (rouge)">
+          <span class="connsign">+</span>
+          <span class="conndot"></span>
+          <span class="conntxt">Sonde +<b id="probePInfo">non placee</b></span>
+        </div>
+        <div id="probeN" class="conn black" title="Sonde &minus; / COM">
+          <span class="connsign">&minus;</span>
+          <span class="conndot"></span>
+          <span class="conntxt">COM / GND<b id="probeNInfo">non placee</b></span>
+        </div>
+      </div>
+      <div class="role">Clique une pastille du schema pour y placer la <b>sonde rouge</b> (elle se deplace a chaque clic). La <b>sonde noire</b> reste en place : clique d'abord sur <b>COM &minus;</b> pour la repositionner. Tourne le <b>selecteur</b> pour choisir le calibre. En mode V l'alimentation est en marche ; en Ohm/Continuite/Diode elle est hors tension.</div>
+    </div>
+    <div class="row"><button id="btnShowGuide" class="btn ghost">Valeurs attendues / methode</button></div>
+    <div class="potrow">
+      <label>R4 (potentiometre) <span id="potVal">-- V</span></label>
+      <input type="range" id="potSlider" min="0" max="100" value="75">
+      <button class="btn ghost" id="btnPotReset" title="Valeur par defaut">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Observation (les sens) flottant -->
+<div id="obsFloat" class="floater">
+  <div class="fhead" id="obsFloatHead">
+    <span>Observation (les sens)</span>
+    <span>
+      <span class="fhint">glisser pour d&eacute;placer</span>
+      <button class="btn ghost" id="obsMin" style="padding:2px 8px;margin-left:6px;" title="Reduire">&#8211;</button>
+    </span>
+  </div>
+  <div class="fbody">
+    <div class="row">
+      <button id="btnLook" class="btn blue">&#128065; Observer (survol)</button>
+      <button id="btnThermal" class="btn amber">&#127777; Camera thermique</button>
+    </div>
+    <div id="obsOut" class="obsout"><div class="role">Avant de mesurer, entra&icirc;ne ton &oelig;il et ta <b>cam&eacute;ra thermique</b> : <b>Observer</b> = survol &agrave; l'&oelig;il ; <b>Cam&eacute;ra thermique</b> = d&eacute;place le carr&eacute; sur le sch&eacute;ma ou la carte pour r&eacute;v&eacute;ler la chaleur des pi&egrave;ces. Certains d&eacute;fauts se voient (ou chauffent), d'autres non.</div></div>
+  </div>
+</div>
+
+<!-- Diagnostic force (guide) flottant -->
+<div id="forcedFloat" class="floater" style="display:none;">
+  <div class="fhead" id="forcedFloatHead">
+    <span>Diagnostic force (guide)</span>
+    <span>
+      <span class="fhint">glisser pour d&eacute;placer</span>
+      <button class="btn ghost" id="forcedMin" style="padding:2px 8px;margin-left:6px;" title="Reduire">&#8211;</button>
+    </span>
+  </div>
+  <div class="fbody">
+    <div id="forcedHelp">
+      <button id="btnForcedHelp" class="btn ghost">&#10067; Comprendre la carte (parties et fonctions)</button>
+      <div id="forcedHelpBody" style="display:none;">
+        <div class="blk"><b>Redressement / filtrage</b> &mdash; D1 (pont de diodes) redresse le secondaire du transformateur, C1 / C2 lissent : on obtient le <b>rail non regule (~21 V)</b>.</div>
+        <div class="blk"><b>Reference</b> &mdash; R2 + zener D3 : une tension fixe de <b>16 V</b> (l'image de ce qu'on veut obtenir).</div>
+        <div class="blk"><b>Consigne</b> &mdash; le potentiometre R4 preleve une fraction de la reference : c'est la tension voulue en sortie.</div>
+        <div class="blk"><b>Ampli d'erreur</b> &mdash; LM358 (IC1) compare la consigne (In+) et la sortie (In&minus;) et regle la commande.</div>
+        <div class="blk"><b>Commande / Puissance</b> &mdash; Q2 (2N3904) commande Q1 (TIP41C), le transistor de passage qui regle la sortie.</div>
+        <div class="blk"><b>Limitation de courant</b> &mdash; R8 (shunt 1 &Omega;) mesure le courant ; le bloc Q3 / R9-R10-R11 reduit la commande des que la chute sur R8 atteint ~0,7 V (soit ~0,7 A). C'est la protection surintensite.</div>
+        <div class="blk"><b>Sortie</b> &mdash; C5 (filtrage) et R12 (retour de mesure).</div>
+        <div class="regle">Regle : chute sur R8 ~0,7 V &rArr; surintensite &rArr; court-circuit en aval du limiteur.</div>
+      </div>
+    </div>
+    <div id="forcedArea"></div>
+  </div>
+</div>
+
+<!-- Camera thermique (lentille deplacable) -->
+<div id="thermalLens">
+  <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+  <span class="lenstag">THERMIQUE</span><span id="lensReadout" class="lensread"></span>
+  <div class="lenslbl">camera thermique (glisser)</div>
+</div>
+
+<!-- Fenetre d'accueil / explication -->
+<div id="introModal" class="modal">
+  <div class="modalbox">
+    <h2>Bienvenue &mdash; Diagnostic d'une alimentation lin&eacute;aire</h2>
+    <p class="role">Cette carte est une alimentation r&eacute;gul&eacute;e <b>r&eacute;glable de 0 &agrave; 16 V</b> (r&eacute;gulateur s&eacute;rie TIP41C + ampli d'erreur LM358).</p>
+
+    <h3>Comment fonctionne la carte</h3>
+    <ul>
+      <li><b>Redressement / filtrage</b> &mdash; D1 (pont de diodes) redresse le secondaire du transformateur, C1 / C2 lissent : on obtient le <b>rail non r&eacute;gul&eacute; (~21 V)</b>.</li>
+      <li><b>R&eacute;f&eacute;rence</b> &mdash; R2 + zener D3 donnent une tension fixe de <b>16 V</b> (l'image de ce qu'on veut obtenir).</li>
+      <li><b>Consigne</b> &mdash; le potentiom&egrave;tre R4 pr&eacute;l&egrave;ve une fraction de la r&eacute;f&eacute;rence : c'est la tension voulue en sortie.</li>
+      <li><b>Ampli d'erreur</b> &mdash; le LM358 (IC1) compare la consigne (In+) et la sortie (In&minus;) et r&egrave;gle la commande.</li>
+      <li><b>Commande / Puissance</b> &mdash; Q2 (2N3904) commande Q1 (TIP41C), le transistor de passage qui r&egrave;gle la sortie.</li>
+      <li><b>Limitation de courant</b> &mdash; R8 (shunt 1 &Omega;) mesure le courant ; le bloc Q3 / R9-R10-R11 r&eacute;duit la commande d&egrave;s que la chute sur R8 atteint ~0,7 V (soit ~0,7 A). C'est la protection surintensit&eacute;.</li>
+      <li><b>Sortie</b> &mdash; C5 (filtrage) et R12 (retour de mesure).</li>
+    </ul>
+    <p class="regle">R&egrave;gle : chute sur R8 ~0,7 V &rArr; surintensit&eacute; &rArr; court-circuit en aval du limiteur.</p>
+
+    <h3>Les modes de travail</h3>
+    <ul>
+      <li><b>D&eacute;couverte (sans panne)</b> &mdash; explore les tensions nominales en d&eacute;pla&ccedil;ant les sondes du multim&egrave;tre.</li>
+      <li><b>Diagnostic forc&eacute; (guid&eacute;)</b> &mdash; une panne cach&eacute;e. Le programme te <b>guide pas &agrave; pas</b> : valider les sympt&ocirc;mes, v&eacute;rifier physiquement (observation + cam&eacute;ra thermique), puis suivre la <b>m&eacute;thode de remont&eacute;e</b> (mesures, « est-ce normal ? », questions) jusqu'&agrave; la pi&egrave;ce fautive. Entra&icirc;nement, non not&eacute;.</li>
+      <li><b>Pratique (1 &agrave; 3 pannes)</b> &mdash; d&eacute;pannage <b>libre</b> : le programme n'indique rien, &agrave; toi de rep&eacute;rer les sympt&ocirc;mes, mesurer, remonter et r&eacute;parer.</li>
+      <li><b>&Eacute;valuation (10)</b> &mdash; 10 sc&eacute;narios not&eacute;s, transmis &agrave; Moodle.</li>
+    </ul>
+
+    <div class="row" style="margin-top:16px;"><button id="btnIntroOk" class="btn blue" style="padding:9px 18px;">Commencer</button></div>
+  </div>
+</div>
+
+<script src="scorm_api.js"></script>
+<script src="netlist.js"></script>
+<script src="procs.js"></script>
+<script src="pinpos.js"></script>
+<script src="schematic.js"></script>
+<script src="tpmap.js"></script>
+<script src="photomap.js"></script>
+<script src="boardmap.js"></script>
+<script src="spice.js"></script>
+<script src="sim.js"></script>
+</body>
+</html>

@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice PID — Flywheel décentrée</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #08111f;
+  --bg-soft: #0e1a2b;
+  --panel: rgba(16, 29, 48, .9);
+  --panel-strong: #12243b;
+  --line: #29415e;
+  --text: #edf5ff;
+  --muted: #9db1c9;
+  --cyan: #55d8ff;
+  --cyan-soft: rgba(85, 216, 255, .16);
+  --orange: #ffb45c;
+  --orange-soft: rgba(255, 180, 92, .15);
+  --green: #6ee7a8;
+  --red: #ff7d87;
+  --violet: #b49bff;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .28);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--bg); }
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(43, 117, 166, .22), transparent 33rem),
+    radial-gradient(circle at 100% 12%, rgba(95, 66, 160, .18), transparent 28rem),
+    var(--bg);
+  line-height: 1.45;
+}
+button, input, select { font: inherit; }
+button, select { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+.app { width: min(1480px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 42px; }
+.hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 20px; }
+.eyebrow { color: var(--cyan); font-size: .76rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+h1 { margin: 5px 0 6px; font-size: clamp(1.8rem, 4vw, 3.25rem); line-height: 1.04; letter-spacing: -.045em; }
+.hero p { max-width: 720px; margin: 0; color: var(--muted); }
+.hero-note { min-width: 220px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 16px; background: rgba(12, 24, 40, .7); color: var(--muted); font-size: .9rem; }
+.hero-note strong { color: var(--text); display: block; margin-bottom: 3px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, .75fr); gap: 18px; align-items: start; }
+.column { min-width: 0; display: grid; gap: 18px; }
+.panel { border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 17px 20px; border-bottom: 1px solid rgba(86, 118, 151, .22); }
+.panel-header h2, .panel-header h3 { margin: 0; font-size: 1rem; letter-spacing: -.01em; }
+.panel-header p { margin: 0; color: var(--muted); font-size: .86rem; }
+.visual-panel { min-height: 660px; }
+.visual-toolbar { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; justify-content: flex-end; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: .76rem; white-space: nowrap; }
+.pill.cyan { color: var(--cyan); border-color: rgba(85, 216, 255, .35); background: var(--cyan-soft); }
+.pill.orange { color: var(--orange); border-color: rgba(255, 180, 92, .35); background: var(--orange-soft); }
+.pill.red { color: var(--red); border-color: rgba(255, 125, 135, .35); background: rgba(255, 125, 135, .12); }
+.pill.violet { color: var(--violet); border-color: rgba(180, 155, 255, .35); background: rgba(180, 155, 255, .12); }
+#fieldArrow path:first-child { stroke: var(--violet); }
+#fieldArrow path:last-child { fill: var(--violet); }
+#fieldArrow.negative path:first-child { stroke: var(--cyan); }
+#fieldArrow.negative path:last-child { fill: var(--cyan); }
+#fieldArrow.idle path:first-child { stroke: var(--muted); }
+#fieldArrow.idle path:last-child { fill: var(--muted); }
+#fieldNeedle line { stroke: var(--violet); }
+#fieldNeedle circle { fill: var(--violet); }
+#fieldNeedle.negative line { stroke: var(--cyan); }
+#fieldNeedle.negative circle { fill: var(--cyan); }
+.instrument-wrap { display: grid; place-items: center; padding: 8px 16px 0; }
+#flywheelSvg { display: block; width: min(100%, 570px); height: auto; max-height: 580px; user-select: none; touch-action: none; }
+.visual-caption { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; padding: 0 20px 17px; color: var(--muted); font-size: .82rem; }
+.legend-item { display: inline-flex; align-items: center; gap: 7px; }
+.legend-line { width: 25px; height: 3px; border-radius: 99px; background: var(--cyan); }
+.legend-line.target { background: var(--orange); }
+.legend-line.muted-line { background: var(--violet); }
+.legend-line.weight { width: 9px; height: 9px; border-radius: 50%; background: var(--orange); }
+.control-panel { padding: 20px; }
+.control-section + .control-section { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(86, 118, 151, .22); }
+.control-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.control-label label, .control-label strong { font-weight: 750; }
+.control-label output { color: var(--cyan); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+.range-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: .75rem; margin-top: 3px; }
+.button-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.button-grid.two { grid-template-columns: repeat(2, 1fr); }
+button { border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; color: var(--text); background: #172a42; transition: background .16s, border-color .16s, transform .16s; }
+button:hover { background: #203958; border-color: #466684; }
+button:active { transform: translateY(1px); }
+button.primary { background: var(--cyan); border-color: var(--cyan); color: #062033; font-weight: 800; }
+button.primary:hover { background: #8be7ff; }
+button.warning { color: var(--orange); background: var(--orange-soft); border-color: rgba(255, 180, 92, .4); }
+button.danger { color: var(--red); }
+button.wide { grid-column: 1 / -1; }
+.control-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+select { min-width: 112px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--text); background: #172a42; }
+.metrics-panel { padding: 18px; }
+.metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+.metric { min-width: 0; padding: 12px; border: 1px solid rgba(86, 118, 151, .27); border-radius: 13px; background: rgba(5, 14, 26, .28); }
+.metric-label { display: block; color: var(--muted); font-size: .73rem; }
+.metric-value { display: block; margin-top: 3px; font-size: 1.08rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.metric-value.cyan { color: var(--cyan); }
+.metric-value.orange { color: var(--orange); }
+.metric-value.green { color: var(--green); }
+.metric-value.red { color: var(--red); }
+.metric-value.violet { color: var(--violet); }
+.status-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(86, 118, 151, .22); color: var(--muted); font-size: .84rem; }
+.status-line strong { color: var(--text); text-align: right; }
+.status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(110, 231, 168, .1); vertical-align: 1px; }
+  .status-dot.paused { background: var(--orange); box-shadow: 0 0 0 4px rgba(255, 180, 92, .1); }
+  .status-dot.friction { background: var(--orange); box-shadow: 0 0 0 4px rgba(255, 180, 92, .1); }
+  .status-dot.oscillating { background: var(--red); box-shadow: 0 0 0 4px rgba(255, 125, 135, .1); }
+.charts-panel { padding: 18px 18px 14px; }
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.chart-card { min-width: 0; padding: 13px; border: 1px solid rgba(86, 118, 151, .25); border-radius: 14px; background: rgba(5, 14, 26, .3); }
+.chart-card h3 { margin: 0 0 3px; font-size: .9rem; }
+.chart-card p { margin: 0 0 8px; color: var(--muted); font-size: .76rem; }
+.chart-canvas { display: block; width: 100%; height: 220px; }
+.chart-legend { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 6px; color: var(--muted); font-size: .75rem; }
+.chart-key { display: inline-flex; align-items: center; gap: 6px; }
+.chart-key::before { content: ""; width: 18px; height: 3px; border-radius: 99px; background: var(--key-color); }
+.lesson { padding: 19px 20px; }
+.lesson h2 { margin: 0 0 8px; font-size: 1rem; }
+.lesson p, .lesson li { color: var(--muted); font-size: .88rem; }
+.lesson p { margin: 8px 0 12px; }
+.lesson ol { margin: 0; padding-left: 21px; }
+.lesson li + li { margin-top: 7px; }
+
+details { border-top: 1px solid rgba(86, 118, 151, .22); }
+summary { padding: 15px 20px; color: var(--muted); cursor: pointer; font-size: .84rem; }
+summary:hover { color: var(--text); }
+.constants { padding: 0 20px 17px; }
+.constants table { width: 100%; border-collapse: collapse; color: var(--muted); font-size: .8rem; }
+.constants th, .constants td { padding: 7px 0; border-bottom: 1px solid rgba(86, 118, 151, .16); text-align: left; }
+.constants th { width: 55%; color: var(--text); font-weight: 600; }
+.constants td { text-align: right; font-variant-numeric: tabular-nums; }
+.footer-note { margin: 18px 0 0; color: #7188a1; font-size: .75rem; text-align: center; }
+.small { color: var(--muted); font-size: .78rem; }
+.hidden { display: none !important; }
+.intro-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(3, 9, 17, .8); backdrop-filter: blur(7px); }
+.intro-backdrop[hidden] { display: none; }
+.intro-modal { width: min(560px, 100%); max-height: min(720px, calc(100vh - 40px)); overflow: auto; padding: 28px; border: 1px solid rgba(85, 216, 255, .4); border-radius: 22px; background: linear-gradient(145deg, #142a43, #0c1829); box-shadow: 0 28px 90px rgba(0, 0, 0, .5); }
+.intro-modal h2 { margin: 7px 0 10px; font-size: clamp(1.6rem, 5vw, 2.25rem); line-height: 1.05; letter-spacing: -.035em; }
+.intro-modal p { color: var(--muted); }
+.intro-card { display: flex; align-items: center; gap: 14px; margin: 18px 0; padding: 15px 17px; border: 1px solid rgba(85, 216, 255, .35); border-radius: 15px; background: var(--cyan-soft); }
+.intro-card strong { color: var(--text); }
+.intro-card span { color: var(--cyan); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; }
+.intro-list { margin: 0; padding-left: 21px; color: var(--muted); font-size: .9rem; }
+.intro-list li + li { margin-top: 8px; }
+.intro-start { width: 100%; margin-top: 22px; padding: 13px 16px; }
+@media (max-width: 1080px) {
+  .workspace { grid-template-columns: 1fr; }
+  .visual-panel { min-height: 0; }
+  .control-column { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .control-column > .panel:first-child { grid-row: span 2; }
+}
+@media (max-width: 720px) {
+  .app { width: min(100% - 20px, 620px); padding-top: 18px; }
+  .hero { display: block; }
+  .hero-note { margin-top: 14px; }
+  .control-column { display: grid; grid-template-columns: 1fr; }
+  .control-column > .panel:first-child { grid-row: auto; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .panel-header { align-items: flex-start; flex-direction: column; }
+  .visual-toolbar { justify-content: flex-start; }
+  .chart-canvas { height: 190px; }
+}
+</style>
+</head>
+<body>
+<div class="intro-backdrop" id="introBackdrop">
+  <section class="intro-modal" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introText">
+    <div class="eyebrow">Variante PI — décentrage</div>
+    <h2 id="introTitle">Un poids hors du centre</h2>
+    <p id="introText">Le poids décentré crée un couple de gravité, et la rotation ajoute une force centrifuge. Le régulateur PID corrige ces perturbations : le P réagit à l’écart, le I le mémorise, le D anticipe sa vitesse. Gains P, I et D réglables.</p>
+    <div class="intro-card"><strong>Effets du poids</strong><span>La pesanteur agit même à l’arrêt ; la force centrifuge apparaît pendant la rotation.</span></div>
+    <ul class="intro-list">
+      <li><strong>Roue équilibrée</strong> → aucun couple parasite.</li>
+       <li>Le poids est à droite du rotor lorsque la roue indique 180°.</li>
+       <li>À 270° à droite → la pesanteur crée le couple de rotation maximal.</li>
+       <li>À 0° en bas → la force pointe vers le bas mais ne crée pas de couple autour de l’axe.</li>
+      <li>En rotation → la force centrifuge devient plus forte lorsque la vitesse augmente.</li>
+      <li>Le modèle traduit ces forces en couples équivalents pour rendre l’effet du régulateur visible.</li>
+    </ul>
+    <p class="small">Le P réagit immédiatement à l’écart, le I le mémorise et le D anticipe sa vitesse. Essayez une roue équilibrée, puis déplacez progressivement le poids vers le bord.</p>
+    <button type="button" class="primary intro-start" id="introStart">Commencer l’expérience</button>
+  </section>
+</div>
+<main class="app" id="app" inert aria-hidden="true">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Variante PI — décentrage de la flywheel</div>
+      <h1>Exercice PID — Flywheel décentrée</h1>
+      <p>Une flyweight sur roulement à billes, pilotée par un moteur BLDC simplifié. Déplacez le poids hors du centre et observez la force de décentrage, la perturbation et la réponse du régulateur PI.</p>
+    </div>
+    <div class="hero-note"><strong>Objectif</strong>Comprendre comment le poids excentré crée une perturbation, puis comment P, I et D la compensent.</div>
+  </header>
+
+  <section class="workspace">
+    <div class="column">
+      <article class="panel visual-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Position de la flywheel décentrée</h2>
+            <p>Faites glisser la cible orange, la roue cyan ou le poids sur sa piste.</p>
+          </div>
+          <div class="visual-toolbar">
+            <span class="pill cyan" id="directionPill">Consigne 180°</span>
+             <span class="pill" id="balancePill">Roue équilibrée</span>
+             <span class="pill violet" id="fieldDirectionPill">Champ immobile</span>
+             <span class="pill" id="saturatedPill">PID non saturé</span>
+          </div>
+        </div>
+        <div class="instrument-wrap">
+          <svg id="flywheelSvg" viewBox="0 0 520 520" role="img" aria-label="Sélecteur de position de la flywheel, poids décentré et moteur BLDC">
+            <defs>
+              <radialGradient id="wheelFill" cx="35%" cy="25%">
+                <stop offset="0" stop-color="#314d70"/>
+                <stop offset=".62" stop-color="#172c46"/>
+                <stop offset="1" stop-color="#0b1829"/>
+              </radialGradient>
+              <linearGradient id="rimGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8be7ff"/>
+                <stop offset=".45" stop-color="#477fa6"/>
+                <stop offset="1" stop-color="#18314c"/>
+              </linearGradient>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="260" cy="260" r="244" fill="none" stroke="#1c344f" stroke-width="1"/>
+            <circle cx="260" cy="260" r="224" fill="none" stroke="#35536f" stroke-width="2"/>
+            <circle cx="260" cy="260" r="207" fill="none" stroke="#172f49" stroke-width="1" stroke-dasharray="2 8"/>
+            <g id="dialTicks"></g>
+            <g id="dialLabels" fill="#8298b1" font-size="12" text-anchor="middle"></g>
+            <circle id="dialHit" cx="260" cy="260" r="224" fill="transparent" stroke="transparent" pointer-events="all" style="cursor:grab"/>
+            <g id="fieldNeedle" opacity=".9">
+              <line x1="260" y1="260" x2="260" y2="66" stroke="#b49bff" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="260" cy="66" r="7" fill="#b49bff" stroke="#efe8ff" stroke-width="2"/>
+            </g>
+            <g id="targetHandle" tabindex="0" role="slider" aria-label="Consigne de position" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0" style="cursor:grab;pointer-events:all">
+              <circle id="targetHalo" cx="260" cy="36" r="15" fill="#ffb45c" opacity=".18" filter="url(#softGlow)"/>
+              <circle id="targetDot" cx="260" cy="36" r="9" fill="#ffb45c" stroke="#fff0d5" stroke-width="2"/>
+              <path id="targetNeedle" d="M260 52 L260 76" stroke="#ffb45c" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <g id="rotorVisual">
+              <circle cx="260" cy="260" r="164" fill="#0a1727" stroke="#314d70" stroke-width="2"/>
+              <circle cx="260" cy="260" r="151" fill="url(#wheelFill)" stroke="url(#rimGradient)" stroke-width="10"/>
+              <circle cx="260" cy="260" r="126" fill="none" stroke="#3b5b79" stroke-width="2" stroke-dasharray="3 9"/>
+               <circle cx="260" cy="260" r="22" fill="#0a1727" stroke="#8ba6bf" stroke-width="3"/>
+               <circle cx="260" cy="260" r="7" fill="#55d8ff"/>
+               <line id="imbalanceTrack" x1="260" y1="260" x2="400" y2="260" stroke="#ffb45c" stroke-width="3" stroke-dasharray="5 5" opacity=".65"/>
+               <circle id="imbalanceWeight" cx="260" cy="260" r="11" fill="#ffb45c" stroke="#fff0d5" stroke-width="2" filter="url(#softGlow)"/>
+               <g fill="#6f8da9" opacity=".72">
+                <circle cx="260" cy="128" r="8"/>
+                <circle cx="260" cy="392" r="8"/>
+                <circle cx="128" cy="260" r="8"/>
+                <circle cx="392" cy="260" r="8"/>
+              </g>
+              <g stroke="#8ca6bd" stroke-width="4" stroke-linecap="round" opacity=".75">
+                <path d="M260 107 L260 119"/>
+                <path d="M260 401 L260 413"/>
+                <path d="M107 260 L119 260"/>
+                <path d="M401 260 L413 260"/>
+              </g>
+              <path d="M260 260 L260 119" stroke="#55d8ff" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="260" cy="119" r="10" fill="#55d8ff" stroke="#d6f7ff" stroke-width="2"/>
+            </g>
+            <circle id="rotorHit" cx="260" cy="260" r="164" fill="transparent" stroke="transparent" pointer-events="all" style="cursor:grab"/>
+            <g transform="translate(392 392)">
+              <circle r="49" fill="#0b1a2d" stroke="#426482" stroke-width="2"/>
+              <circle r="37" fill="none" stroke="#263f5b" stroke-width="9" stroke-dasharray="3 5"/>
+               <g id="fieldArrow">
+                 <path d="M0 0 L0 -32" stroke="#b49bff" stroke-width="4" stroke-linecap="round"/>
+                 <path d="M0 -36 L-6 -25 L6 -25 Z" fill="#b49bff"/>
+               </g>
+               <text id="fieldDirection" x="0" y="20" fill="#b49bff" font-size="22" text-anchor="middle" aria-label="Sens du champ">·</text>
+               <circle r="6" fill="#ffb45c"/>
+              <text y="68" fill="#9db1c9" font-size="10" text-anchor="middle">CHAMP</text>
+            </g>
+          </svg>
+        </div>
+        <div class="visual-caption">
+          <span class="legend-item"><span class="legend-line"></span>Position réelle</span>
+          <span class="legend-item"><span class="legend-line target"></span>Consigne</span>
+           <span class="legend-item"><span class="legend-line muted-line"></span>Aiguille champ moteur (↻/↺)</span>
+          <span class="legend-item"><span class="legend-line weight"></span>Poids décentré</span>
+        </div>
+      </article>
+
+      <article class="panel charts-panel">
+        <div class="panel-header" style="padding:0 0 15px; border:0">
+          <div><h2>Courbes temporelles</h2><p>Historique de 30 secondes simulées.</p></div>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h3>Position</h3>
+            <p>Degrés, affichés modulo 360°.</p>
+            <canvas id="positionChart" class="chart-canvas" aria-label="Graphique de la consigne et de la position réelle"></canvas>
+            <div class="chart-legend"><span class="chart-key" style="--key-color: var(--orange)">Consigne</span><span class="chart-key" style="--key-color: var(--cyan)">Flywheel</span></div>
+          </div>
+          <div class="chart-card">
+            <h3>Vitesse et champ</h3>
+            <p>Tr/min, avec saturation à ±25.</p>
+            <canvas id="speedChart" class="chart-canvas" aria-label="Graphique de la vitesse réelle et de la commande du champ"></canvas>
+            <div class="chart-legend"><span class="chart-key" style="--key-color: var(--cyan)">Flywheel</span><span class="chart-key" style="--key-color: var(--violet)">Champ</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="column control-column">
+      <article class="panel control-panel">
+        <div class="control-section">
+          <div class="control-label"><label for="kpRange">Gain proportionnel P</label><output id="kpOutput" for="kpRange">1,00</output></div>
+          <input id="kpRange" type="range" min="0" max="10" step="0.05" value="1" aria-label="Gain proportionnel P">
+          <div class="range-scale"><span>0 · faible</span><span>10 · très élevé</span></div>
+          <p class="small">Le P corrige l’écart actuel. Le I conserve une mémoire de l’erreur pour aider à supprimer l’erreur résiduelle.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="kiRange">Gain intégral I</label><output id="kiOutput" for="kiRange">0,35</output></div>
+          <input id="kiRange" type="range" min="0" max="1.50" step="0.05" value="0.35" aria-label="Gain intégral I">
+          <div class="range-scale"><span>0 · désactivé</span><span>1,50 · fort</span></div>
+          <p class="small">Une valeur trop élevée peut provoquer un dépassement ou une accumulation d’action.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="kdRange">Gain dérivé D</label><output id="kdOutput" for="kdRange">0,10</output></div>
+          <input id="kdRange" type="range" min="0" max="2" step="0.05" value="0.10" aria-label="Gain dérivé D">
+          <div class="range-scale"><span>0 · désactivé</span><span>2,00 · fort</span></div>
+          <p class="small">Le D anticipe la vitesse de l’écart : il freine avant le dépassement mais amplifie le bruit.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="frictionRange">Frottement</label><output id="frictionOutput" for="frictionRange">0,04 N·m</output></div>
+          <input id="frictionRange" type="range" min="0" max="0.30" step="0.01" value="0.04" aria-label="Frottement du roulement">
+          <div class="range-scale"><span>0 · libre</span><span>0,30 · très forte</span></div>
+          <p class="small">Le frottement est constant, que la roue soit immobile ou en mouvement.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="massRange">Masse de la flywheel</label><output id="massOutput" for="massRange">1,25 kg</output></div>
+          <input id="massRange" type="range" min="0.50" max="3.00" step="0.05" value="1.25" aria-label="Masse de la flywheel">
+          <div class="range-scale"><span>0,50 · légère</span><span>3,00 · lourde</span></div>
+          <p class="small">La masse modifie l’inertie de rotation ; le frottement reste indépendant.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="imbalanceRange">Décentrage du poids</label><output id="imbalanceOutput" for="imbalanceRange">0,00 m</output></div>
+          <input id="imbalanceRange" type="range" min="0" max="0.21" step="0.01" value="0" aria-label="Décentrage du poids excentré">
+          <div class="range-scale"><span>0 · centré</span><span>0,21 m · au bord</span></div>
+          <p class="small">Un poids de 0,50 kg se déplace du centre vers le bord. À l’arrêt, la pesanteur peut déjà créer un couple ; en rotation, la force centrifuge s’ajoute.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><strong>Consigne de position</strong><span class="small">360° · plus court chemin</span></div>
+          <div class="button-grid">
+            <button type="button" id="targetMinus">−30°</button>
+            <button type="button" id="targetZero">Zéro</button>
+            <button type="button" id="targetPlus">+30°</button>
+          </div>
+          <p class="small">Glissez la cible orange autour de l’anneau. Le déplacement de la cible est l’échelon à observer.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><strong>Simulation</strong><span class="small" id="timeLabel">Temps 1×</span></div>
+          <div class="button-grid two">
+            <button type="button" class="primary" id="pauseButton">Pause</button>
+            <button type="button" id="resetButton">Réinitialiser</button>
+          </div>
+          <div class="control-row" style="margin-top:9px">
+            <label class="small" for="timeScale">Vitesse de simulation</label>
+            <select id="timeScale" aria-label="Vitesse de simulation">
+              <option value="1">1×</option>
+              <option value="0.25">0,25×</option>
+            </select>
+          </div>
+          <button type="button" class="warning wide" id="loadButton" style="margin-top:10px">Injecter une charge ponctuelle</button>
+        </div>
+      </article>
+
+      <article class="panel metrics-panel">
+        <div class="panel-header" style="padding:0 0 14px; border:0"><div><h2>Mesures</h2><p>Valeurs instantanées de la boucle.</p></div></div>
+        <div class="metrics-grid">
+          <div class="metric"><span class="metric-label">Consigne</span><span class="metric-value orange" id="metricTarget">180,0°</span></div>
+          <div class="metric"><span class="metric-label">Position réelle</span><span class="metric-value cyan" id="metricPosition">0,0°</span></div>
+          <div class="metric"><span class="metric-label">Erreur</span><span class="metric-value" id="metricError">0,0°</span></div>
+           <div class="metric"><span class="metric-label">Vitesse flywheel</span><span class="metric-value" id="metricSpeed">0,0 tr/min</span></div>
+           <div class="metric"><span class="metric-label">Champ commandé</span><span class="metric-value" id="metricField">0,0 tr/min</span></div>
+           <div class="metric"><span class="metric-label">Correction I</span><span class="metric-value violet" id="metricIntegral">+0,0 %</span></div>
+          <div class="metric"><span class="metric-label">Correction D</span><span class="metric-value" id="metricDerivative">+0,0 %</span></div>
+            <div class="metric"><span class="metric-label">Couple moteur</span><span class="metric-value" id="metricTorque">0,00 N·m</span></div>
+           <div class="metric"><span class="metric-label">Force de pesanteur</span><span class="metric-value orange" id="gravityForce">4,90 N</span></div>
+           <div class="metric"><span class="metric-label">Force tangentielle</span><span class="metric-value orange" id="imbalanceForce">+0,00 N</span></div>
+           <div class="metric"><span class="metric-label">Couple de gravité</span><span class="metric-value orange" id="gravityTorque">+0,00 N·m</span></div>
+           <div class="metric"><span class="metric-label">Force centrifuge actuelle</span><span class="metric-value orange" id="centrifugalForce">0,00 N</span></div>
+           <div class="metric"><span class="metric-label">Force à 25 tr/min</span><span class="metric-value orange" id="imbalanceMaxForce">0,00 N</span></div>
+         </div>
+        <div class="status-line"><span><span class="status-dot" id="statusDot"></span><span id="statusText">À l’arrêt</span></span><strong id="loadStatus">Charge inactive</strong></div>
+      </article>
+
+      <article class="panel lesson">
+        <h2>Ce qu’il faut observer</h2>
+        <p>Le P applique une correction immédiate à l’écart consigne–position. Le I conserve une mémoire de cet écart pour réduire l’erreur résiduelle. Le D anticipe la vitesse de l’écart pour freiner avant le dépassement, mais il amplifie le bruit. Le poids décentré ajoute un couple de gravité même lorsque la roue est immobile ; dès qu’elle tourne, une force centrifuge s’ajoute et rend la perturbation plus forte.</p>
+        <ol>
+          <li>Commencez avec un décentrage nul, déplacez la cible de 30° ou de 90°, puis laissez la simulation agir.</li>
+          <li>Augmentez progressivement le décentrage : le poids orange se déplace sur sa piste et le couple de gravité apparaît.</li>
+          <li>Placez le poids à droite : la pesanteur crée un couple maximal ; en haut ou en bas, son effet de rotation est nul.</li>
+          <li>Comparez le régulateur avec I désactivé, puis augmentez progressivement I : la mémoire de l’erreur doit aider à réduire le décalage résiduel.</li>
+          <li>Quand I est trop fort, l’action accumulée peut provoquer un dépassement, une oscillation ou un retour lent.</li>
+          <li>Quand P est trop fort, l’inertie, le retard du moteur et le couple parasite produisent des dépassements et des oscillations.</li>
+           <li>Injectez une charge ou tournez la roue à la main pour voir le régulateur PI compenser partiellement la perturbation.</li>
+        </ol>
+        <p>La pesanteur agit en permanence, mais c’est le décentrage du poids qui crée un couple autour de l’axe. L’affichage utilise <strong>180° en haut, 270° à droite, 0° en bas et 90° à gauche</strong>. À 0°, la force pointe vers le bas mais sa ligne d’action passe par le centre : elle ne fait donc pas tourner la roue. En rotation, la force centrifuge s’ajoute à cette perturbation.</p>
+      </article>
+
+      <details class="panel">
+        <summary>Réglages de la simulation</summary>
+        <div class="constants">
+          <table>
+            <tbody>
+                <tr><th>Masse réglable</th><td>0,50 à 3,00 kg</td></tr>
+                <tr><th>Masse du poids décentré</th><td>0,50 kg</td></tr>
+                <tr><th>Décentrage réglable</th><td>0 à 0,21 m</td></tr>
+                <tr><th>Rayon effectif</th><td>0,21 m</td></tr>
+               <tr><th>Frottement réglable</th><td>0 à 0,30 N·m</td></tr>
+              <tr><th>Couple moteur maximal</th><td>0,85 N·m</td></tr>
+              <tr><th>Vitesse de champ maximale</th><td>±25 tr/min</td></tr>
+              <tr><th>Constante de champ</th><td>0,300 s</td></tr>
+              <tr><th>Retard de couple</th><td>0,070 s</td></tr>
+              <tr><th>Paires de pôles</th><td>1 paire</td></tr>
+              <tr><th>Impulsion de charge</th><td>0,18 N·m pendant 0,7 s</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </section>
+  <p class="footer-note">Simulation pédagogique locale · aucune donnée envoyée · format conçu pour Moodle</p>
+</main>
+<script>
+(() => {
+  'use strict';
+
+  const TAU = Math.PI * 2;
+   const DEG = 180 / Math.PI;
+   const DISPLAY_ANGLE_OFFSET = Math.PI;
+  const RPM_TO_RAD = TAU / 60;
+  const MAX_FIELD = 25 * RPM_TO_RAD;
+   const MAX_TORQUE = 0.85;
+   const FLYWHEEL_RADIUS = 0.21;
+   const IMBALANCE_MASS = 0.50;
+   const GRAVITY = 9.81;
+   const GRAVITY_TORQUE_GAIN = 0.20;
+   const WEIGHT_LOCAL_ANGLE = Math.PI / 2;
+   const IMBALANCE_TORQUE_GAIN = 0.22;
+   const IMBALANCE_VISUAL_RADIUS = 140;
+  const MOTOR_GAIN = 0.150;
+  const FIELD_TIME_CONSTANT = 0.300;
+  const TORQUE_TIME_CONSTANT = 0.070;
+   const LOAD_TORQUE = 0.18;
+   const LOAD_DURATION = 0.7;
+   const INTEGRAL_LIMIT = 2.5;
+  const DERIVATIVE_LIMIT = 40;
+   const REST_SPEED = 0.012;
+  const SIM_DT = 1 / 120;
+  const HISTORY_DT = 0.04;
+  const HISTORY_LIMIT = 760;
+  const CENTER_X = 260;
+  const CENTER_Y = 260;
+  const TARGET_RADIUS = 224;
+
+  const elements = {
+    introBackdrop: document.getElementById('introBackdrop'),
+    introStart: document.getElementById('introStart'),
+    app: document.getElementById('app'),
+    svg: document.getElementById('flywheelSvg'),
+    dialTicks: document.getElementById('dialTicks'),
+    dialLabels: document.getElementById('dialLabels'),
+    dialHit: document.getElementById('dialHit'),
+    targetHandle: document.getElementById('targetHandle'),
+    targetDot: document.getElementById('targetDot'),
+    targetHalo: document.getElementById('targetHalo'),
+    targetNeedle: document.getElementById('targetNeedle'),
+    rotorVisual: document.getElementById('rotorVisual'),
+    rotorHit: document.getElementById('rotorHit'),
+     fieldArrow: document.getElementById('fieldArrow'),
+     fieldNeedle: document.getElementById('fieldNeedle'),
+     fieldDirection: document.getElementById('fieldDirection'),
+     fieldDirectionPill: document.getElementById('fieldDirectionPill'),
+     kpRange: document.getElementById('kpRange'),
+     kpOutput: document.getElementById('kpOutput'),
+     kiRange: document.getElementById('kiRange'),
+     kiOutput: document.getElementById('kiOutput'),
+     kdRange: document.getElementById('kdRange'),
+     kdOutput: document.getElementById('kdOutput'),
+     frictionRange: document.getElementById('frictionRange'),
+    frictionOutput: document.getElementById('frictionOutput'),
+     massRange: document.getElementById('massRange'),
+     massOutput: document.getElementById('massOutput'),
+     imbalanceRange: document.getElementById('imbalanceRange'),
+     imbalanceOutput: document.getElementById('imbalanceOutput'),
+     imbalanceWeight: document.getElementById('imbalanceWeight'),
+     targetMinus: document.getElementById('targetMinus'),
+    targetZero: document.getElementById('targetZero'),
+    targetPlus: document.getElementById('targetPlus'),
+    pauseButton: document.getElementById('pauseButton'),
+    resetButton: document.getElementById('resetButton'),
+    timeScale: document.getElementById('timeScale'),
+    loadButton: document.getElementById('loadButton'),
+    timeLabel: document.getElementById('timeLabel'),
+     directionPill: document.getElementById('directionPill'),
+     balancePill: document.getElementById('balancePill'),
+     saturatedPill: document.getElementById('saturatedPill'),
+     metricTarget: document.getElementById('metricTarget'),
+    metricPosition: document.getElementById('metricPosition'),
+    metricError: document.getElementById('metricError'),
+     metricSpeed: document.getElementById('metricSpeed'),
+      metricField: document.getElementById('metricField'),
+      metricIntegral: document.getElementById('metricIntegral'),
+      metricDerivative: document.getElementById('metricDerivative'),
+      metricTorque: document.getElementById('metricTorque'),
+     gravityForce: document.getElementById('gravityForce'),
+     imbalanceForce: document.getElementById('imbalanceForce'),
+     gravityTorque: document.getElementById('gravityTorque'),
+     centrifugalForce: document.getElementById('centrifugalForce'),
+     imbalanceMaxForce: document.getElementById('imbalanceMaxForce'),
+     statusDot: document.getElementById('statusDot'),
+    statusText: document.getElementById('statusText'),
+    loadStatus: document.getElementById('loadStatus'),
+    positionChart: document.getElementById('positionChart'),
+    speedChart: document.getElementById('speedChart')
+  };
+
+  const state = {
+     kp: 1,
+     ki: 0.35,
+     integralError: 0,
+     kd: 0.10,
+     lastError: 0,
+     derivativeError: 0,
+     staticFriction: 0.04,
+     mass: 1.25,
+     imbalance: 0,
+     imbalanceTorque: 0,
+     gravityTorque: 0,
+     target: Math.PI,
+    theta: 0,
+    omega: 0,
+    fieldSpeed: 0,
+    fieldSpeedRef: 0,
+    torque: 0,
+    torqueDemand: 0,
+    normalizedCommand: 0,
+    error: 0,
+    loadTimer: 0,
+    elapsed: 0,
+    historyClock: 0,
+    running: false,
+    timeScale: 1,
+    fieldAngle: 0,
+    lastSpeedSign: 0,
+    reversals: 0,
+    lastReversalTime: -Infinity,
+    history: []
+  };
+
+  let accumulator = 0;
+  let lastFrame = performance.now();
+  let dragMode = '';
+  let dragPointerId = null;
+  let dragLastAngle = 0;
+  let dragLastTime = 0;
+  let dragVelocity = 0;
+  let exerciseStarted = false;
+
+  function clamp(value, minimum, maximum) {
+    return Math.max(minimum, Math.min(maximum, value));
+  }
+
+  function frictionParameters() {
+    return {
+      staticTorque: state.staticFriction,
+      kineticTorque: state.staticFriction,
+      viscousTorque: 0
+    };
+  }
+
+  function flywheelInertia() {
+    return state.mass * FLYWHEEL_RADIUS * FLYWHEEL_RADIUS + IMBALANCE_MASS * state.imbalance * state.imbalance;
+  }
+
+  function imbalanceForceMagnitude() {
+    return IMBALANCE_MASS * state.imbalance * state.omega * state.omega;
+  }
+
+  function imbalanceForceAtReferenceSpeed() {
+    return IMBALANCE_MASS * state.imbalance * MAX_FIELD * MAX_FIELD;
+  }
+
+  function weightForce() {
+    return IMBALANCE_MASS * GRAVITY;
+  }
+
+  function tangentialGravityForce() {
+    if (state.imbalance <= 0) return 0;
+    const weightAngle = state.theta + DISPLAY_ANGLE_OFFSET + WEIGHT_LOCAL_ANGLE;
+    return weightForce() * Math.sin(weightAngle);
+  }
+
+  function gravityTorque() {
+    return tangentialGravityForce() * state.imbalance * GRAVITY_TORQUE_GAIN;
+  }
+
+  function imbalanceTorque() {
+    return gravityTorque() + imbalanceForceMagnitude() * IMBALANCE_TORQUE_GAIN * Math.sin(state.theta + DISPLAY_ANGLE_OFFSET);
+  }
+
+  function wrapAngle(value) {
+    return Math.atan2(Math.sin(value), Math.cos(value));
+  }
+
+  function normalizeAngle(value) {
+    let result = value % TAU;
+    if (result < 0) result += TAU;
+    return result;
+  }
+
+  function signed(value, digits) {
+    const rounded = value.toFixed(digits);
+    if (Number(rounded) > 0) return '+' + rounded.replace('.', ',');
+    return rounded.replace('.', ',');
+  }
+
+  function degrees(value) {
+    return value * DEG;
+  }
+
+  function rpm(value) {
+    return value / RPM_TO_RAD;
+  }
+
+  function formatDegrees(value) {
+    const result = ((value * DEG) % 360 + 360) % 360;
+    return result.toFixed(1).replace('.', ',') + '°';
+  }
+
+  function formatSignedDegrees(value) {
+    const result = value * DEG;
+    return signed(result, 1) + '°';
+  }
+
+  function formatSignedRpm(value) {
+    return signed(rpm(value), 1) + ' tr/min';
+  }
+
+  function formatTorque(value) {
+    return signed(value, 2).replace('+', '') + ' N·m';
+  }
+
+  function formatForce(value) {
+    return value.toFixed(2).replace('.', ',') + ' N';
+  }
+
+  function formatSignedForce(value) {
+    return signed(value, 2) + ' N';
+  }
+
+  function integralCommand() {
+    return state.ki * state.integralError;
+  }
+
+  function derivativeCommand() {
+    return state.kd * state.derivativeError;
+  }
+
+  function formatPercent(value) {
+    return signed(value * 100, 1) + ' %';
+  }
+
+  function polarToSvg(angle, radius) {
+    const displayAngle = angle + DISPLAY_ANGLE_OFFSET;
+    return {
+      x: CENTER_X + Math.sin(displayAngle) * radius,
+      y: CENTER_Y - Math.cos(displayAngle) * radius
+    };
+  }
+
+  function eventAngle(event) {
+    const point = elements.svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const matrix = elements.svg.getScreenCTM();
+    if (!matrix) return 0;
+    const local = point.matrixTransform(matrix.inverse());
+    return wrapAngle(Math.atan2(local.x - CENTER_X, -(local.y - CENTER_Y)) - DISPLAY_ANGLE_OFFSET);
+  }
+
+  function eventTime(event) {
+    return typeof event.timeStamp === 'number' ? event.timeStamp : performance.now();
+  }
+
+  function setTarget(angle) {
+    if (!exerciseStarted) return;
+    const nextTarget = normalizeAngle(angle);
+    state.integralError = 0;
+    state.lastError = state.error;
+    state.derivativeError = 0;
+    state.target = nextTarget;
+    const value = Math.min(359, Math.round(degrees(state.target)));
+    elements.targetHandle.setAttribute('aria-valuenow', String(value));
+    updateVisuals();
+  }
+
+  function adjustTarget(delta) {
+    if (!exerciseStarted) return;
+    setTarget(state.target + delta * Math.PI / 180);
+  }
+
+  function startExercise() {
+    exerciseStarted = true;
+    elements.introBackdrop.hidden = true;
+    elements.app.inert = false;
+    elements.app.removeAttribute('inert');
+    elements.app.setAttribute('aria-hidden', 'false');
+    resetSimulation();
+    elements.pauseButton.focus();
+  }
+
+  function resetSimulation() {
+    state.kp = Number(elements.kpRange.value);
+    state.ki = Number(elements.kiRange.value);
+    state.integralError = 0;
+    state.kd = Number(elements.kdRange.value);
+    state.lastError = 0;
+    state.derivativeError = 0;
+    state.staticFriction = Number(elements.frictionRange.value);
+    state.mass = Number(elements.massRange.value);
+    state.imbalance = Number(elements.imbalanceRange.value);
+    state.imbalanceTorque = 0;
+    state.gravityTorque = 0;
+    state.target = Math.PI;
+    state.theta = 0;
+    state.omega = 0;
+    state.fieldSpeed = 0;
+    state.fieldSpeedRef = 0;
+    state.torque = 0;
+    state.torqueDemand = 0;
+    state.normalizedCommand = 0;
+    state.error = 0;
+    state.loadTimer = 0;
+    state.elapsed = 0;
+    state.historyClock = 0;
+    state.running = exerciseStarted;
+    state.timeScale = Number(elements.timeScale.value);
+    state.fieldAngle = 0;
+    state.lastSpeedSign = 0;
+    state.reversals = 0;
+    state.lastReversalTime = -Infinity;
+    state.history = [];
+    accumulator = 0;
+    elements.pauseButton.textContent = 'Pause';
+    elements.timeLabel.textContent = 'Temps ' + (state.timeScale === 1 ? '1×' : '0,25×');
+    updateVisuals();
+    drawCharts();
+  }
+
+  function addHistory() {
+    const targetDegrees = ((state.target * DEG) % 360 + 360) % 360;
+    const positionDegrees = ((state.theta * DEG) % 360 + 360) % 360;
+    state.history.push({
+      time: state.elapsed,
+      target: targetDegrees,
+      position: positionDegrees,
+      speed: rpm(state.omega),
+      field: rpm(state.fieldSpeedRef)
+    });
+    if (state.history.length > HISTORY_LIMIT) state.history.shift();
+  }
+
+  function applyLoad() {
+    if (state.loadTimer <= 0) return 0;
+    const direction = Math.abs(state.omega) > REST_SPEED ? -Math.sign(state.omega) : -1;
+    return direction * LOAD_TORQUE;
+  }
+
+  function motorTorqueDemand(fieldSpeed, omega) {
+    const direction = Math.abs(fieldSpeed) > 0.0001 ? Math.sign(fieldSpeed) : (omega >= 0 ? 1 : -1);
+    const alongField = omega * direction;
+    const envelope = alongField < 0 ? 1 : Math.max(0.02, 1 - Math.abs(omega) / MAX_FIELD);
+    const rawTorque = MOTOR_GAIN * (fieldSpeed - omega) * envelope;
+    return clamp(rawTorque, -MAX_TORQUE, MAX_TORQUE);
+  }
+
+  function updateRotorFriction(dt, load, disturbanceTorque) {
+    const friction = frictionParameters();
+    const availableTorque = state.torque + load + disturbanceTorque;
+    if (Math.abs(state.omega) < REST_SPEED && Math.abs(availableTorque) <= friction.staticTorque) {
+      state.omega = 0;
+      return;
+    }
+    let frictionDirection = Math.abs(state.omega) > REST_SPEED ? Math.sign(state.omega) : -Math.sign(availableTorque);
+    if (frictionDirection === 0) frictionDirection = 1;
+    const frictionTorque = frictionDirection * friction.kineticTorque + state.omega * friction.viscousTorque;
+    const acceleration = (availableTorque - frictionTorque) / flywheelInertia();
+    state.omega += acceleration * dt;
+    if (Math.abs(state.omega) < REST_SPEED && Math.abs(availableTorque) <= friction.staticTorque) state.omega = 0;
+    state.omega = clamp(state.omega, -MAX_FIELD, MAX_FIELD);
+  }
+
+  function stepSimulation(dt) {
+    state.error = wrapAngle(state.target - state.theta);
+    const normalizedError = state.error / Math.PI;
+    const proportionalCommand = state.kp * normalizedError;
+    const integralCandidate = clamp(state.integralError + normalizedError * dt, -INTEGRAL_LIMIT, INTEGRAL_LIMIT);
+    const candidateCommand = proportionalCommand + state.ki * integralCandidate;
+    const saturatedCandidate = Math.abs(candidateCommand) > 1;
+    const errorAlignsWithCandidate = Math.sign(normalizedError) === Math.sign(candidateCommand);
+    if (!saturatedCandidate || !errorAlignsWithCandidate) state.integralError = integralCandidate;
+    const rawDerivative = dt > 0 ? wrapAngle(state.error - state.lastError) / dt : 0;
+    state.lastError = state.error;
+    state.derivativeError = clamp(rawDerivative, -DERIVATIVE_LIMIT, DERIVATIVE_LIMIT);
+    state.normalizedCommand = clamp(proportionalCommand + integralCommand() + derivativeCommand(), -1, 1);
+    state.fieldSpeedRef = state.normalizedCommand * MAX_FIELD;
+    state.fieldSpeed += (state.fieldSpeedRef - state.fieldSpeed) * dt / FIELD_TIME_CONSTANT;
+    state.fieldSpeed = clamp(state.fieldSpeed, -MAX_FIELD, MAX_FIELD);
+    state.torqueDemand = motorTorqueDemand(state.fieldSpeed, state.omega);
+    state.torque += (state.torqueDemand - state.torque) * dt / TORQUE_TIME_CONSTANT;
+    const load = applyLoad();
+    state.gravityTorque = gravityTorque();
+    state.imbalanceTorque = imbalanceTorque();
+    updateRotorFriction(dt, load, state.imbalanceTorque);
+    state.theta += state.omega * dt;
+    state.fieldAngle += state.fieldSpeed * dt;
+    if (state.loadTimer > 0) state.loadTimer = Math.max(0, state.loadTimer - dt);
+    const speedSign = Math.abs(state.omega) > REST_SPEED ? Math.sign(state.omega) : 0;
+    if (speedSign && state.lastSpeedSign && speedSign !== state.lastSpeedSign) {
+      state.reversals += 1;
+      state.lastReversalTime = state.elapsed;
+    }
+    if (speedSign) state.lastSpeedSign = speedSign;
+    if (state.elapsed - state.lastReversalTime > 1.5) state.reversals = 0;
+    state.elapsed += dt;
+    state.historyClock += dt;
+    if (state.historyClock >= HISTORY_DT) {
+      state.historyClock -= HISTORY_DT;
+      addHistory();
+    }
+  }
+
+  function getStatus() {
+    const friction = frictionParameters();
+    if (!state.running) return 'En pause';
+    if (state.loadTimer > 0 && Math.abs(state.omega) < REST_SPEED && Math.abs(state.torque) <= friction.staticTorque) return 'Charge au seuil';
+    if (state.reversals >= 2 && state.elapsed - state.lastReversalTime < 1.5) return 'Oscillation détectée';
+    if (Math.abs(state.omega) < REST_SPEED && Math.abs(state.torque) <= friction.staticTorque && Math.abs(state.error) > 0.05) return 'Frottement dominant';
+    if (Math.abs(state.omega) < REST_SPEED && Math.abs(state.torque) <= friction.staticTorque) return 'À l’arrêt · zone morte';
+    if (Math.abs(state.error) < 0.035) return 'Proche de la consigne';
+    if (Math.sign(state.torque) !== Math.sign(state.error) && Math.abs(state.omega) > 0.04) return 'Freinage';
+    if (Math.abs(state.error) > 0.05) return 'Déplacement vers la cible';
+    return 'Stabilisation';
+  }
+
+  function updateDial() {
+    for (let index = 0; index < 36; index += 1) {
+      const angle = index * 10 * Math.PI / 180;
+      const outer = polarToSvg(angle, 214);
+      const inner = polarToSvg(angle, index % 3 === 0 ? 204 : 208);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', outer.x.toFixed(2));
+      line.setAttribute('y1', outer.y.toFixed(2));
+      line.setAttribute('x2', inner.x.toFixed(2));
+      line.setAttribute('y2', inner.y.toFixed(2));
+      line.setAttribute('stroke', index % 9 === 0 ? '#7895b1' : '#35536f');
+      line.setAttribute('stroke-width', index % 9 === 0 ? '2' : '1');
+      elements.dialTicks.appendChild(line);
+    }
+    [['0°', 0], ['90°', 90], ['180°', 180], ['270°', 270]].forEach(item => {
+      const angle = item[1] * Math.PI / 180;
+      const point = polarToSvg(angle, 190);
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', point.x.toFixed(2));
+      text.setAttribute('y', (point.y + 4).toFixed(2));
+      text.textContent = item[0];
+      elements.dialLabels.appendChild(text);
+    });
+  }
+
+  function updateVisuals() {
+    const targetPoint = polarToSvg(state.target, TARGET_RADIUS);
+    const innerTargetPoint = polarToSvg(state.target, TARGET_RADIUS - 30);
+    const targetX = targetPoint.x;
+    const targetY = targetPoint.y;
+    elements.targetDot.setAttribute('cx', targetX.toFixed(2));
+    elements.targetDot.setAttribute('cy', targetY.toFixed(2));
+    elements.targetHalo.setAttribute('cx', targetX.toFixed(2));
+    elements.targetHalo.setAttribute('cy', targetY.toFixed(2));
+    elements.targetNeedle.setAttribute('d', 'M' + targetX.toFixed(2) + ' ' + targetY.toFixed(2) + ' L' + innerTargetPoint.x.toFixed(2) + ' ' + innerTargetPoint.y.toFixed(2));
+     elements.rotorVisual.setAttribute('transform', 'rotate(' + ((state.theta + DISPLAY_ANGLE_OFFSET) * DEG).toFixed(2) + ' ' + CENTER_X + ' ' + CENTER_Y + ')');
+     elements.fieldNeedle.setAttribute('transform', 'rotate(' + ((state.fieldAngle + DISPLAY_ANGLE_OFFSET) * DEG).toFixed(2) + ' ' + CENTER_X + ' ' + CENTER_Y + ')');
+     const fieldNeedleDirection = Math.abs(state.fieldSpeedRef) < 0.001 ? 0 : Math.sign(state.fieldSpeedRef);
+     elements.fieldNeedle.classList.toggle('negative', fieldNeedleDirection < 0);
+     elements.imbalanceWeight.setAttribute('cx', (CENTER_X + state.imbalance / FLYWHEEL_RADIUS * IMBALANCE_VISUAL_RADIUS).toFixed(2));
+     elements.fieldArrow.setAttribute('transform', 'rotate(' + (state.fieldAngle * DEG).toFixed(2) + ')');
+     const fieldDirection = Math.abs(state.fieldSpeedRef) < 0.001 ? 0 : Math.sign(state.fieldSpeedRef);
+     elements.fieldArrow.classList.toggle('negative', fieldDirection < 0);
+     elements.fieldArrow.classList.toggle('idle', fieldDirection === 0);
+     elements.fieldDirection.textContent = fieldDirection > 0 ? '↻' : fieldDirection < 0 ? '↺' : '·';
+     elements.fieldDirection.style.fill = fieldDirection < 0 ? 'var(--cyan)' : fieldDirection > 0 ? 'var(--violet)' : 'var(--muted)';
+     elements.fieldDirectionPill.textContent = fieldDirection > 0 ? 'Champ ↻' : fieldDirection < 0 ? 'Champ ↺' : 'Champ immobile';
+     elements.fieldDirectionPill.className = fieldDirection < 0 ? 'pill cyan' : fieldDirection > 0 ? 'pill violet' : 'pill';
+      elements.kpOutput.textContent = state.kp.toFixed(2).replace('.', ',');
+      elements.kiOutput.textContent = state.ki.toFixed(2).replace('.', ',');
+      elements.kdOutput.textContent = state.kd.toFixed(2).replace('.', ',');
+      elements.frictionOutput.textContent = formatTorque(state.staticFriction);
+     elements.massOutput.textContent = state.mass.toFixed(2).replace('.', ',') + ' kg';
+     elements.imbalanceOutput.textContent = state.imbalance.toFixed(2).replace('.', ',') + ' m';
+     elements.gravityForce.textContent = formatForce(weightForce());
+     elements.imbalanceForce.textContent = formatSignedForce(tangentialGravityForce());
+     elements.gravityTorque.textContent = formatTorque(gravityTorque());
+     elements.centrifugalForce.textContent = formatForce(imbalanceForceMagnitude());
+     elements.imbalanceMaxForce.textContent = formatForce(imbalanceForceAtReferenceSpeed());
+     elements.metricTarget.textContent = formatDegrees(state.target);
+    elements.metricPosition.textContent = formatDegrees(state.theta);
+    elements.metricError.textContent = formatSignedDegrees(state.error);
+    elements.metricError.className = 'metric-value ' + (Math.abs(state.error) > Math.PI / 30 ? 'orange' : 'green');
+     elements.metricSpeed.textContent = formatSignedRpm(state.omega);
+     elements.metricField.textContent = formatSignedRpm(state.fieldSpeedRef);
+     elements.metricIntegral.textContent = formatPercent(integralCommand());
+     elements.metricDerivative.textContent = formatPercent(derivativeCommand());
+      elements.metricTorque.textContent = formatTorque(state.torque);
+     elements.directionPill.textContent = 'Consigne ' + formatDegrees(state.target);
+     const balanced = state.imbalance < 0.005;
+     elements.balancePill.textContent = balanced ? 'Roue équilibrée' : 'Roue décentrée';
+     elements.balancePill.className = balanced ? 'pill' : 'pill orange';
+     const saturated = Math.abs(state.normalizedCommand) >= 0.999;
+     elements.saturatedPill.textContent = saturated ? 'Commande PID saturée' : 'PID non saturé';
+    elements.saturatedPill.className = saturated ? 'pill red' : 'pill';
+    const status = getStatus();
+    elements.statusText.textContent = status;
+    elements.statusDot.className = 'status-dot' + (!state.running ? ' paused' : status === 'Oscillation détectée' ? ' oscillating' : status === 'Frottement dominant' ? ' friction' : '');
+    elements.loadStatus.textContent = state.loadTimer > 0 ? 'Charge active' : 'Charge inactive';
+    elements.loadStatus.style.color = state.loadTimer > 0 ? 'var(--orange)' : 'var(--text)';
+    elements.timeLabel.textContent = 'Temps ' + (state.timeScale === 1 ? '1×' : '0,25×');
+  }
+
+  function prepareCanvas(canvas) {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.max(1, canvas.clientWidth);
+    const height = Math.max(1, canvas.clientHeight);
+    if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+    }
+    const context = canvas.getContext('2d');
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return { context, width, height };
+  }
+
+  function drawChart(canvas, minimum, maximum, lines) {
+    const prepared = prepareCanvas(canvas);
+    const context = prepared.context;
+    const width = prepared.width;
+    const height = prepared.height;
+    const left = 42;
+    const right = 12;
+    const top = 13;
+    const bottom = 28;
+    const plotWidth = Math.max(1, width - left - right);
+    const plotHeight = Math.max(1, height - top - bottom);
+    const now = state.elapsed;
+    const startTime = Math.max(0, now - 30);
+    const endTime = Math.max(30, now);
+    const xForTime = value => left + (value - startTime) / (endTime - startTime) * plotWidth;
+    const yForValue = value => top + (1 - (value - minimum) / (maximum - minimum)) * plotHeight;
+    context.clearRect(0, 0, width, height);
+    context.font = '11px system-ui, sans-serif';
+    context.lineWidth = 1;
+    context.strokeStyle = 'rgba(132, 159, 185, .2)';
+    context.fillStyle = '#7f96ae';
+    for (let index = 0; index <= 4; index += 1) {
+      const ratio = index / 4;
+      const y = top + ratio * plotHeight;
+      context.beginPath();
+      context.moveTo(left, y + .5);
+      context.lineTo(width - right, y + .5);
+      context.stroke();
+      const value = maximum - ratio * (maximum - minimum);
+      context.fillText(value.toFixed(0), 4, y + 4);
+    }
+    for (let index = 0; index <= 3; index += 1) {
+      const ratio = index / 3;
+      const x = left + ratio * plotWidth;
+      context.beginPath();
+      context.moveTo(x + .5, top);
+      context.lineTo(x + .5, height - bottom);
+      context.stroke();
+      const value = startTime + ratio * (endTime - startTime);
+      context.fillText(value.toFixed(0) + 's', x - 8, height - 8);
+    }
+    context.strokeStyle = 'rgba(157, 177, 201, .5)';
+    context.beginPath();
+    context.moveTo(left, top);
+    context.lineTo(left, height - bottom);
+    context.lineTo(width - right, height - bottom);
+    context.stroke();
+    if (!state.history.length) {
+      context.fillStyle = '#7188a1';
+      context.fillText('En attente de données', 14, 24);
+      return;
+    }
+    lines.forEach(line => {
+      context.beginPath();
+      let started = false;
+      state.history.forEach(point => {
+        if (point.time < startTime - 0.1) return;
+        const x = xForTime(point.time);
+        const y = yForValue(clamp(line.value(point), minimum, maximum));
+        if (!started) {
+          context.moveTo(x, y);
+          started = true;
+        } else context.lineTo(x, y);
+      });
+      context.strokeStyle = line.color;
+      context.lineWidth = line.width || 2;
+      context.setLineDash(line.dash || []);
+      context.stroke();
+      context.setLineDash([]);
+    });
+  }
+
+  function drawCharts() {
+    const positionMinimum = 0;
+    const positionMaximum = 360;
+    drawChart(elements.positionChart, positionMinimum, positionMaximum, [
+      { color: '#ffb45c', value: point => point.target, width: 2, dash: [5, 4] },
+      { color: '#55d8ff', value: point => point.position, width: 2.2 }
+    ]);
+    const speedMaximum = Math.max(6, ...state.history.flatMap(point => [Math.abs(point.speed), Math.abs(point.field)]), 6) + 1;
+    drawChart(elements.speedChart, -speedMaximum, speedMaximum, [
+      { color: '#55d8ff', value: point => point.speed, width: 2.2 },
+      { color: '#b49bff', value: point => point.field, width: 1.8, dash: [4, 4] }
+    ]);
+  }
+
+  function startTargetDrag(event) {
+    if (!exerciseStarted) return;
+    event.preventDefault();
+    dragMode = 'target';
+    dragPointerId = event.pointerId;
+    elements.svg.setPointerCapture(dragPointerId);
+    setTarget(eventAngle(event));
+  }
+
+  function startRotorDrag(event) {
+    if (!exerciseStarted) return;
+    event.preventDefault();
+    dragMode = 'rotor';
+    dragPointerId = event.pointerId;
+    dragLastAngle = eventAngle(event);
+    dragLastTime = eventTime(event);
+    dragVelocity = 0;
+    elements.svg.setPointerCapture(dragPointerId);
+  }
+
+  function movePointer(event) {
+    if (event.pointerId !== dragPointerId) return;
+    if (dragMode === 'target') {
+      setTarget(eventAngle(event));
+      return;
+    }
+    const angle = eventAngle(event);
+    const time = eventTime(event);
+    const delta = wrapAngle(angle - dragLastAngle);
+    state.theta += delta;
+    const elapsed = Math.max(1, time - dragLastTime) / 1000;
+    dragVelocity = delta / elapsed;
+    dragLastAngle = angle;
+    dragLastTime = time;
+    state.omega = clamp(dragVelocity, -MAX_FIELD, MAX_FIELD);
+    state.error = wrapAngle(state.target - state.theta);
+    updateVisuals();
+  }
+
+  function endPointer(event) {
+    if (event.pointerId !== dragPointerId) return;
+    if (dragMode === 'rotor') state.omega = clamp(dragVelocity, -MAX_FIELD, MAX_FIELD);
+    dragMode = '';
+    dragPointerId = null;
+  }
+
+  function togglePause() {
+    if (!exerciseStarted) return;
+    state.running = !state.running;
+    elements.pauseButton.textContent = state.running ? 'Pause' : 'Reprendre';
+  }
+
+  function animationFrame(timestamp) {
+    const frameDelta = Math.min(0.1, Math.max(0, (timestamp - lastFrame) / 1000));
+    lastFrame = timestamp;
+    if (state.running && !dragMode) {
+      accumulator += frameDelta * state.timeScale;
+      let steps = 0;
+      while (accumulator >= SIM_DT && steps < 16) {
+        stepSimulation(SIM_DT);
+        accumulator -= SIM_DT;
+        steps += 1;
+      }
+    }
+    updateVisuals();
+    drawCharts();
+    requestAnimationFrame(animationFrame);
+  }
+
+  elements.introStart.addEventListener('click', startExercise);
+   elements.kpRange.addEventListener('input', event => {
+     state.kp = Number(event.target.value);
+     updateVisuals();
+   });
+   elements.kiRange.addEventListener('input', event => {
+     state.ki = Number(event.target.value);
+     state.integralError = 0;
+     updateVisuals();
+   });
+   elements.kdRange.addEventListener('input', event => {
+     state.kd = Number(event.target.value);
+     state.derivativeError = 0;
+     updateVisuals();
+   });
+   elements.frictionRange.addEventListener('input', event => {
+    state.staticFriction = Number(event.target.value);
+    state.reversals = 0;
+    state.lastReversalTime = -Infinity;
+    updateVisuals();
+  });
+   elements.massRange.addEventListener('input', event => {
+     state.mass = Number(event.target.value);
+     updateVisuals();
+   });
+     elements.imbalanceRange.addEventListener('input', event => {
+       state.imbalance = Number(event.target.value);
+       state.imbalanceTorque = 0;
+       state.gravityTorque = 0;
+       updateVisuals();
+     });
+   elements.targetMinus.addEventListener('click', () => adjustTarget(-30));
+  elements.targetZero.addEventListener('click', () => setTarget(0));
+  elements.targetPlus.addEventListener('click', () => adjustTarget(30));
+  elements.pauseButton.addEventListener('click', togglePause);
+  elements.resetButton.addEventListener('click', resetSimulation);
+  elements.timeScale.addEventListener('change', event => {
+    state.timeScale = Number(event.target.value);
+    updateVisuals();
+  });
+  elements.loadButton.addEventListener('click', () => {
+    if (!exerciseStarted) return;
+    state.loadTimer = LOAD_DURATION;
+    updateVisuals();
+  });
+  elements.dialHit.addEventListener('pointerdown', startTargetDrag);
+  elements.targetHandle.addEventListener('pointerdown', startTargetDrag);
+  elements.rotorHit.addEventListener('pointerdown', startRotorDrag);
+  elements.svg.addEventListener('pointermove', movePointer);
+  elements.svg.addEventListener('pointerup', endPointer);
+  elements.svg.addEventListener('pointercancel', endPointer);
+  elements.targetHandle.addEventListener('keydown', event => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      adjustTarget(5);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      adjustTarget(-5);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      setTarget(0);
+    }
+  });
+  window.addEventListener('resize', () => {
+    drawCharts();
+  });
+  window.addEventListener('blur', () => {
+    if (dragMode) {
+      dragMode = '';
+      dragPointerId = null;
+    }
+  });
+
+  updateDial();
+  resetSimulation();
+  requestAnimationFrame(animationFrame);
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+
+  function findScormApi() {
+    let candidate = window;
+    for (let depth = 0; depth < 10 && candidate; depth += 1, candidate = candidate.parent) {
+      try {
+        if (candidate.API) return candidate.API;
+      } catch (error) {
+        return null;
+      }
+    }
+    try {
+      return window.opener && window.opener.API ? window.opener.API : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  const api = findScormApi();
+  if (!api) return;
+
+  let initialized = false;
+  let finished = false;
+  let completed = false;
+
+  function call(method, ...args) {
+    try {
+      return api[method](...args);
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function commit() {
+    if (initialized) call('LMSCommit', '');
+  }
+
+  function complete() {
+    if (completed || !initialized) return;
+    completed = true;
+    call('LMSSetValue', 'cmi.core.lesson_status', 'completed');
+    call('LMSSetValue', 'cmi.core.score.raw', '100');
+    call('LMSSetValue', 'cmi.core.score.min', '0');
+    call('LMSSetValue', 'cmi.core.score.max', '100');
+    commit();
+  }
+
+  function finish() {
+    if (finished || !initialized) return;
+    finished = true;
+    commit();
+    call('LMSFinish', '');
+  }
+
+  try {
+    api.LMSInitialize('');
+    initialized = true;
+  } catch (error) {
+    initialized = false;
+  }
+
+  if (!initialized) return;
+
+  const currentStatus = call('LMSGetValue', 'cmi.core.lesson_status');
+  if (!currentStatus || currentStatus === 'not attempted' || currentStatus === 'unknown') {
+    call('LMSSetValue', 'cmi.core.lesson_status', 'incomplete');
+  }
+  call('LMSSetValue', 'cmi.core.lesson_location', String(window.location.href));
+  commit();
+
+  const targetMetric = document.getElementById('metricTarget');
+  const errorMetric = document.getElementById('metricError');
+  const statusMetric = document.getElementById('statusText');
+  const initialTarget = targetMetric ? targetMetric.textContent : '';
+  let targetChanged = false;
+
+  window.setInterval(() => {
+    if (!targetMetric || !errorMetric || !statusMetric) return;
+    if (targetMetric.textContent !== initialTarget) targetChanged = true;
+    const errorValue = Math.abs(Number.parseFloat(errorMetric.textContent.replace(',', '.')));
+    const status = statusMetric.textContent;
+    const stable = status === 'Proche de la consigne' || status === 'À l’arrêt · zone morte' || status === 'Frottement dominant';
+    if (targetChanged && Number.isFinite(errorValue) && errorValue <= 5 && stable) complete();
+  }, 500);
+
+  window.addEventListener('pagehide', finish);
+  window.addEventListener('beforeunload', finish);
+  window.PID_SCORM = { complete, finish };
+})();
+</script>
+</body>
+</html>

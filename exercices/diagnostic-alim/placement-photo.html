@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Placer les points de test sur la photo</title>
+<style>
+  body{margin:0;background:#0b1120;color:#e2e8f0;font-family:'Segoe UI',Roboto,sans-serif;font-size:14px;}
+  .app{max-width:1900px;margin:0 auto;padding:12px;}
+  h1{font-size:1.2rem;color:#e0f2fe;margin:0 0 4px;}
+  .role{color:#94a3b8;font-size:.82rem;line-height:1.5;}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px 12px;margin:10px 0;}
+  .btn{border:1px solid #334155;background:#172033;color:#e2e8f0;border-radius:8px;padding:8px 12px;font-size:.85rem;font-weight:600;cursor:pointer;}
+  .btn:hover{filter:brightness(1.2);}
+  .btn.green{background:#14532d;border-color:#22c55e;color:#bbf7d0;}
+  .btn.blue{background:#0c4a6e;border-color:#38bdf8;color:#bae6fd;}
+  .btn.amber{background:#713f12;border-color:#f59e0b;color:#fde68a;}
+  .grid{display:grid;grid-template-columns:minmax(0,1.7fr) 360px;gap:12px;align-items:start;}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr;}}
+  .card{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:10px 12px;}
+  .card h2{font-size:.9rem;color:#bae6fd;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+  #wrap{position:relative;border:1px solid #334155;border-radius:8px;overflow:hidden;cursor:crosshair;}
+  #wrap img{display:block;width:100%;height:auto;}
+  .pd{position:absolute;width:16px;height:16px;border-radius:50%;background:rgba(250,204,21,.9);
+    border:2px solid #0b1120;transform:translate(-50%,-50%);cursor:grab;box-shadow:0 0 4px #000;}
+  .pd:hover{background:#fde68a;}
+  .pd .t{position:absolute;left:18px;top:-4px;white-space:nowrap;font:600 11px monospace;color:#0f172a;background:#facc15;padding:0 3px;border-radius:3px;}
+  select,input{background:#0d1526;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:6px 8px;font-size:.85rem;}
+  input[type=number]{width:70px;font-family:monospace;}
+  table{width:100%;border-collapse:collapse;font-size:.78rem;}
+  th,td{padding:3px 5px;border-bottom:1px solid #24334a;text-align:left;}
+  th{color:#93c5fd;}
+  textarea{width:100%;height:170px;background:#0d1526;color:#bbf7d0;border:1px solid #334155;border-radius:8px;font-family:monospace;font-size:.75rem;padding:8px;}
+  .tag{font-family:monospace;color:#fde68a;}
+  table tr.sel{background:#0c4a6e;}
+  .scroll{max-height:52vh;overflow:auto;}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Placer les points de test sur la photo de la carte</h1>
+  <div class="role">Choisis un noeud dans la liste (ou le menu), puis <b>clique sur l'endroit de la carte</b>. Les pastilles peuvent etre glissees. Clique <b>Exporter photomap.js</b> et remplace le fichier du SCORM.</div>
+
+  <div class="bar">
+    <label>Noeud a placer :</label>
+    <select id="nodeSel"></select>
+    <button id="btnAdd" class="btn blue">Placer ce noeud (clic photo)</button>
+    <button id="btnSvg" class="btn green">Exporter board-points.svg</button>
+    <button id="btnPm" class="btn">Exporter photomap.js</button>
+    <button id="btnClear" class="btn amber">Vider</button>
+    <span id="hint" class="role"></span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div id="wrap"><img src="boardcc.jpg" id="board"><div id="dots"></div></div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Points places</h2>
+        <div class="scroll"><table id="tbl"><thead><tr><th>Noeud</th><th>X%</th><th>Y%</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <h2>photomap.js</h2>
+        <textarea id="out" spellcheck="false"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="netlist.js"></script>
+<script src="photomap.js"></script>
+<script src="placement-photo.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="MANIFEST-PID-FLYWHEEL-IMBALANCE" version="1.0"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="ORG-PID-FLYWHEEL-IMBALANCE">
+    <organization identifier="ORG-PID-FLYWHEEL-IMBALANCE">
+      <title>Variante PID — Flywheel décentrée</title>
+      <item identifier="ITEM-PID-FLYWHEEL-IMBALANCE" identifierref="RES-PID-FLYWHEEL-IMBALANCE">
+        <title>Variante PID — Gravité et force centrifuge</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES-PID-FLYWHEEL-IMBALANCE" type="webcontent" adlcp:scormtype="sco" href="PID-imbal.html">
+      <file href="PID-imbal.html"/>
+    </resource>
+  </resources>
+</manifest>

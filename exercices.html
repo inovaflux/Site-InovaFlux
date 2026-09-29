@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercices interactifs | InovaFlux</title>
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --bleu: #1A365D;
+            --orange: #E67E22;
+            --fond: #F4F7F6;
+            --blanc: #ffffff;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--fond); color: #333; line-height: 1.5; }
+
+        /* --- BARRE DE NAVIGATION --- */
+        header {
+            background: white;
+            padding: 16px 5%;
+            border-bottom: 2px solid var(--bleu);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo { height: 120px; width: auto; display: block; max-width: 100%; }
+
+        .nav-top { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+
+        .lang-switch {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .lang-switch a {
+            color: var(--bleu);
+            text-decoration: none;
+        }
+
+        .lang-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 22px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-bleu {
+            color: var(--bleu);
+            border: 2px solid var(--bleu);
+        }
+
+        .btn-bleu:hover,
+        .btn-nav.current.btn-bleu {
+            background: var(--bleu);
+            color: white;
+        }
+
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+            border: 2px solid var(--orange);
+        }
+
+        .btn-orange:hover,
+        .btn-nav.current.btn-orange {
+            background: #d35400;
+            border-color: #d35400;
+        }
+
+        /* --- CONTENU --- */
+        .container { padding: 40px 5%; max-width: 1000px; margin: 0 auto; }
+
+        .intro { text-align: center; margin-bottom: 40px; }
+        h1 { color: var(--bleu); margin-bottom: 10px; }
+
+        /* --- CARTE D'EXERCICE --- */
+        .exercice-section {
+            background: var(--blanc);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 8px solid var(--bleu);
+        }
+
+        .exercice-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercice-head h2 { margin: 0; color: var(--bleu); font-size: 1.3rem; }
+
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tag {
+            font-family: monospace;
+            background: #eee;
+            color: #475569;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .exercice-desc { margin: 0 0 20px; color: #555; }
+
+        /* --- BOUTON DE LANCEMENT --- */
+        .btn-lancer {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            background: var(--orange);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-lancer:hover { background: #d35400; transform: translateY(-2px); }
+
+        /* --- FENÊTRE MODALE DE L'EXERCICE --- */
+        .ex-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ex-modal.open { display: flex; }
+
+        .ex-modal-inner {
+            background: var(--blanc);
+            border-radius: 12px;
+            width: 96vw;
+            height: 92vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .ex-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 12px 20px;
+            background: var(--bleu);
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ex-modal-header .hint { font-weight: normal; font-size: 0.82rem; opacity: 0.85; }
+
+        .ex-modal-close {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .ex-modal-close:hover { background: rgba(255, 255, 255, 0.32); }
+
+        #ex-frame {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            header { padding: 10px 3%; }
+            .logo { height: 80px; }
+            .container { padding: 30px 4%; }
+            .exercice-section { padding: 20px; }
+            .ex-modal-inner { width: 100vw; height: 100vh; border-radius: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .exercice-head { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { padding: 5px 3%; }
+            .logo { height: 40px; }
+            .nav-top { gap: 8px; }
+            .btn-nav { padding: 6px 12px; font-size: 0.85rem; }
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+</head>
+<body>
+
+<!-- Fenêtre modale : l'exercice se joue ici -->
+<div class="ex-modal" id="ex-modal">
+    <div class="ex-modal-inner">
+        <div class="ex-modal-header">
+            <span id="ex-modal-title">Exercice</span>
+            <span class="hint">Touche Échap pour fermer</span>
+            <button class="ex-modal-close" id="ex-modal-close" title="Fermer" aria-label="Fermer">&#10005;</button>
+        </div>
+        <iframe id="ex-frame" src="" title="Exercice" allow="fullscreen"></iframe>
+    </div>
+</div>
+
+<header>
+    <a href="index.html">
+        <img src="logo.png" alt="InovaFlux" class="logo">
+    </a>
+
+    <nav class="nav-top">
+        <a href="index.html" class="btn-nav btn-bleu">← Accueil</a>
+        <a href="produits.html" class="btn-nav btn-bleu">Produits</a>
+        <a href="exercices.html" class="btn-nav btn-bleu current">Exercices</a>
+        <a href="telechargements.html" class="btn-nav btn-bleu">Téléchargements</a>
+        <a href="contact.html" class="btn-nav btn-orange">Contact</a>
+        <a href="panier.html" class="btn-nav btn-bleu">Panier</a>
+        <span class="lang-switch">FR | <a href="en/exercices.html">EN</a></span>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="intro">
+        <h1>Exercices interactifs</h1>
+        <p>Simulateurs pédagogiques</p>
+    </div>
+
+    <div class="exercice-section">
+        <div class="exercice-head">
+            <h2>Diagnostic — Alimentation linéaire</h2>
+            <div class="tags">
+                <span class="tag">Électronique</span>
+            </div>
+        </div>
+        <p class="exercice-desc">
+            Diagnostic guidé d'une alimentation linéaire sur carte : plan électrique interactif,
+            mesures à chaque pastille, fiche composant par broche et journal d'intervention.
+            Concluez en déclarant la panne.
+        </p>
+        <button class="btn-lancer" data-src="exercices/diagnostic-alim/index.html" data-title="Diagnostic — Alimentation linéaire">▶ Lancer l'exercice</button>
+    </div>
+
+    <div class="exercice-section">
+        <div class="exercice-head">
+            <h2>Diagnostic — Logique Ladder</h2>
+            <div class="tags">
+                <span class="tag">Poste de transfert</span>
+                <span class="tag">Automatisme</span>
+            </div>
+        </div>
+        <p class="exercice-desc">
+            Reconstruisez le fonctionnement d'un poste de transfert : machine en temps réel,
+            entrées / sorties, logique Ladder et Grafcet, jusqu'au diagnostic de la panne.
+        </p>
+        <button class="btn-lancer" data-src="exercices/diagnostic-ladder/index.html" data-title="Diagnostic — Logique Ladder">▶ Lancer l'exercice</button>
+    </div>
+
+    <div class="exercice-section">
+        <div class="exercice-head">
+            <h2>PID — Flywheel décentrée</h2>
+            <div class="tags">
+                <span class="tag">Régulation</span>
+                <span class="tag">PID</span>
+            </div>
+        </div>
+        <p class="exercice-desc">
+            « Un poids hors du centre » : observez la dérive d'une flywheel, analysez les courbes
+            temporelles et les mesures, puis identifiez le déséquilibre que le régulateur doit corriger.
+        </p>
+        <button class="btn-lancer" data-src="exercices/pid-imbal/PID-imbal.html" data-title="PID — Flywheel décentrée">▶ Lancer l'exercice</button>
+    </div>
+
+    <div class="exercice-section">
+        <div class="exercice-head">
+            <h2>PID — Procédé industriel (variante drone)</h2>
+            <div class="tags">
+                <span class="tag">Régulation</span>
+                <span class="tag">PID</span>
+            </div>
+        </div>
+        <p class="exercice-desc">
+            Comprenez le PID, réglez un gain par tâtonnement, puis affinez-le sur un procédé type
+            température pilotant l'altitude d'un drone. Étape 1 : le P, avec courbes et mesures en direct.
+        </p>
+        <button class="btn-lancer" data-src="exercices/PID-procedelineaire.html" data-title="PID — Procédé industriel (variante drone)">▶ Lancer l'exercice</button>
+    </div>
+
+</div>
+
+<script>
+    // ── Lanceur d'exercice (iframe plein écran) ─────────────────────────────
+    (function () {
+        var modal  = document.getElementById('ex-modal');
+        var frame  = document.getElementById('ex-frame');
+        var title  = document.getElementById('ex-modal-title');
+        var closeB = document.getElementById('ex-modal-close');
+
+        function open(src, name) {
+            title.textContent = name;
+            frame.src = src;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function close() {
+            modal.classList.remove('open');
+            // Vide le src pour arrêter le son / la simulation en arrière-plan
+            frame.src = 'about:blank';
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.btn-lancer').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                open(btn.getAttribute('data-src'), btn.getAttribute('data-title'));
+            });
+        });
+
+        closeB.addEventListener('click', close);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('open')) close();
+        });
+    })();
+</script>
+
+</body>
+</html>

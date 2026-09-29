@@ -1,0 +1,2161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1900 700"
+   width="1900"
+   height="700"
+   version="1.1"
+   id="svg281"
+   sodipodi:docname="schematic.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:c2pa="http://c2pa.org/manifest">
+  <defs
+     id="defs281" />
+  <sodipodi:namedview
+     id="namedview281"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="1.2710526"
+     inkscape:cx="1252.5052"
+     inkscape:cy="351.28365"
+     inkscape:window-width="1920"
+     inkscape:window-height="1007"
+     inkscape:window-x="2560"
+     inkscape:window-y="360"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg281" />
+  <metadata
+     id="metadata1">
+    <c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo2ODZhODU0MC01MTc0LTQ0ZjYtODVlZi02NTdmNTcwZGZkOTUAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaHdSFHIG9MfvKmfs3wHGyPMAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpkNjcyNDIxMC1jZTI5LTQ5ODAtOWVhZS0yODhlNjg1ZGRkMzZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNo/uxlh/KA30ZYOVc+2qSb/wAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggaFWsZZV3ZjYIZypTTP6DqGreJOnQHBRd/Q9p2svvGlqkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaDI5bMD/ZmtOESejj3mVyzUAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCD6HyPinZ1TR51YUQmNvCjnR5+HoOIGZvSSBcrQk52xVWRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiYZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjY4NmE4NTQwLTUxNzQtNDRmNi04NWVmLTY1N2Y1NzBkZmQ5NS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjgxYmJkNWU1LTFiZTYtNDA3ZS1hNGVkLWM4M2Q2Yjc5NTJmMnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBoVaxllXdmNghnKlNM/oOoat4k6dAcFF39D2nay+8aWqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggWXIdk1FGOHBxUKlaEzTTvWK16+KH6puePEsQmjOpnpiiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggbMYLpuI8DzkAukqII6+IdexbyvIMrb+W/pUkEtSZCtl0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQPVUdTFfRhgt2giMhFo7nFqYzI/a3IEvviUEh7LdpYvVyakFAfn9cDyp8pLHITBKx5SZ5ab2pzOP/jZn/wRhQmI=</c2pa:manifest>
+  </metadata>
+  <polyline
+     points="78,300 110,300 110,150 150,150"
+     id="polyline1"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(-2.3602484,8.6542443)" />
+  <polyline
+     points="200,150 245,150 245,180"
+     id="polyline2"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(-2.3602484,8.6542443)" />
+  <polyline
+     points="78,330 110,330 110,400 245,400 245,370"
+     id="polyline3"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(-2.3602484,8.6542443)" />
+  <polyline
+     points="282,190 282,170 330,170 330,240"
+     id="polyline4"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="282,360 282,430 450,430 450,240"
+     id="polyline5"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="390,180 390,115"
+     id="polyline6"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="390,300 390,350"
+     id="polyline7"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="390,115 1460,115"
+     id="polyline8"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="matrix(0.887686,0,0,1,43.802461,0.09834369)" />
+  <polyline
+     points="520,115 520,190"
+     id="polyline9"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="520,270 520,430"
+     id="polyline10"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="620,115 620,190"
+     id="polyline11"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="620,270 620,340"
+     id="polyline12"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="700,115 700,150"
+     id="polyline13"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="700,215 700,232"
+     id="polyline14"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="700,274 700,280"
+     id="polyline15"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="800,115 800,186"
+     id="polyline16"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(48.399483,1.1126318)" />
+  <polyline
+     points="800,199 800,262"
+     id="polyline17"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="matrix(1,0,0,1.0706433,48.399483,-17.39591)" />
+  <polyline
+     points="865,115 865,186"
+     id="polyline18"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(139.07897,0.55631589)" />
+  <polyline
+     points="865,199 865,262"
+     id="polyline19"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(139.07897,0.55631589)" />
+  <polyline
+     points="520,430 720,430"
+     id="polyline20"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="600,430 600,482"
+     id="polyline21"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="600,495 600,540"
+     id="polyline22"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="520,540 720,540"
+     id="polyline23"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="720,430 720,445"
+     id="polyline24"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="720,525 720,540"
+     id="polyline25"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="758,485 765,485"
+     id="polyline26"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="830,485 850,485"
+     id="polyline27"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="850,485 880,485"
+     id="polyline28"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="935,485 1000,485"
+     id="polyline29"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="960,485 960,501"
+     id="polyline30"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="960,514 960,566"
+     id="polyline31"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1035,470 1035,340 620,340"
+     id="polyline32"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1035,559 1035,578"
+     id="polyline33"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1110,515 1160,515"
+     id="polyline34"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1210,155 1210,215"
+     id="polyline35"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="matrix(1,0,0,1.2229124,0,-34.551415)" />
+  <polyline
+     points="1165,115 1165,60"
+     id="polyline36"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1255,115 1255,60"
+     id="polyline37"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1120,230 1120,115"
+     id="polyline38"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1202,228 1202,215 1210,215"
+     id="polyline39"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="rotate(180,1206.0064,221.67972)" />
+  <polyline
+     points="1160,260 1160,310"
+     id="polyline40"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1160,310 1160,315"
+     id="polyline41"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1160,380 1160,515"
+     id="polyline42"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1340,115 1360,115"
+     id="polyline43"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1430,115 1460,115"
+     id="polyline44"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1346,210 1340,210 1340,115"
+     id="polyline45"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1460,115 1460,132"
+     id="polyline47"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1460,200 1460,245"
+     id="polyline48"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1430,325 1460,325"
+     id="polyline49"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1532,294 1532,270 1600,270"
+     id="polyline50"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1600,270 1600,620"
+     id="polyline51"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1460,325 1460,345"
+     id="polyline52"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1460,420 1460,450"
+     id="polyline53"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1536,360 1534,450 1460,450"
+     id="polyline54"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1460,115 1730,115"
+     id="polyline55"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1550,115 1550,152"
+     id="polyline56"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1550,165 1550,235"
+     id="polyline57"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="matrix(1,0,0,1.061816,0,-14.526767)" />
+  <polyline
+     points="1630,115 1630,132"
+     id="polyline58"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1630,205 1630,235"
+     id="polyline59"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1550,235 1730,235"
+     id="polyline60"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1590,235 1590,243"
+     id="polyline61"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter"
+     transform="translate(39.730849,0.78674948)" />
+  <polyline
+     points="850,485 850,620 1600,620"
+     id="polyline62"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1000,550 975,550 975,608"
+     id="polyline63"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 975,608 a 12,12 0 0 0 0,24"
+     id="path63"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="975,632 975,645 1680,645"
+     id="polyline64"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1680,645 1680,245"
+     id="polyline65"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1680,245 a 10,10 0 0 1 0,-20"
+     id="path65"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polyline
+     points="1680,225 1680,115"
+     id="polyline66"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 42.639752,298.65424 a 30,40 0 0 0 0,50"
+     id="path66"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 42.639752,308.65424 h 33 m -33,30 h 33"
+     id="path67"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 147.63975,158.65424 h 10 m 30,0 h 10"
+     id="path68"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <circle
+     cx="161.63976"
+     cy="158.65425"
+     r="4"
+     id="circle68"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <circle
+     cx="183.63976"
+     cy="158.65425"
+     r="4"
+     id="circle69"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 165.63975,158.65424 c 6,-13 8,13 14,0"
+     id="path69"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 242.63975,188.65424 a 23.75,23.75 0 0 0 0,47.5 23.75,23.75 0 0 0 0,47.5 23.75,23.75 0 0 0 0,47.5 23.75,23.75 0 0 0 0,47.5"
+     id="path70"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 258,175 v 200 m 8,-200 v 200"
+     id="path71"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 282,190 a 21.25,21.25 0 0 1 0,42.5 21.25,21.25 0 0 1 0,42.5 21.25,21.25 0 0 1 0,42.5 21.25,21.25 0 0 1 0,42.5"
+     id="path72"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="330"
+     y1="240"
+     x2="350.79999"
+     y2="219.2"
+     id="line72"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="369.20001"
+     y1="200.8"
+     x2="390"
+     y2="180"
+     id="line73"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="369.2,200.8 358.6,227 343,211.4 "
+     fill="#000000"
+     stroke="none"
+     id="polygon73"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="377"
+     y1="208.60001"
+     x2="361.39999"
+     y2="193"
+     stroke-width="3"
+     id="line74"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     x1="450"
+     y1="240"
+     x2="429.20001"
+     y2="219.2"
+     id="line75"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="410.79999"
+     y1="200.8"
+     x2="390"
+     y2="180"
+     id="line76"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="410.8,200.8 437,211.4 421.4,227 "
+     fill="#000000"
+     stroke="none"
+     id="polygon76"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="418.60001"
+     y1="193"
+     x2="403"
+     y2="208.60001"
+     stroke-width="3"
+     id="line77"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     x1="390"
+     y1="300"
+     x2="369.20001"
+     y2="279.20001"
+     id="line78"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="350.79999"
+     y1="260.79999"
+     x2="330"
+     y2="240"
+     id="line79"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="350.8,260.8 377,271.4 361.4,287 "
+     fill="#000000"
+     stroke="none"
+     id="polygon79"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="358.60001"
+     y1="253"
+     x2="343"
+     y2="268.60001"
+     stroke-width="3"
+     id="line80"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     x1="390"
+     y1="300"
+     x2="410.79999"
+     y2="279.20001"
+     id="line81"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="429.20001"
+     y1="260.79999"
+     x2="450"
+     y2="240"
+     id="line82"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="429.2,260.8 418.6,287 403,271.4 "
+     fill="#000000"
+     stroke="none"
+     id="polygon82"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="437"
+     y1="268.60001"
+     x2="421.39999"
+     y2="253"
+     stroke-width="3"
+     id="line83"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <path
+     d="m 390,350 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path83"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 520,190 v 10 l 9,10 -18,10 18,10 -18,10 18,10 -9,10 v 10"
+     id="path84"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 620,190 v 10 l 9,10 -18,10 18,10 -18,10 18,10 -9,10 v 10"
+     id="path85"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 700,150 v 8.125 l 9,8.125 -18,8.125 18,8.125 -18,8.125 18,8.125 -9,8.125 V 215"
+     id="path86"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="700"
+     y1="232"
+     x2="700"
+     y2="240"
+     id="line86"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="700"
+     y1="266"
+     x2="700"
+     y2="274"
+     id="line87"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="700,266 689,240 711,240 "
+     fill="#000000"
+     stroke="none"
+     id="polygon87"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="689"
+     y1="266"
+     x2="711"
+     y2="266"
+     stroke-width="3"
+     id="line88"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     class="led-arrow"
+     x1="681.67285"
+     y1="243.55797"
+     x2="675.07288"
+     y2="250.15797"
+     id="line89"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     class="led-arrow"
+     points="673,260 676.9,251.2 681.8,256.1 "
+     fill="#000000"
+     stroke="none"
+     id="polygon89"
+     style="stroke-width:2;stroke-linejoin:miter"
+     transform="translate(-4.3271222,-3.442029)" />
+  <line
+     class="led-arrow"
+     x1="682.70392"
+     y1="254.81987"
+     x2="676.10394"
+     y2="261.41989"
+     id="line90"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     class="led-arrow"
+     points="664,269 667.9,260.2 672.8,265.1 "
+     fill="#000000"
+     stroke="none"
+     id="polygon90"
+     style="stroke-width:2;stroke-linejoin:miter"
+     transform="translate(5.7039338,-1.1801242)" />
+  <path
+     d="m 700,280 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path90"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 829.39948,187.11263 h 38"
+     id="path91"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 829.39948,200.11263 q 19,-11 38,0"
+     id="path92"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 848.39948,263.11263 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path93"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="M 989.07897,186.55632 H 1019.079"
+     id="path94"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="M 989.07897,199.55632 H 1019.079"
+     id="path95"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1004.079,262.55632 v 13 m -17.00003,0 h 34.00003 m -28.00003,7 h 22.00003 m -16.00003,7 h 10.00003"
+     id="path96"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="520"
+     y1="540"
+     x2="520"
+     y2="498"
+     id="line96"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="520"
+     y1="472"
+     x2="520"
+     y2="430"
+     id="line97"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="520,472 531,498 509,498 "
+     fill="#000000"
+     stroke="none"
+     id="polygon97"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="531"
+     y1="472"
+     x2="509"
+     y2="472"
+     stroke-width="3"
+     id="line98"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     x1="529.77686"
+     y1="472.36566"
+     x2="534.72656"
+     y2="467.41589"
+     stroke-width="3"
+     id="line99"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <line
+     x1="510.50134"
+     y1="471.63434"
+     x2="505.55157"
+     y2="476.58411"
+     stroke-width="3"
+     id="line100"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <path
+     d="m 581,482 h 38"
+     id="path100"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 581,495 q 19,-11 38,0"
+     id="path101"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 600,540 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path102"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 720,445 v 10 l 9,10 -18,10 18,10 -18,10 18,10 -9,10 v 10"
+     id="path103"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="758"
+     y1="485"
+     x2="741"
+     y2="485"
+     id="line103"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="741,490.5 728,485 741,479.5 "
+     fill="#000000"
+     stroke="none"
+     id="polygon103"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 765,485 h 8.125 l 8.125,9 8.125,-18 8.125,18 8.125,-18 8.125,18 8.125,-9 H 830"
+     id="path104"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 880,485 h 6.875 l 6.875,9 6.875,-18 6.875,18 6.875,-18 6.875,18 6.875,-9 H 935"
+     id="path105"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 944,501 h 32"
+     id="path106"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 944,514 h 32"
+     id="path107"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 960,566 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path108"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1000,580 1000,450 1110,515 "
+     fill="none"
+     stroke="#000000"
+     stroke-width="2"
+     id="polygon108"
+     style="stroke-linejoin:miter" />
+  <path
+     d="m 1035,578 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path109"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1191,155 h 38"
+     id="path110"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1200,155 -35,-40"
+     id="path111"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1220"
+     y1="155"
+     x2="1245.1"
+     y2="126.3"
+     id="line111"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1241,122.7 1255,115 1249.3,129.9 "
+     fill="#000000"
+     stroke="none"
+     id="polygon111"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1255"
+     y1="60"
+     x2="1223"
+     y2="60"
+     id="line112"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1197"
+     y1="60"
+     x2="1165"
+     y2="60"
+     id="line113"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1197,60 1223,49 1223,71 "
+     fill="#000000"
+     stroke="none"
+     id="polygon113"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1197"
+     y1="49"
+     x2="1197"
+     y2="71"
+     stroke-width="3"
+     id="line114"
+     style="fill:none;stroke:#000000;stroke-linejoin:miter" />
+  <path
+     d="m 1141,260 h 38"
+     id="path114"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1150,260 -30,-30"
+     id="path115"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1170"
+     y1="260"
+     x2="1191.4"
+     y2="238.60001"
+     id="line115"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1187.5,234.7 1202,228 1195.3,242.5 "
+     fill="#000000"
+     stroke="none"
+     id="polygon115"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1160,315 v 8.125 l 9,8.125 -18,8.125 18,8.125 -18,8.125 18,8.125 -9,8.125 V 380"
+     id="path116"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1360,115 h 8.75 l 8.75,9 8.75,-18 8.75,18 8.75,-18 8.75,18 8.75,-9 h 8.75"
+     id="path117"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1372,226 v 38"
+     id="path118"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1372,245 h 88"
+     id="path119"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1340.8613,284.00207 v 41.97516"
+     id="path119-1"
+     style="fill:none;stroke:#000000;stroke-width:1.38129;stroke-linejoin:miter" />
+  <path
+     d="m 1340.3043,325.04969 h 17.5859"
+     id="path119-7"
+     style="fill:none;stroke:#000000;stroke-width:0.894069;stroke-linejoin:miter" />
+  <line
+     x1="1346.103"
+     y1="210.10309"
+     x2="1359.2638"
+     y2="223.06709"
+     id="line119"
+     style="fill:none;stroke:#000000;stroke-width:2.29158;stroke-linejoin:miter" />
+  <polygon
+     points="1368,232 1353.5,225.3 1361.3,217.5 "
+     fill="#000000"
+     stroke="none"
+     id="polygon119"
+     style="stroke-width:2;stroke-linejoin:miter"
+     transform="matrix(1.2577283,0,0,1.189905,-348.83523,-41.304348)" />
+  <path
+     d="m 1371.9063,254.09375 -29.943,28.9595"
+     id="path120"
+     style="fill:none;stroke:#000000;stroke-width:2.26516;stroke-linejoin:miter" />
+  <path
+     d="m 1460,132 v 8.5 l 9,8.5 -18,8.5 18,8.5 -18,8.5 18,8.5 -9,8.5 v 8.5"
+     id="path121"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1360,325 h 8.75 l 8.75,9 8.75,-18 8.75,18 8.75,-18 8.75,18 8.75,-9 h 8.75"
+     id="path122"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1510,306 v 38"
+     id="path123"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1460,325 h 50"
+     id="path124"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1510,316 22,-22"
+     id="path125"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1510"
+     y1="334"
+     x2="1525.4"
+     y2="349.39999"
+     id="line125"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1529.3,345.5 1536,360 1521.5,353.3 "
+     fill="#000000"
+     stroke="none"
+     id="polygon125"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1460,345 v 9.375 l 9,9.375 -18,9.375 18,9.375 -18,9.375 18,9.375 -9,9.375 V 420"
+     id="path126"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1496,450 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path127"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1531,152 h 38"
+     id="path128"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1531,165 q 19,-11 38,0"
+     id="path129"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1630,132 v 9.125 l 9,9.125 -18,9.125 18,9.125 -18,9.125 18,9.125 -9,9.125 V 205"
+     id="path130"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <path
+     d="m 1629.7308,243.78675 v 13 m -17,0 h 34 m -28,7 h 22 m -16,7 h 10"
+     id="path131"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1700"
+     y1="115"
+     x2="1716"
+     y2="115"
+     id="line131"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1716,108 1732,115 1716,122 "
+     fill="#000000"
+     stroke="none"
+     id="polygon131"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <line
+     x1="1700"
+     y1="235"
+     x2="1716"
+     y2="235"
+     id="line132"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:miter" />
+  <polygon
+     points="1716,228 1732,235 1716,242 "
+     fill="#000000"
+     stroke="none"
+     id="polygon132"
+     style="stroke-width:2;stroke-linejoin:miter" />
+  <circle
+     cx="520"
+     cy="115"
+     r="4"
+     id="circle132"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="620"
+     cy="115"
+     r="4"
+     id="circle133"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="700"
+     cy="115"
+     r="4"
+     id="circle134"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="848.39948"
+     cy="116.11263"
+     r="4"
+     id="circle135"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1004.079"
+     cy="115.55631"
+     r="4"
+     id="circle136"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1120"
+     cy="115"
+     r="4"
+     id="circle137"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1165"
+     cy="115"
+     r="4"
+     id="circle138"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1255"
+     cy="115"
+     r="4"
+     id="circle139"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1340"
+     cy="115"
+     r="4"
+     id="circle140"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1460"
+     cy="115"
+     r="4"
+     id="circle141"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="520"
+     cy="430"
+     r="4"
+     id="circle142"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="600"
+     cy="430"
+     r="4"
+     id="circle143"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="720"
+     cy="430"
+     r="4"
+     id="circle144"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="600"
+     cy="540"
+     r="4"
+     id="circle145"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="850"
+     cy="485"
+     r="4"
+     id="circle146"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="960"
+     cy="485"
+     r="4"
+     id="circle147"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1460"
+     cy="325"
+     r="4"
+     id="circle149"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1496"
+     cy="450"
+     r="4"
+     id="circle150"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1550"
+     cy="115"
+     r="4"
+     id="circle151"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1630"
+     cy="115"
+     r="4"
+     id="circle152"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1550"
+     cy="235"
+     r="4"
+     id="circle153"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1630"
+     cy="235"
+     r="4"
+     id="circle154"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1629.7308"
+     cy="235.78674"
+     r="4"
+     id="circle155"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="1680"
+     cy="115"
+     r="4"
+     id="circle156"
+     style="fill:#000000;stroke:none" />
+  <circle
+     cx="149.60663"
+     cy="592.78674"
+     r="4.1999998"
+     id="circle157"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="165.60663"
+     y="598.78674"
+     stroke="none"
+     fill="#e8730c"
+     font-size="15px"
+     font-weight="bold"
+     id="text157"
+     style="font-family:Arial, Helvetica, sans-serif">point de test</text>
+  <circle
+     cx="520.39337"
+     cy="115.25879"
+     r="4.1999998"
+     id="circle158"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="389.65054"
+     cy="182.31578"
+     r="4.1999998"
+     id="circle158-5"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="389.53107"
+     cy="301.20685"
+     r="4.1999998"
+     id="circle158-2"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="330.19998"
+     cy="241.2"
+     r="4.1999998"
+     id="circle158-2-6"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#0c11e8;stroke:none;fill-opacity:1" />
+  <circle
+     cx="450.19998"
+     cy="241.2"
+     r="4.1999998"
+     id="circle158-2-62"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#100ce8;stroke:none;fill-opacity:1" />
+  <circle
+     cx="519.60663"
+     cy="270.78674"
+     r="4.1999998"
+     id="circle159"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="619.60663"
+     cy="115.25879"
+     r="4.1999998"
+     id="circle160"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="619.60663"
+     cy="270.78674"
+     r="4.1999998"
+     id="circle161"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="700.39337"
+     cy="115.38302"
+     r="4.1999998"
+     id="circle162"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="699.60663"
+     cy="215.78674"
+     r="4.1999998"
+     id="circle163"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1358.8199"
+     cy="114.99999"
+     r="4.1999998"
+     id="circle164"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1429.6067"
+     cy="115.78674"
+     r="4.1999998"
+     id="circle165"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1460.3934"
+     cy="115.47826"
+     r="4.1999998"
+     id="circle166"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1459.6067"
+     cy="200.78674"
+     r="4.1999998"
+     id="circle167"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1359.6067"
+     cy="325.78674"
+     r="4.1999998"
+     id="circle168"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1429.6067"
+     cy="325.78674"
+     r="4.1999998"
+     id="circle169"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1461.1802"
+     cy="325.33127"
+     r="4.1999998"
+     id="circle170"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1459.6067"
+     cy="420.78674"
+     r="4.1999998"
+     id="circle171"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1630.3934"
+     cy="114.69151"
+     r="4.1999998"
+     id="circle172"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1735.3966"
+     cy="114.22552"
+     r="4.1999998"
+     id="circle172-6"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1734.0176"
+     cy="234.8179"
+     r="4.1999998"
+     id="circle172-5"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1629.6067"
+     cy="234.89647"
+     r="4.1999998"
+     id="circle173"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1159.6067"
+     cy="315.78674"
+     r="4.1999998"
+     id="circle174"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1159.6067"
+     cy="380.78674"
+     r="4.1999998"
+     id="circle175"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="764.60663"
+     cy="485.78674"
+     r="4.1999998"
+     id="circle176"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="827.2464"
+     cy="484.21326"
+     r="4.1999998"
+     id="circle177"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="879.60663"
+     cy="485.78674"
+     r="4.1999998"
+     id="circle178"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="934.60663"
+     cy="485.78674"
+     r="4.1999998"
+     id="circle179"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="720.39337"
+     cy="430.05176"
+     r="4.1999998"
+     id="circle180"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="720.39337"
+     cy="539.1615"
+     r="4.1999998"
+     id="circle181"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="729.677"
+     cy="485"
+     r="4.1999998"
+     id="circle182"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="699.60663"
+     cy="232.78674"
+     r="4.1999998"
+     id="circle183"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="699.60663"
+     cy="274.78674"
+     r="4.1999998"
+     id="circle184"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="519.60663"
+     cy="430.78674"
+     r="4.1999998"
+     id="circle185"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="519.60663"
+     cy="540.78674"
+     r="4.1999998"
+     id="circle186"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1164.6067"
+     cy="60.786751"
+     r="4.1999998"
+     id="circle187"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1254.6067"
+     cy="60.786751"
+     r="4.1999998"
+     id="circle188"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="848.56244"
+     cy="115.93015"
+     r="4.1999998"
+     id="circle189"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="848.33197"
+     cy="236.89217"
+     r="4.1999998"
+     id="circle190"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1003.7811"
+     cy="116.35149"
+     r="4.1999998"
+     id="circle191"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1003.6856"
+     cy="236.14017"
+     r="4.1999998"
+     id="circle192"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="600.39337"
+     cy="430.07452"
+     r="4.1999998"
+     id="circle193"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="600.39337"
+     cy="540.2381"
+     r="4.1999998"
+     id="circle194"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="960.25879"
+     cy="485.65839"
+     r="4.1999998"
+     id="circle195"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="960.06213"
+     cy="529.73499"
+     r="4.1999998"
+     id="circle196"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1550.3934"
+     cy="115.41615"
+     r="4.1999998"
+     id="circle197"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1550.0001"
+     cy="235.02069"
+     r="4.1999998"
+     id="circle198"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1164.6067"
+     cy="115.78674"
+     r="4.1999998"
+     id="circle199"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1159.6067"
+     y="102.78674"
+     text-anchor="middle"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text199"
+     style="font-family:Arial, Helvetica, sans-serif">C</text>
+  <circle
+     cx="1254.6067"
+     cy="115.78674"
+     r="4.1999998"
+     id="circle200"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1259.6067"
+     y="102.78674"
+     text-anchor="middle"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text200"
+     style="font-family:Arial, Helvetica, sans-serif">E</text>
+  <circle
+     cx="1209.6067"
+     cy="166.22153"
+     r="4.1999998"
+     id="circle201"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1201.1139"
+     y="170.43477"
+     text-anchor="end"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text201"
+     style="font-family:Arial, Helvetica, sans-serif">B</text>
+  <circle
+     cx="1119.6067"
+     cy="230.78674"
+     r="4.1999998"
+     id="circle202"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1106.6067"
+     y="234.78674"
+     text-anchor="end"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text202"
+     style="font-family:Arial, Helvetica, sans-serif">C</text>
+  <circle
+     cx="1201.6067"
+     cy="228.78674"
+     r="4.1999998"
+     id="circle203"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1214.6067"
+     y="232.78674"
+     text-anchor="start"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text203"
+     style="font-family:Arial, Helvetica, sans-serif">E</text>
+  <circle
+     cx="1160.3934"
+     cy="288.36438"
+     r="4.1999998"
+     id="circle204"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1153.5073"
+     y="293.01862"
+     text-anchor="end"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text204"
+     style="font-family:Arial, Helvetica, sans-serif">B</text>
+  <circle
+     cx="1340.3934"
+     cy="210"
+     r="4.1999998"
+     id="circle205"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1333.5073"
+     y="214.78674"
+     text-anchor="end"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text205"
+     style="font-family:Arial, Helvetica, sans-serif">E</text>
+  <circle
+     cx="1389.9794"
+     cy="245.78674"
+     r="4.1999998"
+     id="circle206"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1385.6709"
+     y="261.58798"
+     text-anchor="start"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text206"
+     style="font-family:Arial, Helvetica, sans-serif">B</text>
+  <circle
+     cx="1341.3768"
+     cy="282.8385"
+     r="4.1999998"
+     id="circle207"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1335.6709"
+     y="286.64182"
+     text-anchor="end"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text207"
+     style="font-family:Arial, Helvetica, sans-serif">C</text>
+  <circle
+     cx="1531.6067"
+     cy="294.78674"
+     r="4.1999998"
+     id="circle208"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1544.6067"
+     y="294.78674"
+     text-anchor="start"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text208"
+     style="font-family:Arial, Helvetica, sans-serif">C</text>
+  <circle
+     cx="1535.6067"
+     cy="360.78674"
+     r="4.1999998"
+     id="circle209"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1549.6067"
+     y="364.78674"
+     text-anchor="start"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text209"
+     style="font-family:Arial, Helvetica, sans-serif">E</text>
+  <circle
+     cx="1493.8201"
+     cy="325.23044"
+     r="4.1999998"
+     id="circle210"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="1459.6067"
+     y="312.78674"
+     text-anchor="middle"
+     stroke="none"
+     fill="#e8730c"
+     font-size="12px"
+     font-weight="bold"
+     id="text210"
+     style="font-family:Arial, Helvetica, sans-serif">B</text>
+  <circle
+     cx="999.60663"
+     cy="485.78674"
+     r="4.1999998"
+     id="circle211"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="999.60663"
+     cy="550.78674"
+     r="4.1999998"
+     id="circle212"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1034.6067"
+     cy="470.78674"
+     r="4.1999998"
+     id="circle213"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1034.6067"
+     cy="559.78674"
+     r="4.1999998"
+     id="circle214"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <circle
+     cx="1109.6067"
+     cy="515.78674"
+     r="4.1999998"
+     id="circle215"
+     style="font-family:Arial, Helvetica, sans-serif;fill:#e8730c;stroke:none" />
+  <text
+     x="175"
+     y="133"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text215"
+     style="font-family:Arial, Helvetica, sans-serif">F1</text>
+  <text
+     x="278"
+     y="162"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text216"
+     style="font-family:Arial, Helvetica, sans-serif">T1</text>
+  <text
+     x="175"
+     y="258"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text217"
+     style="font-family:Arial, Helvetica, sans-serif">120V</text>
+  <text
+     x="175"
+     y="278"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text218"
+     style="font-family:Arial, Helvetica, sans-serif">60Hz</text>
+  <text
+     x="390"
+     y="246"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text219"
+     style="font-family:Arial, Helvetica, sans-serif">D1</text>
+  <text
+     x="414"
+     y="166"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#c06000"
+     id="text220"
+     style="font-family:Arial, Helvetica, sans-serif"><tspan
+       sodipodi:role="line"
+       id="tspan281"
+       x="414"
+       y="166">Pont diode</tspan><tspan
+       sodipodi:role="line"
+       x="414"
+       y="183.5"
+       id="tspan283">4 x 1N4007</tspan></text>
+  <text
+     x="548"
+     y="216"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text221"
+     style="font-family:Arial, Helvetica, sans-serif">R2</text>
+  <text
+     x="548"
+     y="236"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text222"
+     style="font-family:Arial, Helvetica, sans-serif">2K2 1W</text>
+  <text
+     x="648"
+     y="216"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text223"
+     style="font-family:Arial, Helvetica, sans-serif">R3</text>
+  <text
+     x="648"
+     y="236"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text224"
+     style="font-family:Arial, Helvetica, sans-serif">470R</text>
+  <text
+     x="728"
+     y="170"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text225"
+     style="font-family:Arial, Helvetica, sans-serif">R1</text>
+  <text
+     x="728"
+     y="190"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text226"
+     style="font-family:Arial, Helvetica, sans-serif">3K3</text>
+  <text
+     x="728"
+     y="262"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text227"
+     style="font-family:Arial, Helvetica, sans-serif">D2</text>
+  <text
+     x="820.39948"
+     y="181.11263"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text228"
+     style="font-family:Arial, Helvetica, sans-serif">+</text>
+  <text
+     x="865.38501"
+     y="177.34036"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text229"
+     style="font-family:Arial, Helvetica, sans-serif">C1</text>
+  <text
+     x="813.91473"
+     y="106.50273"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text230"
+     style="font-family:Arial, Helvetica, sans-serif">1000uF/35V</text>
+  <text
+     x="1023.6285"
+     y="168.03737"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text231"
+     style="font-family:Arial, Helvetica, sans-serif">C2</text>
+  <text
+     x="1018.0653"
+     y="182.4742"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text232"
+     style="font-family:Arial, Helvetica, sans-serif">.1uF</text>
+  <text
+     x="499.86752"
+     y="475.99585"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text233"
+     style="font-family:Arial, Helvetica, sans-serif">D3</text>
+  <text
+     x="504.58798"
+     y="493.38303"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text234"
+     style="font-family:Arial, Helvetica, sans-serif">16V</text>
+  <text
+     x="586.94824"
+     y="476.39337"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text235"
+     style="font-family:Arial, Helvetica, sans-serif">+</text>
+  <text
+     x="598.81989"
+     y="421.44098"
+     text-anchor="middle"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text236"
+     style="font-family:Arial, Helvetica, sans-serif">100uF/35V</text>
+  <text
+     x="628.1532"
+     y="475.93375"
+     text-anchor="end"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text237"
+     style="font-family:Arial, Helvetica, sans-serif">C3</text>
+  <text
+     x="681.5528"
+     y="472.02899"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text238"
+     style="font-family:Arial, Helvetica, sans-serif">10K</text>
+  <text
+     x="678.7547"
+     y="485.51813"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text238-9"
+     style="font-family:Arial, Helvetica, sans-serif"><tspan
+       sodipodi:role="line"
+       id="tspan285"
+       x="678.7547"
+       y="485.51813">POT</tspan></text>
+  <text
+     x="681.5528"
+     y="501.16977"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text239"
+     style="font-family:Arial, Helvetica, sans-serif">R4</text>
+  <text
+     x="797"
+     y="467"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text240"
+     style="font-family:Arial, Helvetica, sans-serif">R5</text>
+  <text
+     x="797"
+     y="507"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text241"
+     style="font-family:Arial, Helvetica, sans-serif">10K</text>
+  <text
+     x="907"
+     y="467"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text242"
+     style="font-family:Arial, Helvetica, sans-serif">R6</text>
+  <text
+     x="907"
+     y="507"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text243"
+     style="font-family:Arial, Helvetica, sans-serif">1K</text>
+  <text
+     x="968.22363"
+     y="465.25879"
+     text-anchor="end"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text244"
+     style="font-family:Arial, Helvetica, sans-serif">C4</text>
+  <text
+     x="954.06213"
+     y="542.69147"
+     text-anchor="end"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text245"
+     style="font-family:Arial, Helvetica, sans-serif">1uF/35V</text>
+  <text
+     x="1030"
+     y="505"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text246"
+     style="font-family:Arial, Helvetica, sans-serif">IC1</text>
+  <text
+     x="1048"
+     y="475"
+     text-anchor="start"
+     font-size="19px"
+     font-weight="bold"
+     fill="#000000"
+     id="text247"
+     style="font-family:Arial, Helvetica, sans-serif">+</text>
+  <text
+     x="1048"
+     y="545"
+     text-anchor="start"
+     font-size="19px"
+     font-weight="bold"
+     fill="#000000"
+     id="text248"
+     style="font-family:Arial, Helvetica, sans-serif">–</text>
+  <text
+     x="1021.3623"
+     y="525.19873"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text249"
+     style="font-family:Arial, Helvetica, sans-serif">Lm358</text>
+  <text
+     x="992"
+     y="478"
+     text-anchor="end"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text250"
+     style="font-family:Arial, Helvetica, sans-serif">3</text>
+  <text
+     x="992"
+     y="556"
+     text-anchor="end"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text251"
+     style="font-family:Arial, Helvetica, sans-serif">2</text>
+  <text
+     x="1044"
+     y="461"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text252"
+     style="font-family:Arial, Helvetica, sans-serif">8</text>
+  <text
+     x="1044"
+     y="575"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text253"
+     style="font-family:Arial, Helvetica, sans-serif">4</text>
+  <text
+     x="1118"
+     y="505"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text254"
+     style="font-family:Arial, Helvetica, sans-serif">1</text>
+  <text
+     x="1244"
+     y="150"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text255"
+     style="font-family:Arial, Helvetica, sans-serif">Q1</text>
+  <text
+     x="1189.4811"
+     y="126.93842"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text256"
+     style="font-family:Arial, Helvetica, sans-serif">Tip41C</text>
+  <text
+     x="1210"
+     y="45"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text257"
+     style="font-family:Arial, Helvetica, sans-serif">D4</text>
+  <text
+     x="1150.2645"
+     y="250.84631"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text258"
+     style="font-family:Arial, Helvetica, sans-serif">Q2</text>
+  <text
+     x="1181.5669"
+     y="237.49474"
+     text-anchor="end"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text259"
+     style="font-family:Arial, Helvetica, sans-serif">2N3904</text>
+  <text
+     x="1188"
+     y="340"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text260"
+     style="font-family:Arial, Helvetica, sans-serif">R7</text>
+  <text
+     x="1188"
+     y="360"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text261"
+     style="font-family:Arial, Helvetica, sans-serif">100R</text>
+  <text
+     x="1395"
+     y="96"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text262"
+     style="font-family:Arial, Helvetica, sans-serif">R8</text>
+  <text
+     x="1395"
+     y="146"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text263"
+     style="font-family:Arial, Helvetica, sans-serif">1R</text>
+  <text
+     x="1331.0168"
+     y="236.16368"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text264"
+     style="font-family:Arial, Helvetica, sans-serif">Q3</text>
+  <text
+     x="1360.041"
+     y="249.68948"
+     text-anchor="end"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text265"
+     style="font-family:Arial, Helvetica, sans-serif">2N3906</text>
+  <text
+     x="1434"
+     y="156"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text266"
+     style="font-family:Arial, Helvetica, sans-serif">R9</text>
+  <text
+     x="1434"
+     y="176"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text267"
+     style="font-family:Arial, Helvetica, sans-serif">1K</text>
+  <text
+     x="1392.7748"
+     y="308.11264"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text268"
+     style="font-family:Arial, Helvetica, sans-serif">R10</text>
+  <text
+     x="1395"
+     y="355"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text269"
+     style="font-family:Arial, Helvetica, sans-serif">10K</text>
+  <text
+     x="1527.8531"
+     y="316.88736"
+     text-anchor="start"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text270"
+     style="font-family:Arial, Helvetica, sans-serif">Q4</text>
+  <text
+     x="1517.5613"
+     y="331.32605"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text271"
+     style="font-family:Arial, Helvetica, sans-serif">2N3904</text>
+  <text
+     x="1444.0137"
+     y="384.07343"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text272"
+     style="font-family:Arial, Helvetica, sans-serif">R11</text>
+  <text
+     x="1444.8481"
+     y="398.23212"
+     text-anchor="end"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text273"
+     style="font-family:Arial, Helvetica, sans-serif">10K</text>
+  <text
+     x="1522"
+     y="146"
+     text-anchor="middle"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text274"
+     style="font-family:Arial, Helvetica, sans-serif">+</text>
+  <text
+     x="1550"
+     y="100"
+     text-anchor="middle"
+     font-size="13px"
+     font-weight="bold"
+     fill="#000000"
+     id="text275"
+     style="font-family:Arial, Helvetica, sans-serif">47uF/50V</text>
+  <text
+     x="1522"
+     y="205"
+     text-anchor="end"
+     font-size="14px"
+     font-weight="bold"
+     fill="#000000"
+     id="text276"
+     style="font-family:Arial, Helvetica, sans-serif">C5</text>
+  <text
+     x="1658"
+     y="156"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text277"
+     style="font-family:Arial, Helvetica, sans-serif">R12</text>
+  <text
+     x="1658"
+     y="176"
+     text-anchor="start"
+     font-size="15px"
+     font-weight="bold"
+     fill="#000000"
+     id="text278"
+     style="font-family:Arial, Helvetica, sans-serif">1K</text>
+  <text
+     x="1744"
+     y="110"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="normal"
+     fill="#000000"
+     id="text279"
+     style="font-family:Arial, Helvetica, sans-serif">Sortie de la</text>
+  <text
+     x="1744"
+     y="128"
+     text-anchor="start"
+     font-size="13px"
+     font-weight="normal"
+     fill="#000000"
+     id="text280"
+     style="font-family:Arial, Helvetica, sans-serif">tension régularisée</text>
+  <text
+     x="1250"
+     y="600"
+     text-anchor="middle"
+     font-size="17px"
+     font-weight="bold"
+     fill="#000000"
+     id="text281"
+     style="font-family:Arial, Helvetica, sans-serif">Schéma du régulateur de tension</text>
+</svg>

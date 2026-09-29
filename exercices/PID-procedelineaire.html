@@ -1,0 +1,1803 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercice PID — Procédé industriel (variante drone)</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #08111f;
+  --bg-soft: #0e1a2b;
+  --panel: rgba(16, 29, 48, .9);
+  --panel-strong: #12243b;
+  --line: #29415e;
+  --text: #edf5ff;
+  --muted: #9db1c9;
+  --cyan: #55d8ff;
+  --cyan-soft: rgba(85, 216, 255, .16);
+  --orange: #ffb45c;
+  --orange-soft: rgba(255, 180, 92, .15);
+  --green: #6ee7a8;
+  --red: #ff7d87;
+  --violet: #b49bff;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .28);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--bg); }
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(43, 117, 166, .22), transparent 33rem),
+    radial-gradient(circle at 100% 12%, rgba(95, 66, 160, .18), transparent 28rem),
+    var(--bg);
+  line-height: 1.45;
+}
+button, input, select { font: inherit; }
+button, select { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+.app { width: min(1480px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 42px; }
+.hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 20px; }
+.eyebrow { color: var(--cyan); font-size: .76rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+h1 { margin: 5px 0 6px; font-size: clamp(1.8rem, 4vw, 3.25rem); line-height: 1.04; letter-spacing: -.045em; }
+.hero p { max-width: 720px; margin: 0; color: var(--muted); }
+.hero-note { min-width: 220px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 16px; background: rgba(12, 24, 40, .7); color: var(--muted); font-size: .9rem; }
+.hero-note strong { color: var(--text); display: block; margin-bottom: 3px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, .75fr); gap: 18px; align-items: start; }
+.column { min-width: 0; display: grid; gap: 18px; }
+.panel { border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 17px 20px; border-bottom: 1px solid rgba(86, 118, 151, .22); }
+.panel-header h2, .panel-header h3 { margin: 0; font-size: 1rem; letter-spacing: -.01em; }
+.panel-header p { margin: 0; color: var(--muted); font-size: .86rem; }
+.visual-panel { min-height: 640px; }
+.visual-toolbar { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; justify-content: flex-end; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: .76rem; white-space: nowrap; }
+.pill.cyan { color: var(--cyan); border-color: rgba(85, 216, 255, .35); background: var(--cyan-soft); }
+.pill.orange { color: var(--orange); border-color: rgba(255, 180, 92, .35); background: var(--orange-soft); }
+.pill.red { color: var(--red); border-color: rgba(255, 125, 135, .35); background: rgba(255, 125, 135, .12); }
+.pill.violet { color: var(--violet); border-color: rgba(180, 155, 255, .35); background: rgba(180, 155, 255, .12); }
+.pill.green { color: var(--green); border-color: rgba(110, 231, 168, .35); background: rgba(110, 231, 168, .12); }
+.instrument-wrap { display: grid; place-items: center; padding: 8px 16px 0; }
+#droneSvg { display: block; width: min(100%, 560px); height: auto; max-height: 600px; user-select: none; touch-action: none; }
+.visual-caption { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; padding: 0 20px 17px; color: var(--muted); font-size: .82rem; }
+.legend-item { display: inline-flex; align-items: center; gap: 7px; }
+.legend-line { width: 25px; height: 3px; border-radius: 99px; background: var(--cyan); }
+.legend-line.target { background: var(--orange); }
+.legend-line.muted-line { background: var(--violet); }
+.legend-line.thrust { background: var(--green); }
+.control-panel { padding: 20px; }
+.control-section + .control-section { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(86, 118, 151, .22); }
+.control-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.control-label label, .control-label strong { font-weight: 750; }
+.control-label output { color: var(--cyan); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+input[type="range"]:disabled { opacity: .4; cursor: not-allowed; }
+.range-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: .75rem; margin-top: 3px; }
+.locked { display: none; } .locked.show { display: block; }
+.value-edit input { width: 74px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 9px; background: #0d1c2f; color: var(--text); font-size: .82rem; font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+.debug-panel { margin-top: 12px; padding: 12px; border: 1px solid rgba(110, 231, 168, .35); border-radius: 13px; background: #06121f; }
+.debug-panel summary { cursor: pointer; color: var(--green); font-size: .8rem; font-weight: 800; letter-spacing: .04em; }
+.debug-log { margin-top: 9px; max-height: 210px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .74rem; line-height: 1.45; color: #9fe6c4; white-space: pre; }
+.value-edit input:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
+.button-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.button-grid.two { grid-template-columns: repeat(2, 1fr); }
+button { border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; color: var(--text); background: #172a42; transition: background .16s, border-color .16s, transform .16s; }
+button:hover { background: #203958; border-color: #466684; }
+button:active { transform: translateY(1px); }
+button.primary { background: var(--cyan); border-color: var(--cyan); color: #062033; font-weight: 800; }
+button.primary:hover { background: #8be7ff; }
+button.primary:disabled { opacity: .4; cursor: not-allowed; }
+button.warning { color: var(--orange); background: var(--orange-soft); border-color: rgba(255, 180, 92, .4); }
+button.danger { color: var(--red); }
+button.wide { grid-column: 1 / -1; }
+.control-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+select { min-width: 132px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--text); background: #172a42; }
+.metrics-panel { padding: 18px; }
+.metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+.metric { min-width: 0; padding: 12px; border: 1px solid rgba(86, 118, 151, .27); border-radius: 13px; background: rgba(5, 14, 26, .28); }
+.metric-label { display: block; color: var(--muted); font-size: .73rem; }
+.metric-value { display: block; margin-top: 3px; font-size: 1.08rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.metric-value.cyan { color: var(--cyan); }
+.metric-value.orange { color: var(--orange); }
+.metric-value.green { color: var(--green); }
+.metric-value.red { color: var(--red); }
+.metric-value.violet { color: var(--violet); }
+.pid-out { margin-top: 12px; padding: 12px; border: 1px solid rgba(86, 118, 151, .27); border-radius: 13px; background: rgba(5, 14, 26, .28); }
+.pid-out-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 9px; }
+.pid-out-head span { color: var(--muted); font-size: .73rem; }
+.pid-out-head strong { font-size: 1.12rem; font-variant-numeric: tabular-nums; }
+.pid-row { display: grid; grid-template-columns: 18px 1fr 72px; align-items: center; gap: 8px; margin-top: 6px; font-size: .78rem; }
+.pid-row .pid-tag { font-weight: 800; text-align: center; }
+.pid-row.pdp .pid-tag { color: var(--cyan); }
+.pid-row.pdi .pid-tag { color: var(--violet); }
+.pid-row.pdd .pid-tag { color: var(--orange); }
+.pid-bar { position: relative; height: 8px; border-radius: 5px; background: rgba(86, 118, 151, .22); overflow: hidden; }
+.pid-bar-fill { position: absolute; left: 50%; top: 0; bottom: 0; width: 0; background: var(--cyan); border-radius: 5px; }
+.pid-row.pdp .pid-bar-fill { background: var(--cyan); }
+.pid-row.pdi .pid-bar-fill { background: var(--violet); }
+.pid-row.pdd .pid-bar-fill { background: var(--orange); }
+.pid-row.pdtotal .pid-tag { color: var(--green); }
+.pid-row.pdtotal .pid-bar-fill { background: var(--green); }
+.pid-val { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.status-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(86, 118, 151, .22); color: var(--muted); font-size: .84rem; }
+.status-line strong { color: var(--text); text-align: right; }
+.status-dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(110, 231, 168, .1); vertical-align: 1px; }
+.status-dot.paused { background: var(--orange); box-shadow: 0 0 0 4px rgba(255, 180, 92, .1); }
+.status-dot.oscillating { background: var(--red); box-shadow: 0 0 0 4px rgba(255, 125, 135, .1); }
+.charts-panel { padding: 18px 18px 14px; }
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.chart-card { min-width: 0; padding: 13px; border: 1px solid rgba(86, 118, 151, .25); border-radius: 14px; background: rgba(5, 14, 26, .3); }
+.chart-card h3 { margin: 0 0 3px; font-size: .9rem; }
+.chart-card p { margin: 0 0 8px; color: var(--muted); font-size: .76rem; }
+.chart-canvas { display: block; width: 100%; height: 180px; }
+.chart-legend { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 6px; color: var(--muted); font-size: .75rem; }
+.chart-key { display: inline-flex; align-items: center; gap: 6px; }
+.chart-key::before { content: ""; width: 14px; height: 3px; border-radius: 99px; background: var(--key-color, var(--cyan)); }
+.lesson { padding: 19px 20px; }
+.method-bubble { margin-top: 14px; padding: 14px 16px; border: 1px solid rgba(110, 231, 168, .4); border-radius: 14px; background: rgba(20, 45, 35, .35); }
+.method-bubble h3 { margin: 0 0 8px; font-size: .92rem; color: var(--green); }
+.method-bubble p { margin: 7px 0; color: var(--muted); font-size: .85rem; }
+.method-bubble em { color: var(--cyan); font-style: normal; font-weight: 700; }
+.lesson h2 { margin: 0 0 9px; font-size: 1rem; }
+.lesson p, .lesson li { color: var(--muted); font-size: .88rem; }
+.lesson ol { margin: 10px 0; padding-left: 20px; }
+.formula { margin: 12px 0; padding: 12px 14px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: var(--cyan-soft); color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; }
+details.panel { padding: 0; }
+summary { padding: 15px 20px; color: var(--muted); cursor: pointer; font-size: .84rem; }
+.constants { padding: 0 20px 18px; }
+.constants table { width: 100%; border-collapse: collapse; color: var(--muted); font-size: .8rem; }
+.constants th, .constants td { padding: 6px 0; text-align: left; border-bottom: 1px solid rgba(86, 118, 151, .18); }
+.small { color: var(--muted); font-size: .78rem; }
+.footer-note { margin: 22px 0 0; color: var(--muted); font-size: .78rem; text-align: center; }
+.mode-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 20px; border: 1px solid var(--line); border-radius: 16px; background: rgba(12, 24, 40, .6); margin-bottom: 18px; }
+.mode-bar strong { font-size: .84rem; }
+.tabs { display: flex; gap: 6px; }
+.tab { border-radius: 999px; padding: 7px 14px; font-size: .82rem; background: #14243a; }
+.tab.active { background: var(--cyan); border-color: var(--cyan); color: #062033; font-weight: 800; }
+.stepper { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.step-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+.step-chip.active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-soft); }
+.step-chip.done { border-color: rgba(110, 231, 168, .5); color: var(--green); background: rgba(110, 231, 168, .1); }
+.mission { padding: 18px 20px; }
+.mission h2 { margin: 0 0 6px; font-size: 1rem; }
+.mission p { margin: 0 0 10px; color: var(--muted); font-size: .86rem; }
+.criteria { display: grid; gap: 7px; margin: 10px 0; }
+.criterion { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border: 1px solid rgba(86, 118, 151, .27); border-radius: 11px; background: rgba(5, 14, 26, .28); font-size: .84rem; }
+.criterion .label { color: var(--muted); }
+.criterion .value { font-variant-numeric: tabular-nums; font-weight: 700; }
+.criterion.pass { border-color: rgba(110, 231, 168, .45); }
+.criterion.pass .value { color: var(--green); }
+.criterion.fail .value { color: var(--red); }
+.verdict { margin-top: 10px; padding: 11px 13px; border-radius: 12px; font-weight: 800; text-align: center; }
+.verdict.pass { color: var(--green); background: rgba(110, 231, 168, .12); border: 1px solid rgba(110, 231, 168, .4); }
+.verdict.pending { color: var(--muted); background: rgba(5, 14, 26, .3); border: 1px solid rgba(86, 118, 151, .27); }
+.seed { color: var(--muted); font-size: .76rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 980px) {
+  .workspace { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .visual-toolbar { justify-content: flex-start; }
+  .chart-canvas { height: 160px; }
+  .hero { flex-direction: column; align-items: flex-start; }
+}
+.intro-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(3, 9, 17, .8); backdrop-filter: blur(7px); }
+.intro-backdrop[hidden] { display: none; }
+.intro-modal { width: min(580px, 100%); max-height: min(760px, calc(100vh - 40px)); overflow: auto; padding: 28px; border: 1px solid rgba(85, 216, 255, .4); border-radius: 22px; background: linear-gradient(145deg, #142a43, #0c1829); box-shadow: 0 28px 90px rgba(0, 0, 0, .5); }
+.intro-modal h2 { margin: 7px 0 10px; font-size: clamp(1.6rem, 5vw, 2.25rem); line-height: 1.05; letter-spacing: -.035em; }
+.intro-modal p { color: var(--muted); }
+.intro-card { display: flex; align-items: center; gap: 14px; margin: 18px 0; padding: 15px 17px; border: 1px solid rgba(85, 216, 255, .35); border-radius: 15px; background: var(--cyan-soft); }
+.intro-card strong { color: var(--text); }
+.intro-card span { color: var(--cyan); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; }
+.intro-list { margin: 0; padding-left: 21px; color: var(--muted); font-size: .9rem; }
+.intro-list li + li { margin-top: 8px; }
+.intro-start { margin-top: 12px; width: 100%; }
+</style>
+</head>
+<body>
+<div class="intro-backdrop" id="introBackdrop">
+  <section class="intro-modal" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introText">
+    <div class="eyebrow">Avant de commencer</div>
+    <h2 id="introTitle">Le PID, c’est quoi ?</h2>
+    <p id="introText">Dans cette variante, le drone se comporte comme un procédé industriel, par exemple un four. Plus il monte, plus il devient lourd : à pleine poussée, il plafonne vers 40 m sans jamais toucher le plafond, comme un four qui plafonne quand ses pertes égalent sa puissance de chauffe. Il réagit lentement, et avec un temps mort : la poussée arrive en retard sur la commande.</p>
+    <div class="intro-card"><strong>Analogie</strong><span>altitude ↔ température · poussée ↔ puissance de chauffe · masse qui augmente ↔ pertes qui augmentent</span></div>
+    <ul class="intro-list">
+      <li>Vous réglez le <strong>P</strong>, puis le <strong>I</strong>, puis le <strong>D</strong>.</li>
+      <li>Le procédé est <strong>lent</strong> : attendez que la courbe se stabilise avant de juger (vitesse 2× ou 4× disponible).</li>
+      <li>Une dernière étape teste le réglage avec <strong>perturbations</strong> (rafale et changement de charge).</li>
+      <li>Le mode <strong>Libre</strong> permet de piloter en <strong>manuel</strong> (boucle ouverte) pour observer la réponse du procédé.</li>
+    </ul>
+    <p class="small">Objectif pédagogique : régler un PID sur un procédé lent, stable et avec temps mort, comme une boucle de température.</p>
+    <button type="button" class="primary intro-start" id="introStart">Commencer l’exploration</button>
+  </section>
+</div>
+<div class="intro-backdrop" id="methodBackdrop" hidden>
+  <section class="intro-modal" role="dialog" aria-modal="true" aria-labelledby="methodTitle">
+    <div class="eyebrow">Méthode de réglage</div>
+    <h2 id="methodTitle">Régler un gain PID par tâtonnement</h2>
+    <p class="small">La même méthode marche pour <strong>P</strong>, <strong>I</strong> et <strong>D</strong> : on cherche la plus petite valeur efficace, jamais la plus grande.</p>
+    <div class="intro-card"><strong>1. Pars petit, puis double</strong><span>0,01 → 0,02 → 0,04 → 0,08… jusqu’à voir un effet net.</span></div>
+    <div class="intro-card"><strong>2. Attends entre chaque essai</strong><span>Laisse le drone se stabiliser (regarde la courbe) avant de juger. Ne conclus pas sur les 10 premières secondes.</span></div>
+    <div class="intro-card"><strong>3. Trop d’oscillation ? Reviens de la moitié</strong><span>Tu es à 0,8, tu ajoutes 0,8 → 1,6 et ça part en vrille : recule de la moitié de ce que tu viens d’ajouter, soit −0,4 → 1,2.</span></div>
+    <div class="intro-card"><strong>4. Répète jusqu’au meilleur compromis</strong><span>Le plus proche de la cible, sans oscillation excessive. Chaque gain corrige un défaut.</span></div>
+    <button type="button" class="primary intro-start" id="methodStart">J’ai compris, commencer</button>
+  </section>
+</div>
+<main class="app" id="app" inert aria-hidden="true">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Exercice PID — variante procédé industriel</div>
+      <h1>Exercice PID — Procédé type température</h1>
+      <p>Le drone prend de la masse en montant : son altitude se stabilise d’elle-même pour une poussée donnée, comme la température d’un four pour une puissance donnée. Réponse lente, avec temps mort.</p>
+    </div>
+    <div class="hero-note"><strong>Objectif</strong>Régler P, I puis D pour atteindre la consigne en moins de 40 s, sans dépasser 3 m au-dessus.</div>
+  </header>
+
+  <div class="mode-bar">
+    <strong>Mode :</strong>
+    <div class="tabs">
+      <button type="button" class="tab active" id="modeGuided">Guide PID</button>
+      <button type="button" class="tab" id="modePdi" hidden>Guide PDI</button>
+      <button type="button" class="tab" id="modeFree">Libre</button>
+      <button type="button" class="tab" id="modeChallenge">Défi</button>
+    </div>
+    <div class="stepper" id="stepper"></div>
+    <span class="seed" id="seedLabel"></span>
+  </div>
+
+  <section class="workspace">
+    <div class="column">
+      <article class="panel visual-panel">
+        <div class="panel-header">
+          <div>
+            <h2 id="visualTitle">Altitude du drone</h2>
+            <p id="visualHint">La ligne rouge montre l’altitude maximale atteignable : au-dessus, la poussée ne suffit plus.</p>
+          </div>
+          <div class="visual-toolbar">
+            <span class="pill cyan" id="directionPill">Consigne 25,0 m</span>
+            <span class="pill violet" id="thrustPill">Poussée équilibre</span>
+            <span class="pill" id="saturatedPill">PID non saturé</span>
+          </div>
+        </div>
+        <div class="instrument-wrap">
+          <svg id="droneSvg" viewBox="0 0 520 520" role="img" aria-label="Scène verticale du drone et de son altitude">
+            <defs>
+              <linearGradient id="skyFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#0d2137"/>
+                <stop offset="1" stop-color="#081426"/>
+              </linearGradient>
+              <linearGradient id="groundFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#1c3a2a"/>
+                <stop offset="1" stop-color="#0c1d15"/>
+              </linearGradient>
+              <linearGradient id="bladeGradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#f2f7ff" stop-opacity=".95"/>
+                <stop offset=".5" stop-color="#b7cde2" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#f2f7ff" stop-opacity=".95"/>
+              </linearGradient>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect x="0" y="0" width="520" height="520" fill="url(#skyFill)"/>
+            <g id="altitudeTicks"></g>
+            <g id="altitudeLabels" fill="#8298b1" font-size="12" text-anchor="middle"></g>
+            <line x1="60" y1="470" x2="60" y2="40" stroke="#35536f" stroke-width="2"/>
+            <path d="M60 40 L60 470" stroke="#8ca6bd" stroke-width="1" opacity=".4"/>
+            <g id="guideLines" stroke="#2c4a68" stroke-width="1" stroke-dasharray="3 7" opacity=".7"></g>
+            <line id="targetLine" x1="60" y1="120" x2="460" y2="120" stroke="#ffb45c" stroke-width="3" stroke-dasharray="7 5"/>
+            <text id="targetLabel" x="466" y="116" fill="#ffb45c" font-size="13" text-anchor="end">Consigne</text>
+            <line id="limitLine" x1="60" y1="80" x2="460" y2="80" stroke="#ff7a8a" stroke-width="2" stroke-dasharray="2 6" opacity=".8"/>
+            <text id="limitLabel" x="466" y="74" fill="#ff7a8a" font-size="12" text-anchor="end">Altitude max à pleine poussée</text>
+            <line id="groundLine" x1="30" y1="470" x2="490" y2="470" stroke="#4f7a5f" stroke-width="5" stroke-linecap="round"/>
+            <rect x="30" y="470" width="460" height="30" fill="url(#groundFill)"/>
+            <circle id="altitudeDot" cx="260" cy="470" r="7" fill="#55d8ff"/>
+            <line id="velocityArrow" x1="260" y1="470" x2="260" y2="470" stroke="#55d8ff" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+            <g id="droneGroup" transform="translate(260 470)">
+              <line id="thrustArrow" x1="0" y1="0" x2="0" y2="-60" stroke="#6ee7a8" stroke-width="4" stroke-linecap="round" opacity=".9"/>
+              <path id="thrustHead" d="M0 -70 L-7 -56 L7 -56 Z" fill="#6ee7a8"/>
+              <text id="thrustLabel" x="14" y="-48" fill="#6ee7a8" font-size="11">poussée</text>
+              <g id="rotor">
+                <rect id="bladeA" x="-34" y="0" width="68" height="9" rx="4.5" fill="url(#bladeGradient)" opacity=".95"/>
+                <rect id="bladeShine" x="-34" y="0" width="18" height="9" rx="4.5" fill="#ffffff" opacity=".5"/>
+                <circle id="hub" cx="0" cy="4.5" r="4" fill="#c9dcef" stroke="#5c7fa0" stroke-width="1"/>
+              </g>
+              <path d="M-22 4 L22 4 L14 22 L-14 22 Z" fill="#28425f" stroke="#8ba6bf" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="4.5" fill="#ffb45c" stroke="#8ba6bf" stroke-width="1"/>
+              <circle cx="-28" cy="23" r="3" fill="#9db1c9"/>
+              <circle cx="28" cy="23" r="3" fill="#9db1c9"/>
+            </g>
+          </svg>
+        </div>
+        <div class="visual-caption">
+          <span class="legend-item"><span class="legend-line"></span>Altitude réelle</span>
+          <span class="legend-item"><span class="legend-line target"></span>Consigne</span>
+          <span class="legend-item"><span class="legend-line thrust"></span>Poussée moteur</span>
+        </div>
+        <div class="pid-out" aria-label="Sortie du régulateur PID">
+          <div class="pid-out-head"><span>Sortie du PID (part de la poussée max)</span><strong id="pidTotal">+0,0 %</strong></div>
+          <div class="pid-row pdp"><span class="pid-tag">P</span><div class="pid-bar"><div class="pid-bar-fill" id="pidPBar"></div></div><span class="pid-val" id="pidPVal">+0,0 %</span></div>
+          <div class="pid-row pdi"><span class="pid-tag">I</span><div class="pid-bar"><div class="pid-bar-fill" id="pidIBar"></div></div><span class="pid-val" id="pidIVal">+0,0 %</span></div>
+          <div class="pid-row pdd"><span class="pid-tag">D</span><div class="pid-bar"><div class="pid-bar-fill" id="pidDBar"></div></div><span class="pid-val" id="pidDVal">+0,0 %</span></div>
+          <div class="pid-row pdtotal"><span class="pid-tag">Σ</span><div class="pid-bar"><div class="pid-bar-fill" id="pidSumBar"></div></div><span class="pid-val" id="pidSumVal">+0,0 %</span></div>
+        </div>
+      </article>
+
+      <article class="panel charts-panel">
+        <div class="panel-header" style="padding:0 0 15px; border:0">
+          <div><h2>Courbes temporelles</h2><p>Historique de 90 secondes simulées.</p></div>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h3>Altitude</h3>
+            <p>Mètres, 0 en bas (sol).</p>
+            <canvas id="altitudeChart" class="chart-canvas" aria-label="Graphique de la consigne et de l’altitude réelle"></canvas>
+            <div class="chart-legend"><span class="chart-key" style="--key-color: var(--orange)">Consigne</span><span class="chart-key" style="--key-color: var(--cyan)">Drone</span></div>
+          </div>
+          <div class="chart-card">
+            <h3>Commande et poussée</h3>
+            <p>En % de la poussée max. L’écart horizontal entre les deux = temps mort.</p>
+            <canvas id="speedChart" class="chart-canvas" aria-label="Graphique de la commande et de la poussée réelle"></canvas>
+            <div class="chart-legend"><span class="chart-key" style="--key-color: var(--violet)">Commande</span><span class="chart-key" style="--key-color: var(--green)">Poussée réelle</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="column control-column">
+      <article class="panel mission">
+        <h2 id="missionTitle">Étape 1 — le P</h2>
+        <p id="missionText">Ajustez le gain P pour approcher l’altitude cible. Le I et le D sont verrouillés pour l’instant.</p>
+        <div class="criteria" id="criteriaList"></div>
+        <div class="verdict pending" id="verdict">Objectif en cours</div>
+        <div class="button-grid two" style="margin-top:10px">
+          <button type="button" class="primary" id="nextStep" disabled>Suivant</button>
+          <button type="button" id="skipStep" class="locked">Passer</button>
+        </div>
+      </article>
+
+      <article class="panel control-panel">
+        <div class="control-section">
+          <div class="control-label"><label for="kpRange">Gain proportionnel P</label><input id="kpNumber" class="gain-number" type="text" inputmode="decimal" autocomplete="off" min="0" max="10" step="0.01" value="1" aria-label="Valeur du gain P"></div>
+          <input id="kpRange" type="range" min="0" max="10" step="0.01" value="1" aria-label="Gain proportionnel P">
+          <div class="range-scale"><span>0 · faible</span><span>10 · très élevé</span></div>
+        </div>
+
+        <div class="control-section locked" id="kiSection">
+          <div class="control-label"><label for="kiRange">Gain intégral I</label><input id="kiNumber" class="gain-number" type="text" inputmode="decimal" autocomplete="off" min="0" max="1.50" step="0.01" value="0" aria-label="Valeur du gain I"></div>
+          <input id="kiRange" type="range" min="0" max="1.50" step="0.01" value="0" aria-label="Gain intégral I">
+          <div class="range-scale"><span>0 · désactivé</span><span>1,50 · fort</span></div>
+        </div>
+
+        <div class="control-section locked" id="kdSection">
+          <div class="control-label"><label for="kdRange">Gain dérivé D</label><input id="kdNumber" class="gain-number" type="text" inputmode="decimal" autocomplete="off" min="0" max="5" step="0.01" value="0" aria-label="Valeur du gain D"></div>
+          <input id="kdRange" type="range" min="0" max="5" step="0.01" value="0" aria-label="Gain dérivé D">
+          <div class="range-scale"><span>0 · désactivé</span><span>5,00 · fort</span></div>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><label for="massRange">Masse au sol</label><output id="massOutput" for="massRange">1,25 kg</output></div>
+          <input id="massRange" type="range" min="0.50" max="3.00" step="0.05" value="1.25" aria-label="Masse du drone au sol">
+          <div class="range-scale"><span>0,50 · léger</span><span>3,00 · lourd</span></div>
+          <p class="small">Le drone prend 0,17 kg par mètre d’altitude. Plus la masse au sol est grande, plus l’altitude maximale est basse.</p>
+        </div>
+
+        <div class="control-section" id="deadTimeSection" hidden>
+          <div class="control-label"><label for="deadTimeRange">Temps mort</label><output id="deadTimeOutput" for="deadTimeRange">1,5 s</output></div>
+          <input id="deadTimeRange" type="range" min="0" max="5" step="0.1" value="1.5" aria-label="Temps mort de la poussée">
+          <div class="range-scale"><span>0 s · aucun</span><span>5 s · long</span></div>
+          <p class="small">Retard entre la commande et la poussée, comme le temps que met la chaleur à atteindre la sonde.</p>
+        </div>
+
+        <div class="control-section" id="manualSection" hidden>
+          <div class="control-label"><label for="manualToggle">Mode manuel (boucle ouverte)</label><input id="manualToggle" type="checkbox" aria-label="Activer le mode manuel"></div>
+          <div class="control-label"><label for="manualRange">Commande manuelle</label><output id="manualOutput" for="manualRange">50 %</output></div>
+          <input id="manualRange" type="range" min="0" max="100" step="1" value="50" aria-label="Commande manuelle en pourcentage" disabled>
+          <div class="range-scale"><span>0 %</span><span>100 %</span></div>
+          <p class="small">Le PID est débranché : vous imposez la poussée. Changez la commande d’un coup et observez la courbe : c’est la réponse indicielle du procédé.</p>
+        </div>
+
+        <div class="control-section" hidden>
+          <div class="control-label"><label for="dragRange">Amortissement (air)</label><output id="dragOutput" for="dragRange">0,10</output></div>
+          <input id="dragRange" type="range" min="5" max="40" step="0.5" value="20" aria-label="Amortissement du drone">
+          <div class="range-scale"><span>0,10 · peu amorti</span><span>3,00 · très amorti</span></div>
+        </div>
+
+        <div class="control-section" hidden>
+          <div class="control-label"><label for="thrustRange">Poussée maximale</label><output id="thrustOutput" for="thrustRange">80,0 N</output></div>
+          <input id="thrustRange" type="range" min="50" max="100" step="1" value="80" aria-label="Poussée maximale du drone en newtons">
+          <div class="range-scale"><span>50 N · faible</span><span>100 N · très puissant</span></div>
+          <p class="small">Poussée maximale absolue (en N), indépendante du poids. Un drone lourd avec la même poussée aura moins de marge et réagira différemment.</p>
+        </div>
+
+        <div class="control-section" hidden>
+          <div class="control-label"><label for="smoothingRange">Lissage de la poussée</label><output id="smoothingOutput" for="smoothingRange">0,02 s</output></div>
+          <input id="smoothingRange" type="range" min="0.02" max="1.00" step="0.01" value="0.02" aria-label="Constante de temps de la poussée">
+          <div class="range-scale"><span>0,02 · nerveux</span><span>1,00 · mou</span></div>
+          <p class="small">Temps de réponse de la poussée : petit = réaction vive, grand = réponse molle et retardée.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><strong>Consigne d’altitude</strong><span class="small" id="targetValue">25,0 m</span></div>
+          <div class="button-grid">
+            <button type="button" id="targetMinus">−1 m</button>
+            <button type="button" id="targetBase">25 m</button>
+            <button type="button" id="targetPlus">+1 m</button>
+          </div>
+          <p class="small">Montez ou baissez la consigne : c’est l’échelon à observer.</p>
+        </div>
+
+        <div class="control-section">
+          <div class="control-label"><strong>Simulation</strong><span class="small" id="timeLabel">Temps 1×</span></div>
+          <div class="button-grid two">
+            <button type="button" class="primary" id="pauseButton">Pause</button>
+            <button type="button" id="resetButton">Réinitialiser</button>
+          </div>
+          <div class="control-row" style="margin-top:9px">
+            <label class="small" for="timeScale">Vitesse de simulation</label>
+            <select id="timeScale" aria-label="Vitesse de simulation">
+              <option value="1">1×</option>
+              <option value="2">2×</option>
+              <option value="4">4×</option>
+              <option value="0.25">0,25×</option>
+            </select>
+          </div>
+          <button type="button" class="warning wide" id="gustButton" style="margin-top:10px">Injecter une rafale</button>
+        </div>
+      </article>
+
+      <article class="panel metrics-panel">
+        <div class="panel-header" style="padding:0 0 14px; border:0"><div><h2>Mesures</h2><p>Valeurs instantanées de la boucle.</p></div></div>
+        <div class="metrics-grid">
+          <div class="metric"><span class="metric-label">Consigne</span><span class="metric-value orange" id="metricTarget">25,0 m</span></div>
+          <div class="metric"><span class="metric-label">Altitude réelle</span><span class="metric-value cyan" id="metricAltitude">0,0 m</span></div>
+          <div class="metric"><span class="metric-label">Erreur</span><span class="metric-value" id="metricError">0,0 m</span></div>
+          <div class="metric"><span class="metric-label">Vitesse verticale</span><span class="metric-value" id="metricSpeed">0,0 m/s</span></div>
+          <div class="metric"><span class="metric-label">Poussée</span><span class="metric-value green" id="metricThrust">0,0 %</span></div>
+          <div class="metric"><span class="metric-label">Correction I</span><span class="metric-value violet" id="metricIntegral">+0,0 %</span></div>
+          <div class="metric"><span class="metric-label">Masse actuelle</span><span class="metric-value" id="metricMass">1,25 kg</span></div>
+          <div class="metric"><span class="metric-label">Dépassement max</span><span class="metric-value" id="metricOvershoot">0,0 m</span></div>
+        </div>
+        <details class="debug-panel">
+          <summary>Console de debug PID (valeurs internes en direct)</summary>
+          <div class="debug-log" id="debugLog">—</div>
+        </details>
+        <div class="status-line"><span><span class="status-dot" id="statusDot"></span><span id="statusText">À l’arrêt</span></span><strong id="missionStatus">Mission inactive</strong></div>
+      </article>
+
+      <article class="panel lesson">
+        <h2>Ce qu’il faut observer</h2>
+        <p id="lessonText">Le P applique une correction proportionnelle à l’écart d’altitude. Le I mémorise l’écart pour supprimer l’erreur résiduelle. Le D anticipe la vitesse pour freiner avant le dépassement.</p>
+        <div class="formula" id="lessonFormula">e = consigne − altitude ; v = vitesse mesurée<br>poussée = sat(Kp · e + Ki · ∫e − Kd · v) · poussée max</div>
+        <ol id="lessonList">
+          <li>Commencez par le P : montez-le jusqu’à approcher la cible sans osciller.</li>
+          <li>Ajoutez le I pour supprimer l’erreur qui reste.</li>
+          <li>Ajoutez le D pour supprimer le dépassement.</li>
+          <li>Testez ensuite avec perturbations : rafales et changement de charge.</li>
+        </ol>
+        <div class="method-bubble" id="methodBubble" hidden>
+          <h3>Méthode (valable pour P, I et D)</h3>
+          <p><strong>1. Pars petit, puis double.</strong> <em>0,01</em> → <em>0,02</em> → <em>0,04</em> → <em>0,08</em>… jusqu’à voir un effet net.</p>
+          <p><strong>2. Attends entre chaque essai.</strong> Laisse le drone se stabiliser (regarde la courbe) avant de juger. Ne conclus pas sur les 10 premières secondes.</p>
+          <p><strong>3. Trop d’oscillation ? Reviens de la moitié.</strong> Tu es à <em>0,8</em>, tu ajoutes <em>0,8</em> → <em>1,6</em> et ça part en vrille : recule de la moitié de ce que tu viens d’ajouter, soit <em>−0,4</em> → <em>1,2</em>.</p>
+          <p><strong>4. Répète</strong> jusqu’au meilleur compromis : le plus proche de la cible, sans oscillation excessive.</p>
+        </div>
+      </article>
+
+      <details class="panel">
+        <summary>Constantes et réglages du modèle pédagogique</summary>
+        <div class="constants">
+          <table>
+            <tbody>
+              <tr><th>Masse au sol</th><td>0,50 à 3,00 kg (1,25 kg dans le guide)</td></tr>
+              <tr><th>Prise de masse</th><td>0,17 kg par mètre d’altitude</td></tr>
+              <tr><th>Altitude max à pleine poussée</th><td>≈ 40 m pour 1,25 kg au sol</td></tr>
+              <tr><th>Amortissement</th><td>20 N·s/m (guide) ; aléatoire en Défi</td></tr>
+              <tr><th>Constante de temps du procédé</th><td>≈ 12 s</td></tr>
+              <tr><th>Temps mort</th><td>1,5 s (guide) ; réglable en Libre</td></tr>
+              <tr><th>Poussée max</th><td>80 N (fixe)</td></tr>
+              <tr><th>Compensation du poids</th><td>aucune : c’est le PID qui doit la fournir</td></tr>
+              <tr><th>Bande de précision</th><td>±0,3 m</td></tr>
+              <tr><th>Temps de réponse visé</th><td>40 s</td></tr>
+              <tr><th>Dépassement maximal visé</th><td>3 m</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </section>
+  <p class="footer-note">Simulation pédagogique locale · aucune donnée envoyée · format conçu pour Moodle</p>
+</main>
+<script>
+(() => {
+  'use strict';
+
+  const GRAVITY = 9.81;
+  const MAX_ALTITUDE = 50;
+  const MAX_TARGET = 25;
+  const SCENE_BOTTOM = 470;
+  const SCENE_TOP = 40;
+  const DRONE_SCALE = 0.72;
+  const DEFAULT_THRUST_MAX = 80;
+  const DEFAULT_THRUST_SMOOTHING = 0.02;
+  const INTEGRAL_LIMIT = 400;
+  const DERIVATIVE_LIMIT = 40;
+  const REST_SPEED = 0.02;
+  const STABLE_BAND = 2;
+  const GUIDED_MASS = 1.25;
+  const MAX_CLIMB_RATE = 6;
+  const GROUND_CUSHION = 14;
+  const GROUND_CUSHION_MAX_FALL = 0.35;
+  const ALTITUDE_REF = 25;
+  const SIM_DT = 1 / 120;
+  const HISTORY_DT = 0.1;
+  const HISTORY_LIMIT = 900;
+  const EPSILON = 0.3;
+  const TARGET_TIME = 40;
+  const MASS_GAIN = 0.17;
+  const GUIDED_DRAG = 20;
+  const GUIDED_DEAD_TIME = 1.5;
+  const CHART_WINDOW = 90;
+  const OVERSHOOT_LIMIT = 3;
+
+  const elements = {
+    introBackdrop: document.getElementById('introBackdrop'),
+    introStart: document.getElementById('introStart'),
+    methodBackdrop: document.getElementById('methodBackdrop'),
+    methodStart: document.getElementById('methodStart'),
+    app: document.getElementById('app'),
+    modeGuided: document.getElementById('modeGuided'),
+    modePdi: document.getElementById('modePdi'),
+    modeFree: document.getElementById('modeFree'),
+    modeChallenge: document.getElementById('modeChallenge'),
+    stepper: document.getElementById('stepper'),
+    seedLabel: document.getElementById('seedLabel'),
+    missionTitle: document.getElementById('missionTitle'),
+    missionText: document.getElementById('missionText'),
+    criteriaList: document.getElementById('criteriaList'),
+    verdict: document.getElementById('verdict'),
+    nextStep: document.getElementById('nextStep'),
+    skipStep: document.getElementById('skipStep'),
+    visualTitle: document.getElementById('visualTitle'),
+    visualHint: document.getElementById('visualHint'),
+    directionPill: document.getElementById('directionPill'),
+    thrustPill: document.getElementById('thrustPill'),
+    saturatedPill: document.getElementById('saturatedPill'),
+    svg: document.getElementById('droneSvg'),
+    altitudeTicks: document.getElementById('altitudeTicks'),
+    altitudeLabels: document.getElementById('altitudeLabels'),
+    guideLines: document.getElementById('guideLines'),
+    targetLine: document.getElementById('targetLine'),
+    targetLabel: document.getElementById('targetLabel'),
+    altitudeDot: document.getElementById('altitudeDot'),
+    velocityArrow: document.getElementById('velocityArrow'),
+    droneGroup: document.getElementById('droneGroup'),
+    thrustArrow: document.getElementById('thrustArrow'),
+    thrustHead: document.getElementById('thrustHead'),
+    thrustLabel: document.getElementById('thrustLabel'),
+    rotor: document.getElementById('rotor'),
+    bladeShine: document.getElementById('bladeShine'),
+    kpRange: document.getElementById('kpRange'),
+    kpNumber: document.getElementById('kpNumber'),
+    kiSection: document.getElementById('kiSection'),
+    kiRange: document.getElementById('kiRange'),
+    kiNumber: document.getElementById('kiNumber'),
+    kdSection: document.getElementById('kdSection'),
+    kdRange: document.getElementById('kdRange'),
+    kdNumber: document.getElementById('kdNumber'),
+    massRange: document.getElementById('massRange'),
+    massOutput: document.getElementById('massOutput'),
+    dragRange: document.getElementById('dragRange'),
+    dragOutput: document.getElementById('dragOutput'),
+    thrustRange: document.getElementById('thrustRange'),
+    thrustOutput: document.getElementById('thrustOutput'),
+    smoothingRange: document.getElementById('smoothingRange'),
+    smoothingOutput: document.getElementById('smoothingOutput'),
+    targetMinus: document.getElementById('targetMinus'),
+    targetBase: document.getElementById('targetBase'),
+    targetPlus: document.getElementById('targetPlus'),
+    targetValue: document.getElementById('targetValue'),
+    pauseButton: document.getElementById('pauseButton'),
+    resetButton: document.getElementById('resetButton'),
+    timeScale: document.getElementById('timeScale'),
+    gustButton: document.getElementById('gustButton'),
+    timeLabel: document.getElementById('timeLabel'),
+    metricTarget: document.getElementById('metricTarget'),
+    metricAltitude: document.getElementById('metricAltitude'),
+    metricError: document.getElementById('metricError'),
+    metricSpeed: document.getElementById('metricSpeed'),
+    metricThrust: document.getElementById('metricThrust'),
+    metricIntegral: document.getElementById('metricIntegral'),
+    metricOvershoot: document.getElementById('metricOvershoot'),
+    debugLog: document.getElementById('debugLog'),
+    pidTotal: document.getElementById('pidTotal'),
+    pidPVal: document.getElementById('pidPVal'),
+    pidIVal: document.getElementById('pidIVal'),
+    pidDVal: document.getElementById('pidDVal'),
+    pidSumVal: document.getElementById('pidSumVal'),
+    pidPBar: document.getElementById('pidPBar'),
+    pidIBar: document.getElementById('pidIBar'),
+    pidDBar: document.getElementById('pidDBar'),
+    pidSumBar: document.getElementById('pidSumBar'),
+    statusDot: document.getElementById('statusDot'),
+    statusText: document.getElementById('statusText'),
+    missionStatus: document.getElementById('missionStatus'),
+    lessonTitle: document.querySelector('.lesson h2'),
+    lessonText: document.getElementById('lessonText'),
+    lessonFormula: document.getElementById('lessonFormula'),
+    methodBubble: document.getElementById('methodBubble'),
+    lessonList: document.getElementById('lessonList'),
+    altitudeChart: document.getElementById('altitudeChart'),
+    speedChart: document.getElementById('speedChart'),
+    metricMass: document.getElementById('metricMass'),
+    limitLine: document.getElementById('limitLine'),
+    limitLabel: document.getElementById('limitLabel'),
+    deadTimeSection: document.getElementById('deadTimeSection'),
+    deadTimeRange: document.getElementById('deadTimeRange'),
+    deadTimeOutput: document.getElementById('deadTimeOutput'),
+    manualSection: document.getElementById('manualSection'),
+    manualToggle: document.getElementById('manualToggle'),
+    manualRange: document.getElementById('manualRange'),
+    manualOutput: document.getElementById('manualOutput')
+  };
+
+  const state = {
+    kp: 1,
+    ki: 0,
+    kd: 0,
+    integralError: 0,
+    lastError: 0,
+    lastAltitude: 0,
+    derivativeError: 0,
+    mass: 1.25,
+    drag: GUIDED_DRAG,
+    deadTime: GUIDED_DEAD_TIME,
+    delayLine: [],
+    delayedDemand: 0,
+    manual: false,
+    manualCommand: 0.5,
+    thrustMax: DEFAULT_THRUST_MAX,
+    thrustSmoothing: DEFAULT_THRUST_SMOOTHING,
+    target: 25,
+    altitude: 0,
+    velocity: 0,
+    thrust: 0,
+    thrustDemand: 0,
+    normalizedCommand: 0,
+    error: 0,
+    gustTimer: 0,
+    gustMagnitude: 0,
+    elapsed: 0,
+    historyClock: 0,
+    running: false,
+    timeScale: 1,
+    rotorAngle: 0,
+    overshoot: 0,
+    bestApproach: Infinity,
+    holdTimer: 0,
+    oscSamples: [],
+    oscAmplitude: 0,
+    oscMean: 0,
+    guideFinished: false,
+    allFourTime: Infinity,
+    reachedTarget: false,
+    reachedTime: Infinity,
+    settledTimer: 0,
+    mission: null
+  };
+
+  let accumulator = 0;
+  let lastFrame = performance.now();
+  let exerciseStarted = false;
+  let currentMode = 'guided';
+  let guidedStep = 0;
+  const GUIDED_SEQUENCES = { guided: ['P', 'I', 'D', 'TEST'], pdi: ['P', 'D', 'I', 'TEST'] };
+  let GUIDED_STEPS = GUIDED_SEQUENCES.guided;
+  function inGuide() { return currentMode === 'guided' || currentMode === 'pdi'; }
+  const STEP_META = {
+    P: {
+      title: 'Étape 1 — le P',
+      text: 'Ajustez le gain P pour approcher l’altitude cible. Le I et le D sont verrouillés pour l’instant.',
+      lesson: 'Le P applique une correction proportionnelle à l’écart. Pour tenir une altitude, il faut une poussée permanente qui compense le poids, et ce poids augmente avec l’altitude : avec un P seul, le procédé se stabilise toujours sous la consigne. C’est l’erreur statique, comme un four qui plafonne sous sa température de consigne. À cause du temps mort, un P trop fort fait osciller.',
+      formula: 'e = consigne − altitude<br>poussée = sat(Kp · e) · poussée max',
+      list: [
+        'Montez P progressivement et attendez que la courbe se stabilise.',
+        'P faible → réponse lente et grande erreur statique.',
+        'P fort → erreur plus petite, mais le temps mort finit par faire osciller.',
+        'Il reste toujours une erreur : c’est pour cela qu’on ajoutera le I.'
+      ],
+      showI: false,
+      showD: false
+    },
+    I: {
+      title: 'Étape 2 — le I',
+      text: 'Le P est conservé. Ajoutez le I pour supprimer l’erreur statique. Le D est encore verrouillé.',
+      textPdi: 'P et D sont conservés. Ajoutez le I pour supprimer l’erreur qui reste sous la cible.',
+      lesson: 'Le I accumule l’écart dans le temps et finit par fournir la poussée manquante : l’erreur statique disparaît. Sur un procédé lent et stable comme celui-ci, un régulateur PI suffit souvent : c’est le cas de la plupart des boucles de température industrielles. Un I trop fort fait dépasser puis osciller.',
+      formula: 'e = consigne − altitude<br>poussée = sat(Kp · e + Ki · ∫e) · poussée max',
+      list: [
+        'Avec P seul, le procédé reste sous la consigne.',
+        'Ajoutez du I : la courbe finit par rejoindre la consigne.',
+        'I faible → l’erreur disparaît, mais très lentement.',
+        'I trop fort → dépassement puis oscillation.'
+      ],
+      showI: true,
+      showD: false
+    },
+    D: {
+      title: 'Étape 3 — le D',
+      text: 'Le P est conservé. Essayez le D et comparez : sur ce procédé, son effet est limité. Retouchez le I si nécessaire.',
+      textPdi: 'Le P est conservé. Ajoutez le D pour amortir l’oscillation. Le I viendra à l’étape suivante.',
+      lesson: 'Le D freine proportionnellement à la vitesse de variation de la mesure. Sur un drone, il est indispensable ; sur un procédé lent et déjà amorti comme celui-ci, il apporte peu : il peut réduire un léger dépassement, mais ralentit la réponse. En industrie, beaucoup de boucles de température n’utilisent pas de D, car il amplifie aussi le bruit de la sonde.',
+      formula: 'e = consigne − altitude ; v = vitesse mesurée<br>poussée = sat(Kp · e + Ki · ∫e − Kd · v) · poussée max',
+      list: [
+        'Comparez la courbe avec et sans D.',
+        'Si vous aviez un dépassement, le D peut le réduire.',
+        'D trop fort → montée plus lente, la consigne n’est pas atteinte à temps.'
+      ],
+      showI: true,
+      showD: true
+    },
+    TEST: {
+      title: 'Étape 4 — test avec perturbations',
+      text: 'Le procédé part du sol avec vos réglages. Une fois stabilisé, il subit des perturbations automatiques : rafales à 30 s et 60 s, augmentation de charge (+0,5 kg) à 45 s. Observez la reprise.',
+      lesson: 'Cette étape met le réglage à l’épreuve. La rafale est une perturbation brève ; l’augmentation de charge est permanente, comme une porte de four qu’on ouvre : seul le I peut ramener la mesure exactement à la consigne.',
+      formula: 'poussée = sat(Kp · e + Ki · ∫e − Kd · v) · poussée max<br>perturbations : rafales + augmentation de charge',
+      list: [
+        'Le procédé démarre du sol et monte à la consigne.',
+        'Rafales à 30 s et 60 s, charge +0,5 kg à 45 s.',
+        'Le réglage doit ramener la mesure à la consigne après chaque perturbation.',
+        'Cliquez « Passer » si vous avez déjà fait cette étape.'
+      ],
+      showI: true,
+      showD: true
+    }
+  };
+
+  const DEFAULT_GAINS = { kp: 1, ki: 0, kd: 0 };
+
+  function clamp(value, minimum, maximum) {
+    return Math.max(minimum, Math.min(maximum, value));
+  }
+
+  function clampGain(raw, rangeElement) {
+    const minimum = Number(rangeElement.min);
+    const maximum = Number(rangeElement.max);
+    const value = Number(String(raw).replace(',', '.'));
+    if (!Number.isFinite(value)) return minimum;
+    return clamp(value, minimum, maximum);
+  }
+
+  function wrapAngle(value) {
+    return Math.atan2(Math.sin(value), Math.cos(value));
+  }
+
+  function signed(value, digits) {
+    const rounded = value.toFixed(digits);
+    if (Number(rounded) > 0) return '+' + rounded.replace('.', ',');
+    return rounded.replace('.', ',');
+  }
+
+  function formatMeters(value, digits = 2) {
+    return signed(value, digits).replace('+', '') + ' m';
+  }
+
+  function formatSignedMeters(value) {
+    return signed(value, 2) + ' m';
+  }
+
+  function formatSignedMps(value) {
+    return signed(value, 1) + ' m/s';
+  }
+
+  function formatPercent(value) {
+    return signed(value * 100, 1) + ' %';
+  }
+
+  function currentMass() {
+    return state.mass + MASS_GAIN * Math.max(0, state.altitude);
+  }
+
+  function weight() {
+    return currentMass() * GRAVITY;
+  }
+
+  function maxReachableAltitude() {
+    return Math.max(0, (state.thrustMax / GRAVITY - state.mass) / MASS_GAIN);
+  }
+
+  function formatTimeScale(value) {
+    return (value === 0.25 ? '0,25' : String(value)) + '×';
+  }
+
+  function maxThrust() {
+    return state.thrustMax;
+  }
+
+  function proportionalCommandValue() {
+    return state.kp * state.error / ALTITUDE_REF;
+  }
+
+  function integralCommand() {
+    return state.ki * state.integralError / ALTITUDE_REF;
+  }
+
+  function derivativeCommand() {
+    return state.kd * state.derivativeError / ALTITUDE_REF;
+  }
+
+  function pidTotalCommand() {
+    return proportionalCommandValue() + integralCommand() + derivativeCommand();
+  }
+
+  function updatePidBreakdown() {
+    const p = proportionalCommandValue();
+    const i = integralCommand();
+    const d = derivativeCommand();
+    const total = pidTotalCommand();
+    if (!elements.pidTotal) return;
+    elements.pidTotal.textContent = formatPercent(total);
+    elements.pidTotal.style.color = total > 0 ? 'var(--green)' : total < 0 ? 'var(--red)' : 'var(--muted)';
+    elements.pidPVal.textContent = formatPercent(p);
+    elements.pidIVal.textContent = formatPercent(i);
+    elements.pidDVal.textContent = formatPercent(d);
+    elements.pidSumVal.textContent = formatPercent(total);
+    setPidBar(elements.pidPBar, p);
+    setPidBar(elements.pidIBar, i);
+    setPidBar(elements.pidDBar, d);
+    setPidBar(elements.pidSumBar, total);
+  }
+
+  let debugTick = 0;
+  function updateDebugLog() {
+    if (!elements.debugLog) return;
+    debugTick += 1;
+    if (debugTick % 4 !== 0) return;
+    const lines = [
+      't=' + state.elapsed.toFixed(2) + 's  dt=' + SIM_DT.toFixed(4),
+      'cible=' + state.target.toFixed(2) + '  altitude=' + state.altitude.toFixed(3) + '  erreur=' + state.error.toFixed(3),
+      'vitesse mesuree=' + (-state.derivativeError).toFixed(3) + ' m/s',
+      'kp=' + state.kp.toFixed(3) + '  ki=' + state.ki.toFixed(3) + '  kd=' + state.kd.toFixed(3),
+      'integralError(I)=' + state.integralError.toFixed(4) + '   limit=' + INTEGRAL_LIMIT,
+      'P=' + formatPercent(proportionalCommandValue()) + '  I=' + formatPercent(integralCommand()) + '  D=' + formatPercent(derivativeCommand()),
+      'command=' + pidTotalCommand().toFixed(4) + '  thrustDemand=' + state.thrustDemand.toFixed(2) + 'N  thrust=' + state.thrust.toFixed(2) + 'N',
+      'poids=' + weight().toFixed(2) + 'N  maxPoussee=' + maxThrust().toFixed(2) + 'N  sature=' + (state.normalizedCommand >= 0.999),
+      'oscSamples=' + state.oscSamples.length + '  span=' + (state.oscSamples.length ? (state.elapsed - state.oscSamples[0].t).toFixed(2) : '0') + 's  amplitude=' + (Number.isFinite(state.oscAmplitude) ? state.oscAmplitude.toFixed(3) : 'inf') + '  moyenne=' + state.oscMean.toFixed(2)
+    ];
+    elements.debugLog.textContent = lines.join('\n');
+  }
+
+  function setPidBar(bar, value) {
+    const t = clamp(value, -1, 1);
+    const pct = Math.abs(t) * 50;
+    bar.style.width = pct.toFixed(2) + '%';
+    bar.style.left = (t >= 0 ? 50 : 50 - pct).toFixed(2) + '%';
+  }
+
+  function altitudeToY(altitude) {
+    const ratio = clamp(altitude / MAX_ALTITUDE, 0, 1);
+    return SCENE_BOTTOM - ratio * (SCENE_BOTTOM - SCENE_TOP);
+  }
+
+  function buildAltitudeScale() {
+    elements.altitudeTicks.innerHTML = '';
+    elements.altitudeLabels.innerHTML = '';
+    elements.guideLines.innerHTML = '';
+    for (let value = 0; value <= MAX_ALTITUDE; value += 2) {
+      const y = altitudeToY(value);
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('x1', '54');
+      tick.setAttribute('y1', y.toFixed(2));
+      tick.setAttribute('x2', value % 10 === 0 ? '66' : '61');
+      tick.setAttribute('y2', y.toFixed(2));
+      tick.setAttribute('stroke', value % 10 === 0 ? '#7895b1' : '#35536f');
+      tick.setAttribute('stroke-width', value % 10 === 0 ? '2' : '1');
+      elements.altitudeTicks.appendChild(tick);
+      const guide = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      guide.setAttribute('x1', '66');
+      guide.setAttribute('y1', y.toFixed(2));
+      guide.setAttribute('x2', '460');
+      guide.setAttribute('y2', y.toFixed(2));
+      elements.guideLines.appendChild(guide);
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', '46');
+      text.setAttribute('y', (y + 4).toFixed(2));
+      text.setAttribute('text-anchor', 'end');
+      text.textContent = value + ' m';
+      elements.altitudeLabels.appendChild(text);
+    }
+  }
+
+  function applyStepVisibility() {
+    const step = GUIDED_STEPS[guidedStep];
+    const meta = STEP_META[step];
+    const isTest = step === 'TEST';
+    const active = isTest ? 'ALL' : step;
+    const showI = isTest || step === 'I' || step === 'D';
+    const showD = isTest || step === 'D' || step === 'I';
+    elements.kiSection.classList.toggle('show', showI);
+    elements.kdSection.classList.toggle('show', showD);
+    const kiEditable = isTest || active === 'I' || (active === 'D' && currentMode === 'guided');
+    elements.kiRange.disabled = !kiEditable;
+    elements.kdRange.disabled = !(isTest || active === 'D');
+    elements.kiNumber.disabled = elements.kiRange.disabled;
+    elements.kdNumber.disabled = elements.kdRange.disabled;
+    const kpEditable = isTest || active === 'P';
+    elements.kpRange.disabled = !kpEditable;
+    elements.kpNumber.disabled = !kpEditable;
+    if (inGuide()) {
+      elements.dragRange.value = String(GUIDED_DRAG);
+      elements.deadTimeRange.value = String(GUIDED_DEAD_TIME);
+      elements.massRange.value = String(GUIDED_MASS);
+      elements.massRange.disabled = true;
+      elements.massOutput.textContent = GUIDED_MASS.toFixed(2).replace('.', ',') + ' kg';
+    } else {
+      elements.massRange.disabled = false;
+    }
+    elements.missionTitle.textContent = meta.title;
+    elements.missionText.textContent = (currentMode === 'pdi' && meta.textPdi) ? meta.textPdi : meta.text;
+    elements.lessonText.textContent = meta.lesson;
+    elements.lessonFormula.innerHTML = meta.formula;
+    elements.lessonList.innerHTML = meta.list.map(item => '<li>' + item + '</li>').join('');
+    if (elements.methodBubble) {
+      elements.methodBubble.hidden = !inGuide();
+    }
+  }
+
+  function renderStepper() {
+    elements.stepper.innerHTML = '';
+    if (!inGuide()) return;
+    GUIDED_STEPS.forEach((step, index) => {
+      const chip = document.createElement('span');
+      chip.className = 'step-chip' + (index === guidedStep ? ' active' : index < guidedStep ? ' done' : '');
+      chip.textContent = (index < guidedStep ? '✓ ' : '') + (index + 1) + '. ' + (step === 'TEST' ? 'Test' : step);
+      elements.stepper.appendChild(chip);
+    });
+  }
+
+  function currentMission() {
+    return state.mission;
+  }
+
+  function missionCriteria() {
+    const mission = currentMission();
+    if (mission) return mission.criteria;
+    return { epsilon: EPSILON, time: TARGET_TIME, overshoot: OVERSHOOT_LIMIT };
+  }
+
+  function guidedCriteria() {
+    const step = GUIDED_STEPS[guidedStep];
+    if (step === 'P') return { epsilon: 3, time: TARGET_TIME, overshoot: 10, checkOvershoot: false, checkPrecision: false, reachBand: 3, stableBand: 3, settleTime: 0.25, holdTime: 30 };
+    if (step === 'I') return { epsilon: 0.5, time: TARGET_TIME, overshoot: 10, checkOvershoot: false, checkPrecision: true, reachBand: 0.5, stableBand: 1 };
+    if (step === 'D') return { epsilon: EPSILON, time: TARGET_TIME, overshoot: OVERSHOOT_LIMIT, checkOvershoot: true, checkPrecision: true, reachBand: EPSILON, stableBand: STABLE_BAND };
+    return { epsilon: EPSILON, time: TARGET_TIME, overshoot: OVERSHOOT_LIMIT, checkOvershoot: false, checkPrecision: true, reachBand: EPSILON, stableBand: STABLE_BAND };
+  }
+
+  function evaluateMission() {
+    const criteria = inGuide() ? guidedCriteria() : missionCriteria();
+    const step = GUIDED_STEPS[guidedStep];
+    const isApproachStep = inGuide() && step === 'P';
+    const isPdiD = currentMode === 'pdi' && step === 'D';
+    const reached = isApproachStep ? true : (state.reachedTarget && state.reachedTime <= criteria.time);
+    const precise = isApproachStep ? state.holdTimer >= criteria.holdTime : Math.abs(state.error) <= criteria.epsilon;
+    const noOvershoot = state.overshoot <= criteria.overshoot;
+    const stable = isApproachStep ? true : state.settledTimer >= (criteria.settleTime || 0.5);
+    const lowOscillation = state.oscAmplitude < 0.6;
+    const allFourNow = reached && precise && noOvershoot && stable;
+    if (allFourNow && !Number.isFinite(state.allFourTime)) {
+      state.allFourTime = state.elapsed;
+    }
+    const allFourInTime = Number.isFinite(state.allFourTime) && state.allFourTime <= criteria.time;
+    return { reached, precise, noOvershoot, stable, lowOscillation, isPdiD, allFour: allFourInTime, allFourTime: state.allFourTime, overshoot: state.overshoot, criteria };
+  }
+
+  function updateMissionUI() {
+    const evaluation = evaluateMission();
+    const criteria = evaluation.criteria;
+    const isPStep = inGuide() && GUIDED_STEPS[guidedStep] === 'P';
+    const rows = [];
+    const mis = state.mission;
+    const isFullChallenge = !inGuide() && mis && typeof mis.text === 'string' && mis.text.startsWith('Complète');
+    if (isFullChallenge) {
+      const shown = Number.isFinite(evaluation.allFourTime) ? evaluation.allFourTime.toFixed(1) + ' s' : 'en cours';
+      rows.push(['Réussir les 4 conditions en ≤ ' + criteria.time.toFixed(0) + ' s', shown, evaluation.allFour]);
+    }
+    if (evaluation.isPdiD) {
+      const amp = Number.isFinite(state.oscAmplitude) ? state.oscAmplitude.toFixed(2) + ' m' : 'approche la cible…';
+      rows.push(['Oscillation < 0,60 m sur 15 s', amp, evaluation.lowOscillation]);
+    } else {
+      if (!isPStep) {
+        rows.push(['Temps de réponse ≤ ' + criteria.time.toFixed(0) + ' s', evaluation.reached ? state.reachedTime.toFixed(1) + ' s' : '—', evaluation.reached]);
+      }
+      if (isPStep) {
+        rows.push(['Rester entre 18 et 25 m pendant 30 s', state.holdTimer.toFixed(1) + ' s', evaluation.precise]);
+      } else if (criteria.checkPrecision !== false) {
+        rows.push(['Précision |erreur| ≤ ' + criteria.epsilon.toFixed(2) + ' m', formatSignedMeters(state.error), evaluation.precise]);
+      }
+      if (criteria.checkOvershoot) {
+        rows.push(['Dépassement ≤ ' + criteria.overshoot.toFixed(1) + ' m', state.overshoot.toFixed(2) + ' m', evaluation.noOvershoot]);
+      }
+      if (!isPStep) {
+        rows.push(['Stabilité |erreur| ≤ ' + STABLE_BAND.toFixed(1) + ' m', evaluation.stable ? 'stable' : 'en cours', evaluation.stable]);
+      }
+    }
+    elements.criteriaList.innerHTML = rows.map(row =>
+      '<div class="criterion ' + (row[2] ? 'pass' : 'fail') + '"><span class="label">' + row[0] + '</span><span class="value">' + row[1] + '</span></div>'
+    ).join('');
+
+    if (inGuide() && GUIDED_STEPS[guidedStep] === 'TEST') {
+      if (!state.guideFinished) {
+        elements.verdict.textContent = 'Observation libre — terminez quand vous voulez.';
+        elements.verdict.className = 'verdict pending';
+      }
+      elements.nextStep.disabled = false;
+      elements.nextStep.textContent = 'Terminer';
+      return;
+    }
+    const allPass = rows.every(row => row[2]);
+    elements.verdict.textContent = allPass ? 'Objectif atteint — passez à la suite.' : 'Objectif en cours';
+    elements.verdict.className = 'verdict ' + (allPass ? 'pass' : 'pending');
+    if (currentMode === 'challenge') {
+      elements.nextStep.disabled = false;
+      elements.nextStep.textContent = 'Défi suivant';
+    } else {
+      elements.nextStep.disabled = !allPass;
+    }
+    if (allPass && inGuide()) markStepDone();
+  }
+
+  function markStepDone() {
+    if (document.querySelector('.step-chip.active')) {
+      document.querySelector('.step-chip.active').classList.add('done');
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    elements.modeGuided.classList.toggle('active', mode === 'guided');
+    elements.modePdi.classList.toggle('active', mode === 'pdi');
+    elements.modeFree.classList.toggle('active', mode === 'free');
+    elements.modeChallenge.classList.toggle('active', mode === 'challenge');
+    elements.skipStep.classList.toggle('show', (mode === 'guided' || mode === 'pdi') && GUIDED_STEPS[guidedStep] === 'TEST');
+    elements.deadTimeSection.hidden = mode !== 'free';
+    elements.manualSection.hidden = mode !== 'free';
+    if (mode !== 'free') {
+      elements.manualToggle.checked = false;
+      elements.manualRange.disabled = true;
+      state.manual = false;
+    }
+    if (mode === 'guided' || mode === 'pdi') {
+      applyStepVisibility();
+      state.mission = null;
+      elements.seedLabel.textContent = '';
+    } else if (mode === 'free') {
+      state.mission = null;
+      setFreeStyle(false);
+      elements.seedLabel.textContent = '';
+    } else {
+      state.mission = null;
+      generateChallenge();
+    }
+    if (elements.methodBubble) elements.methodBubble.hidden = !inGuide();
+    const lockTarget = mode === 'challenge';
+    [elements.targetMinus, elements.targetBase, elements.targetPlus].forEach(btn => { if (btn) btn.disabled = lockTarget; });
+    renderStepper();
+    resetSimulation();
+    updateMissionUI();
+  }
+
+  function setFreeStyle(reset) {
+    elements.kiSection.classList.add('show');
+    elements.kdSection.classList.add('show');
+    elements.kiRange.disabled = false;
+    elements.kdRange.disabled = false;
+    elements.kpRange.disabled = false;
+    elements.kpNumber.disabled = false;
+    elements.kiNumber.disabled = false;
+    elements.kdNumber.disabled = false;
+    elements.massRange.disabled = false;
+    elements.missionTitle.textContent = 'Mode libre';
+    elements.missionText.textContent = 'Réglez les gains, la masse au sol et le temps mort. Passez en mode manuel pour piloter la poussée vous-même, sans PID.';
+    elements.lessonText.textContent = 'En mode manuel, une commande constante donne une altitude qui monte puis se stabilise : c’est la réponse indicielle du procédé, comme la température d’un four à puissance fixe. On y lit le temps mort (délai avant que la courbe bouge), la constante de temps (≈ 63 % de la variation) et le gain statique (variation d’altitude ÷ variation de commande).';
+    elements.lessonFormula.innerHTML = 'e = consigne − altitude ; v = vitesse mesurée<br>poussée = sat(Kp · e + Ki · ∫e − Kd · v) · poussée max';
+    elements.lessonList.innerHTML = [
+      'Mode manuel : fixez 50 %, attendez la stabilisation, puis passez à 70 % d’un coup.',
+      'Mesurez le temps mort, la constante de temps et la variation d’altitude.',
+      'Repassez en automatique et comparez le réglage PID avec ce que vous avez mesuré.',
+      'Augmentez le temps mort : le même réglage devient plus oscillant.'
+    ].map(item => '<li>' + item + '</li>').join('');
+    if (reset) resetSimulation();
+  }
+
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function random() {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function randomGeneration() {
+    return (Math.floor(Math.random() * 900000) + 100000) >>> 0;
+  }
+
+  function generateFreeVariant() {
+    const seed = randomGeneration();
+    const rng = mulberry32(seed);
+    const mass = Number((0.8 + rng() * 4.2).toFixed(2));
+    const drag = Number((0.2 + rng() * 1.2).toFixed(2));
+    const target = Number((5 + rng() * 10).toFixed(1));
+    state.mission = { seed, kind: 'free', criteria: { epsilon: EPSILON, time: TARGET_TIME, overshoot: OVERSHOOT_LIMIT } };
+    elements.seedLabel.textContent = 'Graine ' + seed;
+    applyScenario(mass, drag, target);
+  }
+
+  const CHALLENGE_TEMPLATES = [
+    'Rapide : atteins la cible dans le temps imparti, le dépassement est libre.',
+    'Précis : limite le dépassement imposé, le temps de réponse est souple.',
+    'Équilibré : respecte à la fois le temps de réponse et le dépassement.',
+    'Lourd et rapide : masse élevée, vise la cible en un minimum de temps.',
+    'Lourd et précis : masse élevée, ne dépasse pas la limite imposée.',
+    'Complète : respecte les 4 conditions — temps, dépassement, précision et stabilité.'
+  ];
+
+  function generateChallenge() {
+    const seed = randomGeneration();
+    const rng = mulberry32(seed);
+    const template = CHALLENGE_TEMPLATES[Math.floor(rng() * CHALLENGE_TEMPLATES.length)];
+    const heavy = template.startsWith('Lourd');
+    const mass = Number((heavy ? 1.8 + rng() * 0.7 : 0.8 + rng() * 1.0).toFixed(2));
+    const drag = Number((12 + rng() * 18).toFixed(1));
+    const deadTime = Number((0.5 + rng() * 2).toFixed(1));
+    const reachable = (DEFAULT_THRUST_MAX / GRAVITY - mass) / MASS_GAIN;
+    const target = Number(Math.min(MAX_TARGET, 10 + rng() * (0.75 * reachable - 10)).toFixed(1));
+    const epsilon = Number((0.25 + rng() * 0.35).toFixed(2));
+    const processTau = drag / (MASS_GAIN * GRAVITY);
+    const baseTime = 2 * processTau + 4 * deadTime;
+    const maxOvershootPhysique = Math.max(0, reachable - target);
+    let time;
+    let overshoot;
+    if (template.startsWith('Rapide') || template.startsWith('Lourd et rapide')) {
+      time = Math.round(baseTime + rng() * 10);
+      overshoot = Number(maxOvershootPhysique.toFixed(1));
+    } else if (template.startsWith('Précis') || template.startsWith('Lourd et précis')) {
+      time = Math.round(baseTime * 1.5 + rng() * 15);
+      overshoot = Number(Math.min(rng() * 3, maxOvershootPhysique).toFixed(1));
+    } else if (template.startsWith('Complète')) {
+      time = Math.round(baseTime * 1.3 + rng() * 10);
+      overshoot = Number(Math.min(0.5 + rng() * 1.5, maxOvershootPhysique).toFixed(1));
+    } else {
+      time = Math.round(baseTime * 1.2 + rng() * 10);
+      overshoot = Number(Math.min(rng() * 5, maxOvershootPhysique).toFixed(1));
+    }
+    state.mission = {
+      seed, kind: 'challenge', text: template, locked: [], adjustable: ['kp', 'ki', 'kd'],
+      criteria: { epsilon, time, overshoot, checkOvershoot: true }
+    };
+    elements.seedLabel.textContent = 'Graine ' + seed;
+    elements.missionTitle.textContent = 'Mode défi';
+    elements.missionText.textContent = template + ' Masse au sol ' + mass.toFixed(2).replace('.', ',') + ' kg, temps mort ' + deadTime.toFixed(1).replace('.', ',') + ' s, consigne ' + target.toFixed(1).replace('.', ',') + ' m, temps ≤ ' + time + ' s, dépassement ≤ ' + overshoot.toFixed(1).replace('.', ',') + ' m.';
+    elements.deadTimeRange.value = String(deadTime);
+    elements.lessonText.textContent = 'Mode défi : tous les gains sont réglables. Atteins la cible en respectant le temps de réponse et la limite de dépassement affichés.';
+    setGains(0, 0, 0);
+    applyScenario(mass, drag, target, [], true);
+  }
+
+  function applyScenario(mass, drag, target, locked = [], lockMass = false) {
+    state.mass = mass;
+    state.drag = drag;
+    state.target = target;
+    elements.massRange.value = String(mass);
+    elements.dragRange.value = String(drag);
+    elements.massRange.disabled = lockMass;
+    elements.massOutput.textContent = mass.toFixed(2).replace('.', ',') + ' kg';
+    elements.dragOutput.textContent = drag.toFixed(2).replace('.', ',');
+    const lockMap = { kp: elements.kpRange, ki: elements.kiRange, kd: elements.kdRange };
+    const numberMap = { kp: elements.kpNumber, ki: elements.kiNumber, kd: elements.kdNumber };
+    Object.keys(lockMap).forEach(key => {
+      const isLocked = locked.includes(key);
+      lockMap[key].disabled = isLocked;
+      numberMap[key].disabled = isLocked;
+    });
+    elements.kiSection.classList.add('show');
+    elements.kdSection.classList.add('show');
+    elements.kiNumber.disabled = elements.kiRange.disabled;
+    elements.kdNumber.disabled = elements.kdRange.disabled;
+    resetSimulation();
+  }
+
+  function setGains(kp, ki, kd) {
+    state.kp = kp;
+    state.ki = ki;
+    state.kd = kd;
+    elements.kpRange.value = String(kp);
+    elements.kiRange.value = String(ki);
+    elements.kdRange.value = String(kd);
+    elements.kpNumber.value = String(kp);
+    elements.kiNumber.value = String(ki);
+    elements.kdNumber.value = String(kd);
+  }
+
+  function resetSimulation() {
+    state.kp = Number(elements.kpRange.value);
+    state.ki = Number(elements.kiRange.value);
+    state.kd = Number(elements.kdRange.value);
+    elements.kpNumber.value = String(state.kp);
+    elements.kiNumber.value = String(state.ki);
+    elements.kdNumber.value = String(state.kd);
+    elements.kpNumber.disabled = elements.kpRange.disabled;
+    elements.kiNumber.disabled = elements.kiRange.disabled;
+    elements.kdNumber.disabled = elements.kdRange.disabled;
+    state.integralError = 0;
+    state.lastError = 0;
+    state.lastAltitude = 0;
+    state.derivativeError = 0;
+    state.gustFired = {};
+    state.massChanged = false;
+    state.mass = Number(elements.massRange.value);
+    state.drag = Number(elements.dragRange.value);
+    state.deadTime = Number(elements.deadTimeRange.value);
+    state.delayLine = [];
+    state.delayedDemand = 0;
+    state.manual = elements.manualToggle.checked && !elements.manualSection.hidden;
+    state.manualCommand = Number(elements.manualRange.value) / 100;
+    state.thrustMax = Number(elements.thrustRange.value);
+    state.thrustSmoothing = Number(elements.smoothingRange.value);
+    state.altitude = 0;
+    state.velocity = 0;
+    state.thrust = 0;
+    state.thrustDemand = 0;
+    state.normalizedCommand = 0;
+    state.error = state.target - state.altitude;
+    state.gustTimer = 0;
+    state.gustMagnitude = 0;
+    state.elapsed = 0;
+    state.historyClock = 0;
+    state.running = exerciseStarted;
+    state.timeScale = Number(elements.timeScale.value);
+    state.rotorAngle = 0;
+    state.overshoot = 0;
+    state.bestApproach = Infinity;
+    state.holdTimer = 0;
+    state.oscSamples = [];
+    state.oscAmplitude = 0;
+    state.oscMean = 0;
+    state.reachedTarget = false;
+    state.reachedTime = Infinity;
+    state.allFourTime = Infinity;
+    state.settledTimer = 0;
+    state.history = [];
+    accumulator = 0;
+    elements.pauseButton.textContent = 'Pause';
+    elements.timeLabel.textContent = 'Temps ' + formatTimeScale(state.timeScale);
+    updateVisuals();
+    drawCharts();
+  }
+
+  function addHistory() {
+    state.history.push({
+      time: state.elapsed,
+      target: state.target,
+      altitude: state.altitude,
+      speed: state.velocity,
+      command: state.normalizedCommand,
+      thrust: state.thrust / Math.max(0.001, state.thrustMax)
+    });
+    if (state.history.length > HISTORY_LIMIT) state.history.shift();
+  }
+
+  function stepSimulation(dt) {
+    state.error = state.target - state.altitude;
+    const proportionalCommand = state.kp * state.error / ALTITUDE_REF;
+    // D sur la mesure : vitesse verticale estimée à partir de l'altitude (pas de pic au changement de consigne)
+    const measuredSpeed = dt > 0 ? (state.altitude - state.lastAltitude) / dt : 0;
+    state.lastAltitude = state.altitude;
+    state.derivativeError = clamp(-measuredSpeed, -DERIVATIVE_LIMIT, DERIVATIVE_LIMIT);
+    const pdCommand = proportionalCommand + state.kd * state.derivativeError / ALTITUDE_REF;
+    // Anti-windup : on n'intègre pas si la commande est saturée et que l'erreur pousse encore dans le même sens
+    const integralCandidate = clamp(state.integralError + state.error * dt, -INTEGRAL_LIMIT, INTEGRAL_LIMIT);
+    const trialCommand = pdCommand + state.ki * integralCandidate / ALTITUDE_REF;
+    const pushingIntoSaturation = (trialCommand >= 1 && state.error > 0) || (trialCommand <= 0 && state.error < 0);
+    if (!pushingIntoSaturation) state.integralError = integralCandidate;
+    if (state.manual) state.integralError = 0;
+    const command = state.manual ? state.manualCommand : pdCommand + state.ki * state.integralError / ALTITUDE_REF;
+    state.normalizedCommand = clamp(command, 0, 1);
+    // Temps mort : la poussée demandée n'arrive qu'après state.deadTime secondes
+    const delaySteps = Math.round(state.deadTime / SIM_DT);
+    state.delayLine.push(state.normalizedCommand * state.thrustMax);
+    while (state.delayLine.length > delaySteps) state.delayedDemand = state.delayLine.shift();
+    state.thrustDemand = state.delayedDemand;
+    state.thrust += (state.thrustDemand - state.thrust) * dt / Math.max(0.001, state.thrustSmoothing);
+    const gust = state.gustTimer > 0 ? state.gustMagnitude : 0;
+    // La masse augmente avec l'altitude : le procédé devient autorégulant
+    const acceleration = (state.thrust - weight() - state.drag * state.velocity) / currentMass() + gust;
+    state.velocity += acceleration * dt;
+    state.velocity = clamp(state.velocity, -3 * MAX_CLIMB_RATE, 3 * MAX_CLIMB_RATE);
+    const groundCushionHeight = 1.5;
+    if (state.altitude <= groundCushionHeight && state.velocity < 0) {
+      const proximity = 1 - clamp(state.altitude / groundCushionHeight, 0, 1);
+      const cushion = GROUND_CUSHION * proximity * proximity;
+      state.velocity += cushion * dt;
+      state.velocity = Math.max(state.velocity, -GROUND_CUSHION_MAX_FALL);
+    }
+    if (state.altitude <= 0 && state.velocity < 0) {
+      state.altitude = 0;
+      state.velocity = 0;
+    } else {
+      state.altitude += state.velocity * dt;
+    }
+    if (state.altitude >= MAX_ALTITUDE) {
+      state.altitude = MAX_ALTITUDE;
+      state.velocity = Math.min(0, state.velocity);
+    }
+    if (state.gustTimer > 0) state.gustTimer = Math.max(0, state.gustTimer - dt);
+    state.rotorAngle += (0.5 + Math.abs(state.thrust) / Math.max(0.001, maxThrust()) * 22) * dt;
+
+    const currentError = state.target - state.altitude;
+    if (currentError <= 0) {
+      state.overshoot = Math.max(state.overshoot, state.altitude - state.target);
+    }
+    state.bestApproach = Math.min(state.bestApproach, Math.abs(currentError));
+    if (state.altitude >= 18 && state.altitude <= 25 && Math.abs(state.velocity) < 2) {
+      state.holdTimer += dt;
+    } else {
+      state.holdTimer = 0;
+    }
+    state.oscSamples.push({ t: state.elapsed, alt: state.altitude });
+    while (state.oscSamples.length && state.elapsed - state.oscSamples[0].t > 15.5) {
+      state.oscSamples.shift();
+    }
+    const oscSpan = state.oscSamples.length ? (state.elapsed - state.oscSamples[0].t) : 0;
+    if (oscSpan >= 15 && state.oscSamples.length >= 30) {
+      let lo = Infinity, hi = -Infinity, sum = 0;
+      state.oscSamples.forEach(s => { lo = Math.min(lo, s.alt); hi = Math.max(hi, s.alt); sum += s.alt; });
+      state.oscAmplitude = hi - lo;
+      state.oscMean = sum / state.oscSamples.length;
+    } else {
+      state.oscAmplitude = Infinity;
+      state.oscMean = 0;
+    }
+    const activeCriteria = inGuide() ? guidedCriteria() : missionCriteria();
+    const reachBand = activeCriteria.reachBand || activeCriteria.epsilon;
+    const stableBand = activeCriteria.stableBand || STABLE_BAND;
+    const nearTarget = Math.abs(currentError) <= stableBand;
+    if (!state.reachedTarget && Math.abs(currentError) <= reachBand && state.elapsed > 0.2) {
+      state.reachedTarget = true;
+      state.reachedTime = state.elapsed;
+    }
+    if (nearTarget && Math.abs(state.velocity) < 0.6) {
+      state.settledTimer += dt;
+    } else {
+      state.settledTimer = 0;
+    }
+
+    state.elapsed += dt;
+    state.historyClock += dt;
+    if (state.historyClock >= HISTORY_DT) {
+      state.historyClock -= HISTORY_DT;
+      addHistory();
+    }
+  }
+
+  function getStatus() {
+    if (!state.running) return 'En pause';
+    if (state.altitude <= 0.001 && Math.abs(state.velocity) < REST_SPEED) return 'Au sol';
+    if (Math.abs(state.error) <= EPSILON && Math.abs(state.velocity) < REST_SPEED) return 'Altitude tenue';
+    if (state.overshoot > OVERSHOOT_LIMIT && state.error < 0) return 'Dépassement';
+    if (Math.abs(state.velocity) > 0.05) return state.velocity > 0 ? 'Montée' : 'Descente';
+    return 'Stabilisation';
+  }
+
+  function updateVisuals() {
+    const amplitude = Math.min(Math.abs(state.thrust) / Math.max(0.001, maxThrust()), 1);
+    const thrustLength = 20 + amplitude * 90;
+    elements.thrustArrow.setAttribute('y2', (-thrustLength).toFixed(2));
+    elements.thrustHead.setAttribute('d', 'M0 ' + (-thrustLength - 10).toFixed(2) + ' L-7 ' + (-thrustLength + 4).toFixed(2) + ' L7 ' + (-thrustLength + 4).toFixed(2) + ' Z');
+    elements.thrustLabel.setAttribute('y', (-thrustLength + 16).toFixed(2));
+    const spin = Math.abs(state.thrust) / Math.max(0.001, maxThrust());
+    const shineSpan = 84;
+    const shineOffset = ((state.rotorAngle * 40) % shineSpan + shineSpan) % shineSpan - 34;
+    elements.bladeShine.setAttribute('x', shineOffset.toFixed(2));
+    elements.rotor.style.opacity = (0.5 + spin * 0.5).toFixed(2);
+
+    const droneY = altitudeToY(state.altitude);
+    elements.droneGroup.setAttribute('transform', 'translate(260 ' + droneY.toFixed(2) + ') scale(' + DRONE_SCALE + ')');
+    elements.altitudeDot.setAttribute('cy', droneY.toFixed(2));
+
+    const limitY = altitudeToY(Math.min(maxReachableAltitude(), MAX_ALTITUDE));
+    elements.limitLine.setAttribute('y1', limitY.toFixed(2));
+    elements.limitLine.setAttribute('y2', limitY.toFixed(2));
+    elements.limitLabel.setAttribute('y', (limitY - 6).toFixed(2));
+    elements.metricMass.textContent = currentMass().toFixed(2).replace('.', ',') + ' kg';
+    elements.deadTimeOutput.textContent = state.deadTime.toFixed(1).replace('.', ',') + ' s';
+    elements.manualOutput.textContent = Math.round(state.manualCommand * 100) + ' %';
+    const targetY = altitudeToY(state.target);
+    elements.targetLine.setAttribute('y1', targetY.toFixed(2));
+    elements.targetLine.setAttribute('y2', targetY.toFixed(2));
+    elements.targetLabel.setAttribute('y', (targetY - 7).toFixed(2));
+
+    const speedLength = clamp(state.velocity * 12, -70, 70);
+    elements.velocityArrow.setAttribute('x1', '260');
+    elements.velocityArrow.setAttribute('y1', droneY.toFixed(2));
+    elements.velocityArrow.setAttribute('x2', '260');
+    elements.velocityArrow.setAttribute('y2', (droneY + speedLength).toFixed(2));
+    elements.velocityArrow.setAttribute('opacity', Math.abs(speedLength) < 3 ? '.2' : '.85');
+
+    elements.directionPill.textContent = 'Consigne ' + state.target.toFixed(1).replace('.', ',') + ' m';
+    const thrustPercent = state.thrust / Math.max(0.001, maxThrust());
+    elements.thrustPill.textContent = 'Poussée ' + formatPercent(thrustPercent) + ' · ' + state.thrust.toFixed(1).replace('.', ',') + ' N';
+    elements.metricThrust.textContent = formatPercent(thrustPercent) + ' · ' + state.thrust.toFixed(1).replace('.', ',') + ' N';
+    elements.thrustPill.className = 'pill ' + (state.thrust > weight() ? 'green' : 'violet');
+    const saturated = Math.abs(state.normalizedCommand) >= 0.999;
+    elements.saturatedPill.textContent = state.manual ? 'Mode manuel' : saturated ? 'Commande saturée' : 'Commande non saturée';
+    elements.saturatedPill.className = 'pill' + (state.manual ? ' violet' : saturated ? ' red' : '');
+
+    if (document.activeElement !== elements.kpNumber) elements.kpNumber.value = String(state.kp);
+    if (document.activeElement !== elements.kiNumber) elements.kiNumber.value = String(state.ki);
+    if (document.activeElement !== elements.kdNumber) elements.kdNumber.value = String(state.kd);
+    elements.massOutput.textContent = state.mass.toFixed(2).replace('.', ',') + ' kg';
+    elements.dragOutput.textContent = state.drag.toFixed(2).replace('.', ',');
+    elements.thrustOutput.textContent = state.thrustMax.toFixed(1).replace('.', ',') + ' N';
+    elements.smoothingOutput.textContent = state.thrustSmoothing.toFixed(2).replace('.', ',') + ' s';
+    elements.targetValue.textContent = state.target.toFixed(1).replace('.', ',') + ' m';
+    elements.targetLine.setAttribute('stroke', '#ffb45c');
+
+    elements.metricTarget.textContent = state.target.toFixed(1).replace('.', ',') + ' m';
+    elements.metricAltitude.textContent = state.altitude.toFixed(2).replace('.', ',') + ' m';
+    elements.metricError.textContent = formatSignedMeters(state.error);
+    elements.metricError.className = 'metric-value ' + (Math.abs(state.error) > 1 ? 'orange' : 'green');
+    elements.metricSpeed.textContent = formatSignedMps(state.velocity);
+    elements.metricIntegral.textContent = formatPercent(integralCommand());
+    elements.metricOvershoot.textContent = state.overshoot.toFixed(2).replace('.', ',') + ' m';
+    updatePidBreakdown();
+    updateDebugLog();
+
+    const status = getStatus();
+    elements.statusText.textContent = status;
+    elements.statusDot.className = 'status-dot' + (!state.running ? ' paused' : status === 'Dépassement' ? ' oscillating' : '');
+    elements.missionStatus.textContent = inGuide() ? 'Étape ' + (guidedStep + 1) + '/4' : currentMode === 'free' ? 'Mode libre' : 'Mode défi';
+    elements.timeLabel.textContent = 'Temps ' + formatTimeScale(state.timeScale);
+  }
+
+  function prepareCanvas(canvas) {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const width = Math.max(1, canvas.clientWidth);
+    const height = Math.max(1, canvas.clientHeight);
+    if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+    }
+    const context = canvas.getContext('2d');
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return { context, width, height };
+  }
+
+  function drawChart(canvas, minimum, maximum, lines) {
+    const prepared = prepareCanvas(canvas);
+    const context = prepared.context;
+    const width = prepared.width;
+    const height = prepared.height;
+    const left = 42;
+    const right = 12;
+    const top = 13;
+    const bottom = 26;
+    const plotWidth = Math.max(1, width - left - right);
+    const plotHeight = Math.max(1, height - top - bottom);
+    const now = state.elapsed;
+    const startTime = Math.max(0, now - CHART_WINDOW);
+    const endTime = Math.max(CHART_WINDOW, now);
+    const xForTime = value => left + (value - startTime) / (endTime - startTime) * plotWidth;
+    const yForValue = value => top + (1 - (value - minimum) / (maximum - minimum)) * plotHeight;
+    context.clearRect(0, 0, width, height);
+    context.font = '11px system-ui, sans-serif';
+    context.lineWidth = 1;
+    context.strokeStyle = 'rgba(132, 159, 185, .2)';
+    context.fillStyle = '#7f96ae';
+    for (let index = 0; index <= 4; index += 1) {
+      const ratio = index / 4;
+      const y = top + ratio * plotHeight;
+      context.beginPath();
+      context.moveTo(left, y + .5);
+      context.lineTo(width - right, y + .5);
+      context.stroke();
+      const value = maximum - ratio * (maximum - minimum);
+      context.fillText(value.toFixed(1), 4, y + 4);
+    }
+    for (let index = 0; index <= 3; index += 1) {
+      const ratio = index / 3;
+      const x = left + ratio * plotWidth;
+      context.beginPath();
+      context.moveTo(x + .5, top);
+      context.lineTo(x + .5, height - bottom);
+      context.stroke();
+      const value = startTime + ratio * (endTime - startTime);
+      context.fillText(value.toFixed(0) + 's', x - 8, height - 8);
+    }
+    context.strokeStyle = 'rgba(157, 177, 201, .5)';
+    context.beginPath();
+    context.moveTo(left, top);
+    context.lineTo(left, height - bottom);
+    context.lineTo(width - right, height - bottom);
+    context.stroke();
+    if (!state.history.length) {
+      context.fillStyle = '#7188a1';
+      context.fillText('En attente de données', 14, 24);
+      return;
+    }
+    lines.forEach(line => {
+      context.beginPath();
+      let started = false;
+      state.history.forEach(point => {
+        if (point.time < startTime - 0.1) return;
+        const x = xForTime(point.time);
+        const y = yForValue(clamp(line.value(point), minimum, maximum));
+        if (!started) { context.moveTo(x, y); started = true; }
+        else context.lineTo(x, y);
+      });
+      context.strokeStyle = line.color;
+      context.lineWidth = line.width || 2;
+      context.setLineDash(line.dash || []);
+      context.stroke();
+      context.setLineDash([]);
+    });
+  }
+
+  function drawCharts() {
+    drawChart(elements.altitudeChart, 0, MAX_ALTITUDE, [
+      { color: '#ffb45c', value: point => point.target, width: 2, dash: [5, 4] },
+      { color: '#55d8ff', value: point => point.altitude, width: 2.2 }
+    ]);
+    drawChart(elements.speedChart, 0, 100, [
+      { color: '#b49cff', value: point => point.command * 100, width: 1.8, dash: [4, 4] },
+      { color: '#6ee7a8', value: point => point.thrust * 100, width: 2.2 }
+    ]);
+  }
+
+  function showMethodModal() {
+    if (!elements.methodBackdrop) return;
+    elements.methodBackdrop.hidden = false;
+    elements.methodStart.focus();
+  }
+
+  function togglePause() {
+    if (!exerciseStarted) return;
+    state.running = !state.running;
+    elements.pauseButton.textContent = state.running ? 'Pause' : 'Reprendre';
+  }
+
+  function startGuidedStep(index) {
+    GUIDED_STEPS = currentMode === 'pdi' ? GUIDED_SEQUENCES.pdi : GUIDED_SEQUENCES.guided;
+    guidedStep = clamp(index, 0, GUIDED_STEPS.length - 1);
+    state.mission = null;
+    if (GUIDED_STEPS[guidedStep] !== 'TEST') state.guideFinished = false;
+    applyStepVisibility();
+    renderStepper();
+    elements.skipStep.classList.toggle('show', GUIDED_STEPS[guidedStep] === 'TEST');
+    elements.nextStep.disabled = true;
+    elements.nextStep.textContent = guidedStep === GUIDED_STEPS.length - 1 ? 'Terminer' : 'Suivant';
+    if (GUIDED_STEPS[guidedStep] === 'P') {
+      setGains(0, 0, 0);
+    }
+    if (GUIDED_STEPS[guidedStep] === 'TEST') {
+      state.mission = {
+        kind: 'guided-test',
+        criteria: { epsilon: EPSILON, time: TARGET_TIME, overshoot: OVERSHOOT_LIMIT }
+      };
+      scheduleGuidedPerturbations();
+    }
+    resetSimulation();
+    updateMissionUI();
+  }
+
+  function scheduleGuidedPerturbations() {
+    state.gustTimer = 0;
+    state.gustMagnitude = 0;
+  }
+
+  function injectGust() {
+    if (!exerciseStarted) return;
+    const downward = Math.random() < 0.5;
+    state.gustMagnitude = downward ? -8 : 8;
+    state.gustTimer = 0.9;
+    updateVisuals();
+  }
+
+  function applyGuidedPerturbations() {
+    if (!inGuide() || GUIDED_STEPS[guidedStep] !== 'TEST') return;
+    const t = state.elapsed;
+    const gustTimes = [30, 60];
+    for (const time of gustTimes) {
+      if (!state.gustFired) state.gustFired = {};
+      const key = 'g' + time;
+      if (t >= time && !state.gustFired[key]) {
+        state.gustFired[key] = true;
+        state.gustMagnitude = time === 60 ? -8 : 8;
+        state.gustTimer = 0.9;
+      }
+    }
+    const massKey = 'mass';
+    if (t >= 45 && !state.massChanged) {
+      state.massChanged = true;
+      const newMass = clamp(state.mass + 0.5, 0.5, 3);
+      state.mass = newMass;
+    }
+  }
+
+  function animationFrame(timestamp) {
+    const frameDelta = Math.min(0.1, Math.max(0, (timestamp - lastFrame) / 1000));
+    lastFrame = timestamp;
+    if (state.running) {
+      accumulator += frameDelta * state.timeScale;
+      let steps = 0;
+      while (accumulator >= SIM_DT && steps < 32) {
+        applyGuidedPerturbations();
+        stepSimulation(SIM_DT);
+        accumulator -= SIM_DT;
+        steps += 1;
+      }
+    }
+    updateVisuals();
+    drawCharts();
+    updateMissionUI();
+    requestAnimationFrame(animationFrame);
+  }
+
+  elements.introStart.addEventListener('click', () => {
+    exerciseStarted = true;
+    elements.introBackdrop.hidden = true;
+    elements.app.inert = false;
+    elements.app.removeAttribute('inert');
+    elements.app.setAttribute('aria-hidden', 'false');
+    startGuidedStep(0);
+    showMethodModal();
+  });
+
+  elements.methodStart.addEventListener('click', () => {
+    elements.methodBackdrop.hidden = true;
+    elements.pauseButton.focus();
+  });
+
+  elements.modeGuided.addEventListener('click', () => { currentMode = 'guided'; startGuidedStep(0); setMode('guided'); showMethodModal(); });
+  elements.modePdi.addEventListener('click', () => { currentMode = 'pdi'; startGuidedStep(0); setMode('pdi'); showMethodModal(); });
+  elements.modeFree.addEventListener('click', () => setMode('free'));
+  elements.modeChallenge.addEventListener('click', () => setMode('challenge'));
+
+  elements.nextStep.addEventListener('click', () => {
+    if (currentMode === 'challenge') {
+      generateChallenge();
+      return;
+    }
+    if (!inGuide()) return;
+    if (guidedStep < GUIDED_STEPS.length - 1) {
+      if (GUIDED_STEPS[guidedStep] === 'P') setGains(state.kp, 0, 0);
+      startGuidedStep(guidedStep + 1);
+    } else {
+      state.guideFinished = true;
+      elements.verdict.textContent = 'Parcours guidé terminé.';
+      elements.verdict.className = 'verdict pass';
+      elements.nextStep.disabled = true;
+    }
+  });
+
+  elements.skipStep.addEventListener('click', () => {
+    if (!inGuide()) return;
+    if (GUIDED_STEPS[guidedStep] === 'TEST') {
+      state.guideFinished = true;
+      elements.verdict.textContent = 'Étape 4 passée — parcours guidé terminé.';
+      elements.verdict.className = 'verdict pass';
+      elements.nextStep.disabled = true;
+      elements.skipStep.classList.remove('show');
+    }
+  });
+
+  elements.kpRange.addEventListener('input', event => { state.kp = Number(event.target.value); elements.kpNumber.value = event.target.value; updateVisuals(); });
+  elements.kiRange.addEventListener('input', event => { state.ki = Number(event.target.value); elements.kiNumber.value = event.target.value; state.integralError = 0; updateVisuals(); });
+  elements.kdRange.addEventListener('input', event => { state.kd = Number(event.target.value); elements.kdNumber.value = event.target.value; state.derivativeError = 0; updateVisuals(); });
+  elements.kpNumber.addEventListener('input', event => {
+    state.kp = clampGain(event.target.value, elements.kpRange);
+    elements.kpRange.value = String(state.kp);
+    updateVisuals();
+  });
+  elements.kiNumber.addEventListener('input', event => {
+    state.ki = clampGain(event.target.value, elements.kiRange);
+    elements.kiRange.value = String(state.ki);
+    state.integralError = 0;
+    updateVisuals();
+  });
+  elements.kdNumber.addEventListener('input', event => {
+    state.kd = clampGain(event.target.value, elements.kdRange);
+    elements.kdRange.value = String(state.kd);
+    state.derivativeError = 0;
+    updateVisuals();
+  });
+  elements.massRange.addEventListener('input', event => {
+    state.mass = Number(event.target.value);
+    resetSimulation();
+  });
+  elements.dragRange.addEventListener('input', event => { state.drag = Number(event.target.value); updateVisuals(); });
+  elements.deadTimeRange.addEventListener('input', event => { state.deadTime = Number(event.target.value); updateVisuals(); });
+  elements.manualToggle.addEventListener('change', event => {
+    state.manual = event.target.checked;
+    elements.manualRange.disabled = !state.manual;
+    state.integralError = 0;
+    updateVisuals();
+  });
+  elements.manualRange.addEventListener('input', event => { state.manualCommand = Number(event.target.value) / 100; updateVisuals(); });
+  elements.thrustRange.addEventListener('input', event => { state.thrustMax = Number(event.target.value); updateVisuals(); });
+  elements.smoothingRange.addEventListener('input', event => { state.thrustSmoothing = Number(event.target.value); updateVisuals(); });
+  elements.targetMinus.addEventListener('click', () => { state.target = clamp(state.target - 1, 0, MAX_TARGET); resetSimulation(); });
+  elements.targetBase.addEventListener('click', () => { state.target = 25; resetSimulation(); });
+  elements.targetPlus.addEventListener('click', () => { state.target = clamp(state.target + 1, 0, MAX_TARGET); resetSimulation(); });
+  elements.pauseButton.addEventListener('click', togglePause);
+  elements.resetButton.addEventListener('click', resetSimulation);
+  elements.timeScale.addEventListener('change', event => { state.timeScale = Number(event.target.value); updateVisuals(); });
+  elements.gustButton.addEventListener('click', injectGust);
+  window.addEventListener('resize', drawCharts);
+
+  buildAltitudeScale();
+  applyStepVisibility();
+  renderStepper();
+  resetSimulation();
+  requestAnimationFrame(animationFrame);
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+  function findScormApi() {
+    let candidate = window;
+    for (let depth = 0; depth < 10 && candidate; depth += 1, candidate = candidate.parent) {
+      try { if (candidate.API) return candidate.API; } catch (error) { return null; }
+    }
+    try { return window.opener && window.opener.API ? window.opener.API : null; } catch (error) { return null; }
+  }
+  const api = findScormApi();
+  if (!api) return;
+  let initialized = false;
+  let finished = false;
+  let completed = false;
+  function call(method, ...args) { try { return api[method](...args); } catch (error) { return ''; } }
+  function commit() { if (initialized) call('LMSCommit', ''); }
+  function complete() {
+    if (completed || !initialized) return;
+    completed = true;
+    call('LMSSetValue', 'cmi.core.lesson_status', 'completed');
+    call('LMSSetValue', 'cmi.core.score.raw', '100');
+    call('LMSSetValue', 'cmi.core.score.min', '0');
+    call('LMSSetValue', 'cmi.core.score.max', '100');
+    commit();
+  }
+  function finish() {
+    if (finished || !initialized) return;
+    finished = true;
+    commit();
+    call('LMSFinish', '');
+  }
+  try { api.LMSInitialize(''); initialized = true; } catch (error) { initialized = false; }
+  if (!initialized) return;
+  const currentStatus = call('LMSGetValue', 'cmi.core.lesson_status');
+  if (!currentStatus || currentStatus === 'not attempted' || currentStatus === 'unknown') {
+    call('LMSSetValue', 'cmi.core.lesson_status', 'incomplete');
+  }
+  call('LMSSetValue', 'cmi.core.lesson_location', String(window.location.href));
+  commit();
+  window.setInterval(() => {
+    const verdict = document.getElementById('verdict');
+    if (verdict && verdict.classList.contains('pass')) complete();
+  }, 700);
+  window.addEventListener('pagehide', finish);
+  window.addEventListener('beforeunload', finish);
+  window.PID_DRONE_SCORM = { complete, finish };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Outil de placement des pastilles de test</title>
+<style>
+  :root{ --panel:#1e293b; --line:#334155; --txt:#e2e8f0; --muted:#94a3b8; --blue:#38bdf8; --yellow:#facc15; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#0b1120;color:var(--txt);font-family:'Segoe UI',Roboto,system-ui,sans-serif;font-size:14px;}
+  .app{max-width:1900px;margin:0 auto;padding:12px;}
+  h1{font-size:1.2rem;margin:0 0 4px;color:#e0f2fe;}
+  .role{color:var(--muted);font-size:.82rem;line-height:1.5;}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;}
+  .btn{border:1px solid var(--line);background:#172033;color:var(--txt);border-radius:8px;padding:8px 12px;font-size:.85rem;font-weight:600;cursor:pointer;}
+  .btn:hover{filter:brightness(1.2);}
+  .btn.green{background:#14532d;border-color:#22c55e;color:#bbf7d0;}
+  .btn.blue{background:#0c4a6e;border-color:#38bdf8;color:#bae6fd;}
+  .btn.amber{background:#713f12;border-color:#f59e0b;color:#fde68a;}
+  .btn.on{box-shadow:0 0 0 2px #fde68a inset;}
+  .grid{display:grid;grid-template-columns:minmax(0,1.6fr) 380px;gap:12px;align-items:start;}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;}
+  .card h2{font-size:.9rem;color:#bae6fd;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+  #schemaWrap{background:#0b1120;border:1px solid var(--line);border-radius:8px;overflow:auto;max-height:80vh;}
+  #schemaWrap.grid-bg{background-image:linear-gradient(#152238 1px,transparent 1px),linear-gradient(90deg,#152238 1px,transparent 1px);background-size:25px 25px;}
+  #schemaSvg{width:100%;height:auto;display:block;min-width:1000px;touch-action:none;}
+  #schemaSvg .wire{stroke:#7dd3fc;stroke-width:2;fill:none;}
+  #schemaSvg .junc{fill:#7dd3fc;}
+  #schemaSvg .lbl{fill:#93c5fd;font:600 11px sans-serif;}
+  #schemaSvg .lbl.rail{fill:#64748b;font-size:11px;letter-spacing:1px;}
+  #schemaSvg .lbl.node{fill:#facc15;font:700 11px monospace;}
+  #schemaSvg .body{fill:#1e293b;stroke:#94a3b8;stroke-width:1.5;}
+  #schemaSvg .ref{fill:#e2e8f0;font:700 12px sans-serif;text-anchor:middle;}
+  #schemaSvg .val{fill:#93c5fd;font:400 10px monospace;text-anchor:middle;}
+  #schemaSvg .pintxt{fill:#cbd5e1;font:700 10px monospace;}
+  #schemaSvg .hot{fill:transparent;stroke:transparent;}
+  #schemaSvg .comp{cursor:default;}
+  #schemaSvg .pad{cursor:grab;}
+  #schemaSvg .pad .p{fill:#0f172a;stroke:#facc15;stroke-width:2;}
+  #schemaSvg .pad .pn{fill:#a16207;font:600 8px monospace;text-anchor:middle;opacity:.85;pointer-events:none;}
+  #schemaSvg .pad:hover .p{fill:#facc15;}
+  #schemaSvg .pad.sel .p{fill:#38bdf8;stroke:#fff;}
+  #schemaSvg .pad.dragging .p{fill:#22c55e;stroke:#fff;r:6;}
+  table.pins{width:100%;border-collapse:collapse;font-size:.78rem;}
+  table.pins th,table.pins td{padding:3px 4px;border-bottom:1px solid #24334a;text-align:left;}
+  table.pins th{color:#93c5fd;position:sticky;top:0;background:var(--panel);}
+  table.pins tr.sel{background:#0c4a6e;}
+  table.pins input{width:64px;background:#0d1526;color:var(--txt);border:1px solid var(--line);border-radius:5px;padding:2px 4px;font-family:monospace;}
+  .listwrap{max-height:62vh;overflow:auto;margin-top:6px;}
+  .key{font-family:monospace;color:#fde68a;}
+  textarea{width:100%;height:150px;background:#0d1526;color:#bbf7d0;border:1px solid var(--line);border-radius:8px;font-family:monospace;font-size:.75rem;padding:8px;}
+  .tag{display:inline-block;background:#0c4a6e;color:#bae6fd;border-radius:20px;padding:1px 9px;font-size:.72rem;margin-left:6px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Outil de placement des pastilles de test <span class="tag">Module 11 - alimentation lineaire</span></h1>
+  <div class="role">
+    Glisse chaque <b>pastille jaune</b> sur la broche correspondante de son composant (B/C/E des transistors, les 2 bornes des composants a 2 poles),
+    puis clique <b>Exporter pinpos.js</b> et place le fichier dans le dossier du SCORM. Les coordonnees peuvent aussi etre saisies a la main.
+    Maintiens <b>Maj</b> pendant le glissement pour desactiver l'alignement a la grille.
+  </div>
+
+  <div class="bar">
+    <button id="btnGrid" class="btn on">Grille 25 px</button>
+    <button id="btnSnap" class="btn on">Aligner 5 px</button>
+    <button id="btnReset" class="btn amber">Positions par defaut</button>
+    <button id="btnRevert" class="btn">Recharger pinpos.js</button>
+    <button id="btnExport" class="btn green">Exporter pinpos.js</button>
+    <button id="btnSvg" class="btn blue">T&eacute;l&eacute;charger schematic.svg</button>
+    <span id="count" class="role"></span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div id="schemaWrap" class="grid-bg"><div id="schemaHost"></div></div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Pastilles</h2>
+        <div class="listwrap"><table class="pins" id="pinTable">
+          <thead><tr><th>Composant.Broche</th><th>Noeud</th><th>X</th><th>Y</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <h2>Contenu de pinpos.js</h2>
+        <textarea id="out" spellcheck="false"></textarea>
+        <div class="role" style="margin-top:6px;">Copie aussi possible manuellement. Le fichier exporte est directement reutilisable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="pinpos.js"></script>
+<script src="schematic.js"></script>
+<script src="placement.js"></script>
+</body>
+</html>
