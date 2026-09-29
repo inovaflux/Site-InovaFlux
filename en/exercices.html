@@ -140,6 +140,48 @@
 
         .btn-lancer:hover { background: #d35400; transform: translateY(-2px); }
 
+        /* --- BOUTON DE T&Eacute;L&Eacute;CHARGEMENT (PD&Fi-tier) --- */
+        .exercice-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-dl {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            transition: 0.2s;
+        }
+
+        .btn-dl.pdf { border-color: #ef4444; color: #b91c1c; }
+
+        .btn-dl:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        /* --- INTERTITRE DE SECTION --- */
+        .section-title {
+            color: var(--bleu);
+            font-size: 1.15rem;
+            margin: 45px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .section-title:first-of-type { margin-top: 0; }
+
         /* --- EXERCISE MODAL --- */
         .ex-modal {
             display: none;
@@ -255,9 +297,11 @@
 
 <div class="container">
     <div class="intro">
-        <h1>Interactive Exercises</h1>
+        <h1>Exercises &amp; guides</h1>
         <p>Educational simulators</p>
     </div>
+
+    <h2 class="section-title">Diagnostic 1</h2>
 
     <div class="exercice-section">
         <div class="exercice-head">
@@ -274,6 +318,8 @@
         <button class="btn-lancer" data-src="../exercices/diagnostic-alim/index.html" data-title="Diagnostic — Linear Power Supply">▶ Launch exercise</button>
     </div>
 
+    <h2 class="section-title">Diagnostic 2</h2>
+
     <div class="exercice-section">
         <div class="exercice-head">
             <h2>Diagnostic — Ladder Logic</h2>
@@ -288,6 +334,8 @@
         </p>
         <button class="btn-lancer" data-src="../exercices/diagnostic-ladder/index.html" data-title="Diagnostic — Ladder Logic">▶ Launch exercise</button>
     </div>
+
+    <h2 class="section-title">PID Control 1</h2>
 
     <div class="exercice-section">
         <div class="exercice-head">
@@ -304,6 +352,8 @@
         <button class="btn-lancer" data-src="../exercices/pid-imbal/PID-imbal.html" data-title="PID — Off-centre Flywheel">▶ Launch exercise</button>
     </div>
 
+    <h2 class="section-title">PID Control 2</h2>
+
     <div class="exercice-section">
         <div class="exercice-head">
             <h2>PID — Industrial Process (drone variant)</h2>
@@ -317,6 +367,27 @@
             temperature process driving a drone's altitude. Step 1: the P term, with live curves and measurements.
         </p>
         <button class="btn-lancer" data-src="../exercices/PID-procedelineaire.html" data-title="PID — Industrial Process (drone variant)">▶ Launch exercise</button>
+    </div>
+
+    <h2 class="section-title">32R-DC Guide</h2>
+
+    <div class="exercice-section">
+        <div class="exercice-head">
+            <h2>Interactive Guide &mdash; 32R-DC V3.3 Schematic</h2>
+            <div class="tags">
+                <span class="tag">32R-DC PLC</span>
+                <span class="tag">Schematic</span>
+            </div>
+        </div>
+        <p class="exercice-desc">
+            Walk through the 32R-DC V3.3 schematic across three sheets: power supply and control,
+            inputs, outputs. Clickable zones, voltmeter, component datasheets, LCD display
+            and a simulation lab for the ESP32 &rarr; I2C &rarr; MCP23017 &rarr; opto &rarr; relay chain.
+        </p>
+        <div class="exercice-actions">
+            <button class="btn-lancer" data-src="../exercices/guide-32r-dc/Guide_32R-DC_V3.3_interactif.html" data-title="Interactive Guide &mdash; 32R-DC V3.3 Schematic">&#9654; Launch exercise</button>
+            <a href="../exercices/guide-32r-dc/SCH_32-R-DC_V3.3.pdf" download class="btn-dl pdf">&#128196; Schematic PDF</a>
+        </div>
     </div>
 
 </div>

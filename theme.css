@@ -87,7 +87,8 @@ html[data-theme="dark"] th,
 html[data-theme="dark"] td,
 html[data-theme="dark"] .options-table td,
 html[data-theme="dark"] .product-title,
-html[data-theme="dark"] .exercice-head {
+html[data-theme="dark"] .exercice-head,
+html[data-theme="dark"] .section-title {
     border-color: #2c3440 !important;
 }
 
